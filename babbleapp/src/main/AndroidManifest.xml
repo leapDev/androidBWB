@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.example.ryangunn.beginningtobabble"
+<manifest package="com.leap.ryangunn.beginningtobabble"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -19,57 +19,60 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true"/>
 
-        <receiver android:name=".TipReminderBroadcastReciever" />
+        <receiver android:name="com.leap.ryangunn.beginningtobabble.TipReminderBroadcastReciever" />
 
         <service
-            android:name=".SetNotificationIntentService"
+            android:name="com.leap.ryangunn.beginningtobabble.SetNotificationIntentService"
             android:exported="false"/>
 
-        <receiver android:name=".SetNotficationsBroadcastReciver"
+        <receiver android:name="com.leap.ryangunn.beginningtobabble.SetNotficationsBroadcastReciver"
                   android:exported="false"/>
 
-        <receiver android:name=".ResetAlarmClockBrodcastReceiver"
+        <receiver android:name="com.leap.ryangunn.beginningtobabble.ResetAlarmClockBrodcastReceiver"
                   android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
 
-        <activity android:name=".SplashActivity">
+        <activity android:name="com.leap.ryangunn.beginningtobabble.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".settings.UserInfoActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.UserInfoActivity"
             >
         </activity>
-        <activity android:name=".DownloadActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.DownloadActivity"
                   >
         </activity>
-        <activity android:name=".HomeActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.HomeActivity"
                   >
         </activity>
-        <activity android:name=".DetailActivity"
-                  android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name="com.leap.ryangunn.beginningtobabble.DetailActivity"
+                  >
         </activity>
         <activity
-            android:name=".library.VideoActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:name="com.leap.ryangunn.beginningtobabble.library.VideoActivity"
+            >
         </activity>
-        <activity android:name=".settings.TipSettingsActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.TipSettingsActivity"
                  >
         </activity>
-        <activity android:name=".settings.SettingOptionActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.SettingOptionActivity"
                   >
         </activity>
-        <activity android:name=".settings.WhyActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.WhyActivity"
                  >
         </activity>
-        <activity android:name=".VoteActivity"
+        <activity android:name="com.leap.ryangunn.beginningtobabble.VoteActivity"
                  >
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ba1c204d431ab2416f26cdae557866c316a04f9d" />
     </application>
 
 </manifest>

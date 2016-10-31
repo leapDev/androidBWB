@@ -5,7 +5,7 @@
               android:layout_height="match_parent">
 
     <fragment
-        android:name="com.example.ryangunn.beginningtobabble.settings.TipSettingsFragment"
+        android:name="com.leap.ryangunn.beginningtobabble.settings.TipSettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tipSettigngsFragment"
