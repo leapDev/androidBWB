@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Beginning To Babble</string>
+    <string name="app_name">Beginning With Babble</string>
     <string name="splash">splash</string>
     <string name="userBirthdayHint">BABY\'S BIRTHDAY (MM/DD/YYYY)</string>
     <string name="userFirstNameHint">BABY\'S FIRST NAME</string>

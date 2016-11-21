@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.leap.ryangunn.beginningtobabble"
+<manifest package="com.learning.leap.beginningtobabble"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -19,56 +19,66 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true"/>
 
-        <receiver android:name="com.leap.ryangunn.beginningtobabble.TipReminderBroadcastReciever" />
+        <receiver android:name="com.learning.leap.beginningtobabble.TipReminderBroadcastReciever" />
 
         <service
-            android:name="com.leap.ryangunn.beginningtobabble.SetNotificationIntentService"
+            android:name="com.learning.leap.beginningtobabble.SetNotificationIntentService"
             android:exported="false"/>
 
-        <receiver android:name="com.leap.ryangunn.beginningtobabble.SetNotficationsBroadcastReciver"
+        <receiver android:name="com.learning.leap.beginningtobabble.SetNotficationsBroadcastReciver"
                   android:exported="false"/>
 
-        <receiver android:name="com.leap.ryangunn.beginningtobabble.ResetAlarmClockBrodcastReceiver"
+        <receiver android:name="com.learning.leap.beginningtobabble.ResetAlarmClockBrodcastReceiver"
                   android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.leap.ryangunn.beginningtobabble.SplashActivity">
+        <activity android:name="com.learning.leap.beginningtobabble.SplashActivity"
+                  android:screenOrientation="portrait" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.UserInfoActivity"
+        <activity android:name="com.learning.leap.beginningtobabble.settings.UserInfoActivity"
+                  android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.DownloadActivity"
-                  >
+        <activity android:name="com.learning.leap.beginningtobabble.DownloadActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.HomeActivity"
-                  >
+        <activity android:name="com.learning.leap.beginningtobabble.HomeActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.DetailActivity"
-                  >
+        <activity android:name="com.learning.leap.beginningtobabble.DetailActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
         <activity
-            android:name="com.leap.ryangunn.beginningtobabble.library.VideoActivity"
+            android:name="com.learning.leap.beginningtobabble.library.VideoActivity"
             >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.TipSettingsActivity"
-                 >
+        <activity android:name="com.learning.leap.beginningtobabble.settings.TipSettingsActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.SettingOptionActivity"
-                  >
+        <activity android:name="com.learning.leap.beginningtobabble.settings.SettingOptionActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.settings.WhyActivity"
-                 >
+        <activity android:name="com.learning.leap.beginningtobabble.settings.WhyActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
-        <activity android:name="com.leap.ryangunn.beginningtobabble.VoteActivity"
-                 >
+        <activity android:name="com.learning.leap.beginningtobabble.VoteActivity"
+                  android:screenOrientation="portrait"
+            >
         </activity>
         <meta-data
             android:name="io.fabric.ApiKey"

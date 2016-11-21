@@ -4,6 +4,7 @@ buildscript {
     }
 
     dependencies {
+
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
@@ -19,11 +20,11 @@ android {
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
     defaultConfig {
-        applicationId "com.leap.ryangunn.beginningtobabble"
+        applicationId "com.learning.leap.beginningtobabble"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 2
-        versionName '1.1'
+        versionCode 3
+        versionName '1.3'
     }
     buildTypes {
         release {
