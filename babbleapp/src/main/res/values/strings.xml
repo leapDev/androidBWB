@@ -22,7 +22,7 @@
     <string name="downloadFiles">Downloading Files</string>
     <string name="allTipsSentBetween">ALL TIPS SENT BETWEEN</string>
     <string name="MaxNumberOfTips">MAX # OF TIPS SENT PER DAY</string>
-    <string name="sendTipsToday">SEND TIPS TODAY</string>
+    <string name="turnOffTips">TURN OFF TIPS</string>
     <string name="settingSaved">SETTINGS SAVED</string>
     <string name="and">and</string>
     <string name="wasThisHelpful">Was this helpful?</string>
@@ -31,10 +31,12 @@
     <string name="babyBDay">Baby\'s Birthday?</string>
     <string name="babyFirstName">Baby\'s First Name?</string>
     <string name="babyZipCode">ZipCode?</string>
+    <string name="userSave">Could not save user try again</string>
     <string name="babyBdayInfo">By providing your baby\'s birthday, Beginning with Babble can keep track of your child\'s age! This allows the app to send tips that are just right for your child!</string>
     <string name="babyFirstNameInfo">By including your baby\'s first name, the app creates a unique profile for you and your child. This is a secure profile that no else but you can access!</string>
     <string name="babyZipCodeInfo">The app uses your zip code to figure out when to send reminders based on your time zone. You can also change the times that tips are send under \"Settings\" &lt; \"Reminder Setting.\"  </string>
     <string name="backToSettigns">BACK TO SETTIGNS</string>
     <string name="userStartTime">StartTime</string>
     <string name="userEndTime">EndTime</string>
+    <string name="noConnection">Please Connect To The Internet To Continue</string>
 </resources>

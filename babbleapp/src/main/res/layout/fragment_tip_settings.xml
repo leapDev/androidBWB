@@ -178,9 +178,10 @@
 
 
             <Switch
+                android:id="@+id/tipSettingsFragmentSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sendTipsToday"
+                android:text="@string/turnOffTips"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"/>
             <Button
