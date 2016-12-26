@@ -39,4 +39,5 @@
     <string name="userStartTime">StartTime</string>
     <string name="userEndTime">EndTime</string>
     <string name="noConnection">Please Connect To The Internet To Continue</string>
+    <string name="times_are_incorrect">Please Check That The End Time Is After The Start Time</string>
 </resources>

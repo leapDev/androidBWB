@@ -135,7 +135,8 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
 
     @Override
     public void loadPlayerFromSharedPref() {
-       babblePlayer = babblePlayer.loadBabblePlayerFronSharedPref(context);
+        BabblePlayer localBabblePlayer = new BabblePlayer();
+       babblePlayer = localBabblePlayer.loadBabblePlayerFronSharedPref(context);
         userInfoViewInterface.displayUserInfo(babblePlayer);
     }
 

@@ -82,26 +82,25 @@ public class TipReminder {
     public static void  setUpRepeatingIntentService(Context context){
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         java.util.Calendar now = java.util.Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(java.util.Calendar.HOUR_OF_DAY, 1);
         calendar.set(java.util.Calendar.MINUTE,0);
         calendar.set(java.util.Calendar.SECOND,0);
-        AlarmManager alarmMgr = (AlarmManager)context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        if (calendar.getTimeInMillis() <= now.getTimeInMillis()){
+        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, SetNotficationsBroadcastReciver.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context,0,intent,0);
+        if (calendar.compareTo(now) < 0){
             calendar.add(java.util.Calendar.DATE,1);
         }
-        Intent intent = new Intent(context, SetNotficationsBroadcastReciver.class);
-        PendingIntent repeatingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),101,intent,PendingIntent.FLAG_UPDATE_CURRENT);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, repeatingIntent);
+                AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
     public static void cancelRepeatingIntentService(Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, SetNotficationsBroadcastReciver.class);
-        PendingIntent repeatingIntent = PendingIntent.getBroadcast(context.getApplicationContext(),101,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent repeatingIntent = PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.cancel(repeatingIntent);
     }
-
-
 
 }

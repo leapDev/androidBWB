@@ -34,8 +34,8 @@ public class ScheduleBucket {
 
 
     public void diviedTheBucketIntoThree(){
-        String[] allStartTime = context.getResources().getStringArray(R.array.first_tip_settings_array);
-        String[] allEndTime = context.getResources().getStringArray(R.array.second_tips_settings_array);
+        String[] allStartTime = context.getResources().getStringArray(R.array.start_times_settings_array);
+        String[] allEndTime = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
         int indexForUserStartTime = Utility.readIntSharedPreferences(Constant.START_TIME,context);
         int indexForUserEndTime = Utility.readIntSharedPreferences(Constant.END_TIME,context);
         String[]  userStartTime = Arrays.copyOfRange(allStartTime,indexForUserStartTime,allStartTime.length);
@@ -144,12 +144,11 @@ public class ScheduleBucket {
             return null;
         }
     }
-
     private Date updateConvertDateToToday(Date date){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         Calendar updatedCal = Calendar.getInstance();
-        updatedCal.set(Calendar.HOUR,calendar.get(Calendar.HOUR));
+        updatedCal.set(Calendar.HOUR_OF_DAY,calendar.get(Calendar.HOUR_OF_DAY));
         updatedCal.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE));
         updatedCal.set(Calendar.SECOND,0);
         return updatedCal.getTime();

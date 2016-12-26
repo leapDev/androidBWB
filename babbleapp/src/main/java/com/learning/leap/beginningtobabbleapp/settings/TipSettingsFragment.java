@@ -77,20 +77,20 @@ public class TipSettingsFragment extends Fragment {
         secondTipTimeIndex = Utility.readIntSharedPreferences(Constant.END_TIME,getActivity());
 
 
-        startTime = getResources().getStringArray(R.array.first_tip_settings_array);
-        endTime = getResources().getStringArray(R.array.second_tips_settings_array);
+        startTime = getResources().getStringArray(R.array.start_times_settings_array);
+        endTime = getResources().getStringArray(R.array.end_times_tips_settings_array);
 
         mPlusButton = (Button)view.findViewById(R.id.tipSettingsMaxTipNumberPlusButton);
         mMinusButton = (Button)view.findViewById(R.id.tipsettingsMaxNumberTipMinusButton);
-        mSecondTipBoxMinusButton = (Button)view.findViewById(R.id.tipsettingsSecondTipMinusButton);
+        mSecondTipBoxMinusButton = (Button)view.findViewById(R.id.tipSettingsEndTimeMinusButton);
 
-        mSecondTipBoxPlusButton = (Button)view.findViewById(R.id.tipSettingsSecondTipPlusButton);
-        mSecondTipTextView = (TextView) view.findViewById(R.id.tipSettingsSecondTipTextView);
+        mSecondTipBoxPlusButton = (Button)view.findViewById(R.id.tipSettingsEndTimePlusButton);
+        mSecondTipTextView = (TextView) view.findViewById(R.id.tipSettingsEndTimeTextView);
 
-        mFirstTipBoxMinusButton = (Button)view.findViewById(R.id.tipSettingsStartingMinusButton);
-        mFirstTipBoxPlusButton = (Button)view.findViewById(R.id.tipSettingsStartingPlusButton);
+        mFirstTipBoxMinusButton = (Button)view.findViewById(R.id.tipSettingsStartTimeMinusButton);
+        mFirstTipBoxPlusButton = (Button)view.findViewById(R.id.tipSettingsStartTimePlusButton);
 
-        mFirstTipTextView = (TextView) view.findViewById(R.id.tipSettingsStartingTextView);
+        mFirstTipTextView = (TextView) view.findViewById(R.id.tipSettingsStartTimeTextView);
 
         mFirstTipTextView.setText(startTime[firstTipIndex]);
         mSecondTipTextView.setText(endTime[secondTipTimeIndex]);
@@ -133,7 +133,6 @@ public class TipSettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-
                 getActivity().startActivity(homeIntent);
             }
         });

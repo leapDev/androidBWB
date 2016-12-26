@@ -29,8 +29,6 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
     TextView pleaseTapHereTextView;
     Boolean newUser;
     ProgressDialog mDialog;
-    Subscription savePlayerSubscrtion;
-    Subscription retriveNotificationsSubscrtion;
     List<Notification> awsNotifications;
     UserInfoPresenter userInfoPresenter;
 
@@ -89,8 +87,6 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
         babblePlayer.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         return babblePlayer;
     }
-
-
 
     @Override
     public void displayErrorDialog(int dialogTitle, int dialogMessage) {

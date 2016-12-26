@@ -59,7 +59,7 @@
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/tipSettingsStartingTextView"
+                    android:id="@+id/tipSettingsStartTimeTextView"
                     android:text="5:00 AM"
                     android:gravity="center"
                     android:layout_gravity="center"
@@ -72,14 +72,14 @@
                     android:layout_height="40dp"
                     android:text="-"
 
-                    android:id="@+id/tipSettingsStartingMinusButton"
+                    android:id="@+id/tipSettingsStartTimeMinusButton"
                     android:background="@android:color/white"
                     android:textSize="30sp"/>
                 <Button
                     android:layout_width="70dp"
                     android:layout_height="40dp"
                     android:text="+"
-                    android:id="@+id/tipSettingsStartingPlusButton"
+                    android:id="@+id/tipSettingsStartTimePlusButton"
                     android:background="@android:color/white"
                     android:textSize="30sp"/>
 
@@ -103,7 +103,7 @@
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/tipSettingsSecondTipTextView"
+                    android:id="@+id/tipSettingsEndTimeTextView"
                     android:text="8:00 AM"
                     android:gravity="center"
                     android:layout_gravity="center"
@@ -115,14 +115,14 @@
                     android:layout_width="70dp"
                     android:layout_height="40dp"
                     android:text="-"
-                    android:id="@+id/tipsettingsSecondTipMinusButton"
+                    android:id="@+id/tipSettingsEndTimeMinusButton"
                     android:background="@android:color/white"
                     android:textSize="30sp"/>
                 <Button
                     android:layout_width="70dp"
                     android:layout_height="40dp"
                     android:text="+"
-                    android:id="@+id/tipSettingsSecondTipPlusButton"
+                    android:id="@+id/tipSettingsEndTimePlusButton"
                     android:background="@android:color/white"
                     android:textSize="30dp"/>
 
@@ -190,6 +190,7 @@
                 android:id="@+id/tipSettingSaveButton"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
+                android:visibility="invisible"
                 android:background="@drawable/settings_save"/>
 
         </LinearLayout>

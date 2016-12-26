@@ -147,7 +147,10 @@ public class Notification extends RealmObject {
 
     public Observable<RealmResults<Notification>> getNotificationFromRealm(Realm realm){
         return realm.where(Notification.class).findAll().asObservable();
+    }
 
+    public Observable<RealmResults<Notification>> getPlayTodayFromRealm(Realm realm){
+        return realm.where(Notification.class).equalTo("mPlayToday",true).findAll().asObservable();
 
     }
 
