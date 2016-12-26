@@ -10,6 +10,7 @@ import com.learning.leap.beginningtobabbleapp.utility.Constant;
 import com.learning.leap.beginningtobabbleapp.R;
 import com.learning.leap.beginningtobabbleapp.utility.Utility;
 import com.learning.leap.beginningtobabbleapp.settings.SettingOptionActivity;
+import com.learning.leap.beginningtobabbleapp.vote.VoteViewActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -53,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
 //            @Override
 //            public void onClick(View view) {
 //                Intent voteActivity = new Intent(HomeActivity.this,VoteViewActivity.class);
-//                voteActivity.putExtra("NumberOfTips",3);
+//                voteActivity.putExtra("NumberOfTips",1);
 //                startActivity(voteActivity);
 //            }
 //        });

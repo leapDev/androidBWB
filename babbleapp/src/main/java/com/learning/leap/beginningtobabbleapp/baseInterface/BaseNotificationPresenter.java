@@ -19,7 +19,7 @@ public class BaseNotificationPresenter {
     protected int totalCount = 0;
     private BaseNotificationViewInterface baseNotificationViewInterface;
     protected ArrayList<Notification> notifications;
-    private Subscription notificationListSubscription;
+    protected Subscription notificationListSubscription;
 
     public void onDestory() {
         if (notificationListSubscription != null && !notificationListSubscription.isUnsubscribed()){
@@ -55,7 +55,7 @@ public class BaseNotificationPresenter {
         soundButtonCheck();
     }
 
-    private void setNotifications(RealmResults<Notification> notificationRealmResults){
+    protected void setNotifications(RealmResults<Notification> notificationRealmResults){
         notifications = new ArrayList<>(notificationRealmResults);
         Collections.shuffle(notifications);
         totalCount = notifications.size();

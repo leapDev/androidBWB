@@ -17,7 +17,7 @@ import rx.Subscription;
  */
 
 public class NotificaitonPresenter extends BaseNotificationPresenter implements NotificationPresenterInterface {
-    private NotificationViewViewInterface notificationViewInterface;
+    protected NotificationViewViewInterface notificationViewInterface;
 
     @Override
     public void onCreate() {
@@ -28,7 +28,11 @@ public class NotificaitonPresenter extends BaseNotificationPresenter implements 
             notificationViewInterface.hideNextButton();
         }
 
+        if (notifications.size() == 0){
+           hideAllButtons();
+        }
     }
+
 
     @Override
     public void onNextPress() {
@@ -67,7 +71,7 @@ public class NotificaitonPresenter extends BaseNotificationPresenter implements 
     }
 
     private void nextButtonCheck(){
-        if (index-1 == totalCount){
+        if (index == totalCount -1){
             notificationViewInterface.hideNextButton();
         }else {
             notificationViewInterface.displayNextButton();
@@ -80,6 +84,13 @@ public class NotificaitonPresenter extends BaseNotificationPresenter implements 
         }else {
             notificationViewInterface.displayPreviousButton();
         }
+    }
+
+    private void hideAllButtons(){
+        notificationViewInterface.hideNextButton();
+        notificationViewInterface.hidePreviousButton();
+        notificationViewInterface.hideSoundButton();
+        notificationViewInterface.hideVideoButton();
     }
 
     @Override

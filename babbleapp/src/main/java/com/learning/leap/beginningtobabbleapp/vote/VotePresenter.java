@@ -29,7 +29,7 @@ public class VotePresenter extends BaseNotificationPresenter {
     }
 
     private Boolean doHomeIntent(){
-        return index == numberOfTips;
+        return index == numberOfTips - 1;
     }
 
     protected void thumbUpButtonTapped(){
@@ -59,6 +59,8 @@ public class VotePresenter extends BaseNotificationPresenter {
         notificationAtIndex().setPlayToday(true);
         notificationAtIndex().setFavorite(thumbUp);
         realm.copyToRealmOrUpdate(notificationAtIndex());
+        realm.commitTransaction();
+        realm.beginTransaction();
         AnswerNotification answerNotification = new AnswerNotification();
         answerNotification.setAnswerBucket(bucketNumber);
         answerNotification.mAnswerTime = new Date();
