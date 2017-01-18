@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/settings_bg"/>
+        android:id="@+id/settingsBackground"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -22,7 +22,7 @@
     <string name="downloadFiles">Downloading Files</string>
     <string name="allTipsSentBetween">ALL TIPS SENT BETWEEN</string>
     <string name="MaxNumberOfTips">MAX # OF TIPS SENT PER DAY</string>
-    <string name="turnOffTips">TURN OFF TIPS</string>
+    <string name="sendTipsToday">Send Tips Today</string>
     <string name="settingSaved">SETTINGS SAVED</string>
     <string name="and">and</string>
     <string name="wasThisHelpful">Was this helpful?</string>
@@ -40,4 +40,5 @@
     <string name="userEndTime">EndTime</string>
     <string name="noConnection">Please Connect To The Internet To Continue</string>
     <string name="times_are_incorrect">Please Check That The End Time Is After The Start Time</string>
+    <string name="notification_message">It is a good time to read to %1$s!.</string>
 </resources>

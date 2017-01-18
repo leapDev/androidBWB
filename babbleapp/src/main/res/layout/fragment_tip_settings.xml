@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/settings_bg"
+        android:id="@+id/tipSettingsBackground"
         android:paddingBottom="5dp"
         android:scaleType="fitXY"/>
 
@@ -181,7 +181,7 @@
                 android:id="@+id/tipSettingsFragmentSwitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/turnOffTips"
+                android:text="@string/sendTipsToday"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"/>
             <Button
