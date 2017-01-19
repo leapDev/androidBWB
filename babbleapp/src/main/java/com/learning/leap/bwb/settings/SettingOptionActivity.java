@@ -17,8 +17,8 @@ public class SettingOptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setUpBackground();
         setContentView(R.layout.activity_setting_option);
+        setUpBackground();
         Button tipSettings = (Button)findViewById(R.id.settingsFragmentTipSettingButton);
         Button profileSettings = (Button)findViewById(R.id.settingsFragmentProfileSettingsButton);
         ImageView homeImageView = (ImageView)findViewById(R.id.settingsFragmentHomeImageView);
@@ -38,7 +38,7 @@ public class SettingOptionActivity extends AppCompatActivity {
     }
 
     private void setUpBackground(){
-        ImageView background = (ImageView)findViewById(R.id.tipSettingsBackground);
+        ImageView background = (ImageView)findViewById(R.id.settingsBackground);
         Bitmap backgroundBitmap = Utility.decodeSampledBitmapFromResource(getResources(),R.drawable.settings_bg,Utility.getDisplayMetrics(this));
         background.setImageBitmap(backgroundBitmap);
     }

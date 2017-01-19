@@ -126,7 +126,7 @@ public class UserTipSettings {
     }
 
     public void saveTurnOnTips(){
-        if (sendTipsToday){
+        if (!sendTipsToday){
             JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
         }else {
             PlayTodayJob.schedule();

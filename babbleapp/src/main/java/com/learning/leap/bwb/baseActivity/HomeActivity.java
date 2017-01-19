@@ -36,17 +36,17 @@ public class HomeActivity extends AppCompatActivity {
             //set updated shared Pref to false
         }
 
-                ImageView homeImageView = (ImageView) findViewById(R.id.homeFragmentHomeIcon);
-        homeImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.MINUTE,2);
-                TipReminder tipReminder = new TipReminder(4,1,new Date(),calendar.getTime(),HomeActivity.this);
-                tipReminder.setReminder(calendar.getTime());
-
-            }
-        });
+//                ImageView homeImageView = (ImageView) findViewById(R.id.homeFragmentHomeIcon);
+//        homeImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.add(Calendar.MINUTE,2);
+//                TipReminder tipReminder = new TipReminder(4,1,new Date(),calendar.getTime(),HomeActivity.this);
+//                tipReminder.setReminder(calendar.getTime());
+//
+//            }
+//        });
 
     }
 
