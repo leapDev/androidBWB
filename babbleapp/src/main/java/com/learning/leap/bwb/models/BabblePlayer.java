@@ -80,7 +80,8 @@ public class BabblePlayer extends RealmObject {
 
     public void setuserAgeInMonth() {
         if (checkDate()){
-            this.userAgeInMonth = (int) daysBetween(this.birthdayDate) / 30;
+            double userAgeInMonthDouble = (double) daysBetween(this.birthdayDate) / 30;
+            this.userAgeInMonth = (int)Math.floor(userAgeInMonthDouble);
         }
 
     }
@@ -151,30 +152,30 @@ public class BabblePlayer extends RealmObject {
         BabblePlayer updatedBabblePlayer = new BabblePlayer();
         updatedBabblePlayer.setBabyBirthday(sharedPrefBirthDay);
         updatedBabblePlayer.setuserAgeInMonth();
-        if (checkIfAgeIsInRange(0,3,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(4)){
+        if (checkIfAgeIsInRange(0,2,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(3)){
             return true;
-        }else if (checkIfAgeIsInRange(3,6,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(7)){
+        }else if (checkIfAgeIsInRange(3,5,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(6)){
             return true;
-        }else if (checkIfAgeIsInRange(6,9,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(10)){
+        }else if (checkIfAgeIsInRange(6,8,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(9)){
             return true;
-        }else if (checkIfAgeIsInRange(9,12,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(13)){
+        }else if (checkIfAgeIsInRange(9,11,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(12)){
             return true;
-        }else if (checkIfAgeIsInRange(12,18,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(19)){
+        }else if (checkIfAgeIsInRange(12,17,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(18)){
             return true;
-        }else if (checkIfAgeIsInRange(18,24,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(25)){
+        }else if (checkIfAgeIsInRange(18,23,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(24)){
             return true;
-        }else if (checkIfAgeIsInRange(24,30,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(31)){
+        }else if (checkIfAgeIsInRange(24,29,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(30)){
             return true;
-        }else if (checkIfAgeIsInRange(30,36,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(37)){
+        }else if (checkIfAgeIsInRange(30,35,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(36)){
             return true;
-        }else if (checkIfAgeIsInRange(36,48,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(49)){
+        }else if (checkIfAgeIsInRange(36,47,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(48)){
             return true;
         }else {
             return false;
         }
     }
 
-    private  static Boolean checkIfAgeIsInRange(int startMonth,int endMonth, int age){
+    private static Boolean checkIfAgeIsInRange(int startMonth,int endMonth, int age){
         return startMonth <= age && endMonth >= age;
     }
 
@@ -206,10 +207,10 @@ public class BabblePlayer extends RealmObject {
     }
 
     public boolean checkDate(){
+        String pattern = "MM/dd/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        format.setLenient(false);
         try {
-            String pattern = "MM/dd/yyyy";
-            SimpleDateFormat format = new SimpleDateFormat(pattern);
-            format.setLenient(false);
             this.setBirthdayDate(format.parse(this.getBabyBirthday()));
         }catch (ParseException e) {
             return false;
@@ -219,18 +220,23 @@ public class BabblePlayer extends RealmObject {
 
 
     public boolean checkZipCode() {
-        return Integer.toString(this.getZipCode()).matches("[0-9]{5}");
+        try {
+            return Integer.toString(this.getZipCode()).matches("[0-9]{5}");
+        }catch (NumberFormatException e){
+            return false;
+        }
+
     }
 
     public boolean checkName() {
-        return !checkNameIsEmpty() && checkNameIsTooLong();
+        return !checkNameIsEmpty() && !checkNameIsTooLong();
     }
 
     public Boolean checkNameIsEmpty() {
-        return this.getBabyName().isEmpty();
+        return this.getBabyName().isEmpty() || getBabyName().equals("");
     }
     public Boolean checkNameIsTooLong() {
-        return this.getBabyName().length() <= 20;
+        return this.getBabyName().length() >= 20;
     }
 
     public Boolean checkIfPlayerIsValid() {

@@ -60,6 +60,7 @@
         </activity>
         <activity android:name="com.learning.leap.bwb.baseActivity.DetailActivity"
                   android:screenOrientation="portrait"
+
             >
         </activity>
         <activity

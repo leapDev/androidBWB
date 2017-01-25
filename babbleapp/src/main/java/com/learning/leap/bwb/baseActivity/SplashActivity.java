@@ -24,8 +24,7 @@ public class SplashActivity extends AppCompatActivity {
         if (didDownload){
           homeIntent();
         }else {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(() -> userInfoIntent(),6000);
+            userInfoIntent();
         }
     }
 

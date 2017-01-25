@@ -77,20 +77,7 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
             userInfoViewInterface.displayErrorDialog(R.string.BabbleError,R.string.noConnection);
         }
     }
-    @Override
-    public void saveNotifications(List<Notification> notifications) {
-        for (int i = 0; i< notifications.size(); i++){
-            notifications.get(i).setId(i);
-        }
-        Realm realm = Realm.getDefaultInstance();
-        Utility.writeIntSharedPreferences("notficationListSize",notifications.size(),context);
-        realm.beginTransaction();
-        realm.where(Notification.class).findAll().deleteAllFromRealm();
-        realm.copyToRealm(notifications);
-        realm.copyToRealmOrUpdate(babblePlayer);
-        realm.commitTransaction();
-        userInfoViewInterface.downloadIntent();
-    }
+
 
     @Override
     public void retriveNotificationsFromAmazon() {
@@ -119,6 +106,21 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
     }
 
     @Override
+    public void saveNotifications(List<Notification> notifications) {
+        for (int i = 0; i< notifications.size(); i++){
+            notifications.get(i).setId(i);
+        }
+        Realm realm = Realm.getDefaultInstance();
+        Utility.writeIntSharedPreferences("notficationListSize",notifications.size(),context);
+        realm.beginTransaction();
+        realm.where(Notification.class).findAll().deleteAllFromRealm();
+        realm.copyToRealm(notifications);
+        realm.copyToRealmOrUpdate(babblePlayer);
+        realm.commitTransaction();
+        userInfoViewInterface.downloadIntent();
+    }
+
+    @Override
     public void createBabblePlayer(BabblePlayer babblePlayer) {
         this.babblePlayer = babblePlayer;
     }
@@ -135,7 +137,7 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
         babblePlayer.setuserAgeInMonth();
         if (babblePlayer.checkIfPlayerIsValid()){
             updatePlayer();
-        }else if (babblePlayer.checkZipCode()){
+        }else if (!babblePlayer.checkZipCode()){
             userInfoViewInterface.displayErrorDialog(R.string.userZipCodeErrorTitle,R.string.userZipCodeError);
         }else if (babblePlayer.checkNameIsEmpty()){
             userInfoViewInterface.displayErrorDialog(R.string.userNameNameErrorTitle,R.string.userNameEmptyError);

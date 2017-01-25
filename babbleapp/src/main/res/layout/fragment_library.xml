@@ -41,6 +41,16 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/library_playaudio"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/notificationFragmentPlayIconImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/home_library"/>
+
 
     <!--<TextView-->
         <!--android:layout_width="wrap_content"-->
@@ -80,6 +90,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"/>
 
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -108,7 +120,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:src="@drawable/home_playtoday"
+        android:src="@drawable/playtoday_icon"
         android:id="@+id/notificationFragmentPlayTodayImageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

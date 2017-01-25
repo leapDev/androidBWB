@@ -80,10 +80,18 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
     private BabblePlayer createBabblePlayer(){
         BabblePlayer babblePlayer = new BabblePlayer();
         babblePlayer.setBabyName(firstNameEditText.getText().toString().trim());
-        babblePlayer.setZipCode(Integer.parseInt(zipCodeEditText.getText().toString().trim()));
+        babblePlayer.setZipCode(setZipCode());
         babblePlayer.setBabyBirthday(birthDayEditText.getText().toString().trim());
         babblePlayer.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         return babblePlayer;
+    }
+
+    private int setZipCode(){
+        try {
+           return Integer.parseInt(zipCodeEditText.getText().toString().trim());
+        }catch (NumberFormatException e){
+            return 0;
+        }
     }
 
     @Override
