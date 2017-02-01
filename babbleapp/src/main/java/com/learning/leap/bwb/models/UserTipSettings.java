@@ -95,10 +95,16 @@ public class UserTipSettings {
 
     public void startTimePlusButtonHasBeenTapped(){
         startTimeIndex++;
+        if (startTimeIndex > endTimeIndex){
+            endTimeIndex = startTimeIndex;
+        }
     }
 
     public void endTimeMinusButtonHasBeenTapped(){
         endTimeIndex = minusButtonTapped(endTimeIndex);
+        if (startTimeIndex > endTimeIndex){
+            endTimeIndex = startTimeIndex;
+        }
     }
 
     public void endTimePlusButtonHasBeenTapped(){
@@ -156,4 +162,6 @@ public class UserTipSettings {
     public void setSendTipsToday(Boolean sendTipsToday) {
         this.sendTipsToday = sendTipsToday;
     }
+
+
 }

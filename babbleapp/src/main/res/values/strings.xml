@@ -25,7 +25,7 @@
     <string name="sendTipsToday">Send Tips Today</string>
     <string name="settingSaved">SETTINGS SAVED</string>
     <string name="and">and</string>
-    <string name="wasThisHelpful">Was this helpful?</string>
+    <string name="didYouLikeThis">Did you like this tip?</string>
     <string name="notips">Sorry, no tips right now</string>
     <string name="why">WHY?</string>
     <string name="babyBDay">Baby\'s Birthday?</string>
@@ -44,4 +44,6 @@
     <string name="updateDialogTitle">There is updated Content for you to Download.</string>
     <string name="update">Update</string>
     <string name="remindMeLater">Update Later</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
 </resources>

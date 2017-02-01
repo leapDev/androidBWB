@@ -56,5 +56,16 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"/>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/homeLeapLogo"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/leaplogo"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/homeActivitySettings"
+        android:layout_marginTop="5dp"/>
+
 
 </RelativeLayout>

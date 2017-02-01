@@ -9,9 +9,6 @@ import com.learning.leap.bwb.utility.Utility;
 
 import io.realm.Realm;
 
-/**
- * Created by ryangunn on 12/25/16.
- */
 
 public class TipSettingsPresenters {
    private Context context;
@@ -55,15 +52,14 @@ public class TipSettingsPresenters {
     public void startTimeMinusButtonPressed(){
         displaySaveButton();
         userTipSettings.startTimeMinusButtonHasBeenTapped();
-        displayStartTime();
-        displayStartTimePlusAndMinusButton();
+        updateStartTime();
     }
 
     public void startTimePlusButtonPressed(){
         displaySaveButton();
         userTipSettings.startTimePlusButtonHasBeenTapped();
-        displayStartTime();
-        displayStartTimePlusAndMinusButton();
+        updateStartTime();
+        updateEndTime();
     }
 
     private void displayStartTimePlusAndMinusButton(){
@@ -83,16 +79,25 @@ public class TipSettingsPresenters {
     public void endTimeMinusButtonPressed(){
         displaySaveButton();
         userTipSettings.endTimeMinusButtonHasBeenTapped();
-        displayEndTime();
-      displayEndTimePlusAndMinusButton();
+        updateStartTime();
+        updateEndTime();
     }
 
     public void endTimePlusButtonPressed(){
         displaySaveButton();
         userTipSettings.endTimePlusButtonHasBeenTapped();
+        updateEndTime();
+
+    }
+
+    private void updateEndTime(){
         displayEndTime();
         displayEndTimePlusAndMinusButton();
+    }
 
+    private void updateStartTime(){
+        displayStartTime();
+        displayStartTimePlusAndMinusButton();
     }
 
     private void displayEndTimePlusAndMinusButton(){

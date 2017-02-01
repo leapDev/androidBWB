@@ -65,6 +65,7 @@ dependencies {
     compile 'com.devbrackets.android:exomedia:3.0.2'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.6'
+    compile 'info.hoang8f:android-segmented:1.0.6'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }

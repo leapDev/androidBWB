@@ -2,6 +2,7 @@ package com.learning.leap.bwb.baseActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,15 +38,19 @@ public class HomeActivity extends AppCompatActivity  {
         ImageView libararyImageView = (ImageView) findViewById(R.id.homeActivityLibraryImageView);
         ImageView settignsImageView = (ImageView)findViewById(R.id.homeActivitySettings);
         ImageView playToday = (ImageView)findViewById(R.id.homeActivityPlayTodayImageView);
+        ImageView leapLogo = (ImageView)findViewById(R.id.homeLeapLogo);
         libararyImageView.setOnClickListener(view -> detailIntent());
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
+        leapLogo.setOnClickListener(view -> openWebsite());
 
 
-        if (BabblePlayer.homeScreenAgeCheck(this)){
-            //display Updated Dialog
-            //set updated shared Pref to false
-        }
+
+
+//        if (BabblePlayer.homeScreenAgeCheck(this)){
+//            //display Updated Dialog
+//            //set updated shared Pref to false
+//        }
 
 //                ImageView homeImageView = (ImageView) findViewById(R.id.homeFragmentHomeIcon);
 //        homeImageView.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +107,13 @@ public class HomeActivity extends AppCompatActivity  {
         detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.LIBRARY);
         Utility.addCustomEvent(Constant.VIEWED_LIBRARY);
         startActivity(detailIntent);
+    }
+
+    private void openWebsite(){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://leapempowers.org/"));
+        if (Utility.isNetworkAvailable(this)) {
+            startActivity(browserIntent);
+        }
     }
 
 
