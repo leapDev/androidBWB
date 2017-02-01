@@ -58,19 +58,23 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
+        android:layout_below="@id/voteFragmentPromptTextView"
         android:layout_marginBottom="100dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
         android:layout_marginStart="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/wasThisHelpful"
+        android:text="@string/didYouLikeThis"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="120dp"
         android:textSize="22sp"
-        android:textColor="@android:color/black"/>
+        android:layout_toRightOf="@id/voteFragmentThumbsUpImageView"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="10dp" />
 
 
     <ImageView
@@ -78,16 +82,11 @@
         android:layout_height="wrap_content"
         android:src="@drawable/tip_thumbsdown"
         android:id="@+id/voteFragmentThumbsDownImageView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"/>
-
-
-
-
+        android:layout_below="@+id/voteFragmentPromptTextView"
+        android:layout_alignLeft="@+id/voteFragmentPlayVideoImageView"
+        android:layout_alignStart="@+id/voteFragmentPlayVideoImageView"
+        android:layout_marginTop="60dp"
+        android:layout_alignBottom="@+id/voteFragmentThumbsUpImageView" />
 
 
 </RelativeLayout>

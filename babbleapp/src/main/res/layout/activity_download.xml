@@ -5,7 +5,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
     <fragment
-        android:name="com.learning.leap.beginningtobabbleapp.download.DownloadFragment"
+        android:name="com.learning.leap.bwb.download.DownloadFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/downloadFragment"

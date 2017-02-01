@@ -11,7 +11,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/playtoday_bg"
+            android:id="@+id/playTodayBackground"
             android:scaleType="fitXY"/>
 
 
@@ -40,6 +40,16 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/playtoday_playaudio"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playTodayFragmentPlayIconImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/home_playtoday"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -81,7 +91,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="80dp"
-        android:src="@drawable/home_library"
+        android:src="@drawable/library_icon"
         android:id="@+id/playTodayFragmentLibraryImageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -113,8 +123,6 @@
         android:layout_marginBottom="5dp"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"/>
-
-
 
 
 </RelativeLayout>

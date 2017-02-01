@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.learning.leap.beginningtobabbleapp"
+<manifest package="com.learning.leap.bwb"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
-        android:name=".BabbleApplication"
+        android:name="com.learning.leap.bwb.BabbleApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,20 +21,23 @@
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true"/>
 
-        <receiver android:name="com.learning.leap.beginningtobabbleapp.tipReminder.VoteNotificationBroadcastReciever" />
+        <service android:name="com.learning.leap.bwb.ScheduleBucketIntentService"
+            android:exported="false"/>
+
+        <receiver android:name="com.learning.leap.bwb.tipReminder.VoteNotificationBroadcastReciever" />
 
 
-        <receiver android:name="com.learning.leap.beginningtobabbleapp.tipReminder.SetNotficationsBroadcastReciver"
+        <receiver android:name="com.learning.leap.bwb.tipReminder.SetNotficationsBroadcastReciver"
                   android:exported="false"/>
 
-        <receiver android:name="com.learning.leap.beginningtobabbleapp.utility.ResetAlarmClockBrodcastReceiver"
+        <receiver android:name="com.learning.leap.bwb.utility.ResetAlarmClockBrodcastReceiver"
                   android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <activity android:name="com.learning.leap.beginningtobabbleapp.baseActivity.SplashActivity"
+        <activity android:name="com.learning.leap.bwb.baseActivity.SplashActivity"
                   android:screenOrientation="portrait" >
 
             <intent-filter>
@@ -43,39 +46,41 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.settings.UserInfoActivity"
+        <activity android:name="com.learning.leap.bwb.settings.UserInfoActivity"
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.download.DownloadActivity"
+        <activity android:name="com.learning.leap.bwb.download.DownloadActivity"
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.baseActivity.HomeActivity"
+        <activity android:name="com.learning.leap.bwb.baseActivity.HomeActivity"
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.baseActivity.DetailActivity"
+        <activity android:name="com.learning.leap.bwb.baseActivity.DetailActivity"
                   android:screenOrientation="portrait"
+
             >
         </activity>
         <activity
-            android:name="com.learning.leap.beginningtobabbleapp.library.VideoActivity"
+            android:name="com.learning.leap.bwb.library.VideoActivity"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.settings.TipSettingsActivity"
+        <activity android:name="com.learning.leap.bwb.settings.TipSettingsActivity"
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.settings.SettingOptionActivity"
+        <activity android:name="com.learning.leap.bwb.settings.SettingOptionActivity"
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.settings.WhyActivity"
+        <activity android:name="com.learning.leap.bwb.settings.WhyActivity"
                   android:screenOrientation="portrait"
             >
         </activity>
-        <activity android:name="com.learning.leap.beginningtobabbleapp.vote.VoteViewActivity"
+        <activity android:name="com.learning.leap.bwb.vote.VoteViewActivity"
                   android:screenOrientation="portrait"
             >
         </activity>

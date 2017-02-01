@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="first_tip_settings_array">
+    <string-array name="start_times_settings_array">
         <item>5:00 AM</item>
         <item>5:30 AM</item>
         <item>6:00 AM</item>
@@ -36,7 +36,7 @@
     </string-array>
 
 
-    <string-array name="second_tips_settings_array">
+    <string-array name="end_times_tips_settings_array">
         <item>8:00 AM</item>
         <item>8:30 AM</item>
         <item>9:00 AM</item>
