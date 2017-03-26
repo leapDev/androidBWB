@@ -66,7 +66,7 @@ public class TipSettingsFragment extends Fragment {
                 Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS_INDEX,maxNumberOfTipIndex,getActivity());
                 Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS,userMaxTipInt,getActivity());
                deleteAnswerNotifications();
-                Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS);
+                Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS,Utility.getUserID(getActivity()));
                 setTipRemdinder();
                 getActivity().finish();
             }
