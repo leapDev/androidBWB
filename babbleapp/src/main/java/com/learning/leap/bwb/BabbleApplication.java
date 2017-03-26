@@ -19,9 +19,10 @@ public class BabbleApplication extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         Fabric.with(this, new Answers());
-        RealmConfiguration realmConfig = new RealmConfiguration.Builder(this.getApplicationContext()).build();
-        Realm.setDefaultConfiguration(realmConfig);
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .build();
+        Realm.setDefaultConfiguration(config);
         JobManager.create(this).addJobCreator(new PlayTodayJobCreator());
-
     }
 }

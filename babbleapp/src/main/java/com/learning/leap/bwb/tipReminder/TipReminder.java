@@ -5,9 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.learning.leap.bwb.helper.AnswerNotification;
+import com.learning.leap.bwb.utility.Constant;
+import com.learning.leap.bwb.utility.Utility;
 
 import java.math.BigInteger;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -29,6 +36,7 @@ public class TipReminder {
         this.endTimeDate = endTimeDate;
         this.context = context;
     }
+
     public void setNotificationForBucket(){
         Realm realm = Realm.getDefaultInstance();
         RealmResults<AnswerNotification> mAnswerNotificatoinsResults = realm.where(AnswerNotification.class).equalTo("mAnswerBucket",bucketNumber).findAll();
@@ -53,7 +61,7 @@ public class TipReminder {
         }
     }
 
-    public void setReminder(Date notificationDate){
+    private void setReminder(Date notificationDate){
 
         Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
         alarmIntent.putExtra("id",bucketNumber);
@@ -68,40 +76,33 @@ public class TipReminder {
         if (calendar.getTime().before(now.getTime())){
             calendar.add(java.util.Calendar.DATE,1);
         }
+
+        setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
+//        if (bucketNumber == 3){
+//            calendar.add(Calendar.HOUR,1);
+//            setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
+//        }
+        Answers.getInstance().logCustom(new CustomEvent(Constant.TIP_SCHEUDLED_TIME)
+                             .putCustomAttribute("Time",convertDate(calendar.getTime()))
+                             .putCustomAttribute("ID",Utility.getUserID(context)));
+
+    }
+
+    private void setTipToAlarmManger(long timeInMills, PendingIntent pendingIntent){
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         if (Build.VERSION.SDK_INT >= 23){
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,timeInMills,pendingIntent);
         }else if (Build.VERSION.SDK_INT >=19){
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMills, pendingIntent);
         }else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMills, pendingIntent);
         }
-
     }
 
-    public static void  setUpRepeatingIntentService(Context context){
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        java.util.Calendar now = java.util.Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, 1);
-        calendar.set(java.util.Calendar.MINUTE,0);
-        calendar.set(java.util.Calendar.SECOND,0);
-
-        AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SetNotficationsBroadcastReciver.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context,0,intent,0);
-        if (calendar.compareTo(now) < 0){
-            calendar.add(java.util.Calendar.DATE,1);
-        }
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+    private String convertDate(Date date){
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+        return dateFormat.format(date);
     }
 
-    public static void cancelRepeatingIntentService(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SetNotficationsBroadcastReciver.class);
-        PendingIntent repeatingIntent = PendingIntent.getBroadcast(context,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.cancel(repeatingIntent);
-    }
 
 }

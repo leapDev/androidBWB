@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.tipReminder.TipReminder;
@@ -21,14 +22,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
-import rx.Observable;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+
 
 public class HomeActivity extends AppCompatActivity  {
 
-    Subscription retriveNotificationsSubscrtion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +36,13 @@ public class HomeActivity extends AppCompatActivity  {
         ImageView settignsImageView = (ImageView)findViewById(R.id.homeActivitySettings);
         ImageView playToday = (ImageView)findViewById(R.id.homeActivityPlayTodayImageView);
         ImageView leapLogo = (ImageView)findViewById(R.id.homeLeapLogo);
+        TextView poweredByTextView = (TextView)findViewById(R.id.powerByTextView);
         libararyImageView.setOnClickListener(view -> detailIntent());
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
-
-
-
+        poweredByTextView.setOnClickListener(view -> openWebsite());
+        Utility.addCustomEvent(Constant.ACCESSED_APP,Utility.getUserID(this));
 
 //        if (BabblePlayer.homeScreenAgeCheck(this)){
 //            //display Updated Dialog
@@ -68,9 +65,7 @@ public class HomeActivity extends AppCompatActivity  {
 
     @Override
     protected void onDestroy() {
-        if (retriveNotificationsSubscrtion != null){
-            retriveNotificationsSubscrtion.unsubscribe();
-        }
+
         super.onDestroy();
     }
 
@@ -93,19 +88,19 @@ public class HomeActivity extends AppCompatActivity  {
     private void playTodayIntent(){
         Intent detailIntent = new Intent(HomeActivity.this,DetailActivity.class);
         detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.PLAY_TODAY);
-        Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY);
+        Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY,Utility.getUserID(this));
         startActivity(detailIntent);
     }
 
     private void settingsIntent(){
         Intent settingOptionIntent = new Intent(HomeActivity.this,SettingOptionActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS);
+        Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS,Utility.getUserID(this));
         startActivity(settingOptionIntent);
     }
     private void detailIntent() {
         Intent detailIntent = new Intent(HomeActivity.this,DetailActivity.class);
         detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.LIBRARY);
-        Utility.addCustomEvent(Constant.VIEWED_LIBRARY);
+        Utility.addCustomEvent(Constant.VIEWED_LIBRARY,Utility.getUserID(this));
         startActivity(detailIntent);
     }
 

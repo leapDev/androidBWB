@@ -5,51 +5,36 @@ import com.learning.leap.bwb.models.Notification;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Subscriber;
-import rx.Subscription;
 
-/**
- * Created by ryangunn on 12/22/16.
- */
 
 public class BaseNotificationPresenter {
     protected int index = 0;
     protected int totalCount = 0;
     private BaseNotificationViewInterface baseNotificationViewInterface;
     protected ArrayList<Notification> notifications;
-    protected Subscription notificationListSubscription;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    private String babyName;
+    protected boolean isPlaying;
 
     public void onDestory() {
-        if (notificationListSubscription != null && !notificationListSubscription.isUnsubscribed()){
-            notificationListSubscription.unsubscribe();
-        }
+        disposables.clear();
     }
 
     protected void getRealmResults(){
+        babyName = baseNotificationViewInterface.babyName();
         Notification notification = new Notification();
-        notificationListSubscription = notification.getNotificationFromRealm(Realm.getDefaultInstance())
-                .subscribe(new Subscriber<RealmResults<Notification>>() {
-                    @Override
-                    public void onCompleted() {
-                      updateView();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(RealmResults<Notification> notifications) {
-                        setNotifications(notifications);
-                        this.onCompleted();
-                    }
-                });
+        Disposable disposable = notification.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
+        disposables.add(disposable);
     }
 
     protected void updateView(){
+        if (isPlaying){
+            onStopButtonPress();
+        }
         baseNotificationViewInterface.displayPrompt(notificationAtIndex().getMessage());
         videoButtonCheck();
         soundButtonCheck();
@@ -83,14 +68,30 @@ public class BaseNotificationPresenter {
 
 
     protected void displayPrompt(){
-        baseNotificationViewInterface.displayPrompt(notificationAtIndex().getMessage());
+        baseNotificationViewInterface.displayPrompt(notificationAtIndex().updateMessage(babyName));
     }
 
     public void onPlayAudioPress() {
         String notificationSoundFile = notificationAtIndex().getCreated() + "-" + notificationAtIndex().getSoundFileName();
         baseNotificationViewInterface.playSound(notificationSoundFile);
+        isPlaying = true;
+        showStopButton();
     }
 
+    public void onStopButtonPress(){
+        removeStopButton();
+        baseNotificationViewInterface.stopPlayer();
+        isPlaying = false;
+    }
+
+    private void showStopButton(){
+        baseNotificationViewInterface.displayStopButton();
+        baseNotificationViewInterface.hideSoundButton();
+    }
+    private void removeStopButton(){
+        baseNotificationViewInterface.hideStopButton();
+        baseNotificationViewInterface.displaySoundButton();
+    }
 
     public void onPlayVideoPress() {
         String notificationVideoFile = notificationAtIndex().getCreated() + "-" + notificationAtIndex().getVideoFileName();

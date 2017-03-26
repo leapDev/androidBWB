@@ -12,44 +12,49 @@ import io.realm.Realm;
 
 
 public class LocalLoadSaveHelper {
-   private static Realm mRealm = Realm.getDefaultInstance();
+
+    public Context context;
+    public LocalLoadSaveHelper(Context context){
+        this.context = context;
+    }
 
 
-    public static int getNotificationMaxTime(Context context){
+
+    public int getNotificationMaxTime(){
         return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,context);
     }
-    public static void saveNotificationMaxTime(int time,Context context){
+    public void saveNotificationMaxTime(int time){
         Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,time,context);
     }
 
-    public static int getNotificationMinTime(Context context){
+    public int getNotificationMinTime(){
         return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,context);
     }
-    public static void saveNotificationMinTime(int time,Context context){
+    public void saveNotificationMinTime(int time){
         Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,time,context);
     }
 
-    public static void clearBabbleID(Context context){
-        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,null,context);
+    public void clearBabbleID(){
+        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,"",context);
     }
 
-    public static String getBabbleID(Context context){
+    public String getBabbleID(){
        return Utility.readStringSharedPreferences(Constant.BABBLE_ID,context);
     }
 
-    public static void saveBabbleID(String babbleID,Context context){
+    public void saveBabbleID(String babbleID){
         Utility.writeStringSharedPreferences(Constant.BABBLE_ID,babbleID,context);
     }
 
-    public static String getBabyBirthDay(Context context){
+    public String getBabyBirthDay(){
         return Utility.readStringSharedPreferences(Constant.BABY_BIRTHDAY,context);
     }
 
-    public static void saveBabyBirthDay(String babyBirthDay,Context context){
+    public void saveBabyBirthDay(String babyBirthDay){
         Utility.writeStringSharedPreferences(Constant.BABY_BIRTHDAY,babyBirthDay,context);
     }
 
-    public static int getZipCode(Context context){
+    public int getZipCode(){
         return Utility.readIntSharedPreferences(Constant.ZIP_CODE,context);
     }
 
@@ -57,20 +62,28 @@ public class LocalLoadSaveHelper {
         Utility.writeIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,month,context);
     }
 
-    public static int getUserBirthdayInMonth(Context context){
+    public int getUserBirthdayInMonth(){
         return Utility.readIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,context);
     }
 
-    public static void saveZipCode(int zipCode,Context context){
+    public void saveZipCode(int zipCode){
         Utility.writeIntSharedPreferences(Constant.ZIP_CODE,zipCode,context);
     }
 
-    public static String getBabyName(Context context){
+    public String getBabyName(){
         return Utility.readStringSharedPreferences(Constant.BABY_NAME,context);
     }
 
-    public static void saveBabyName(String babyName,Context context){
+    public void saveBabyName(String babyName){
         Utility.writeStringSharedPreferences(Constant.BABY_NAME,babyName,context);
+    }
+
+    public void saveBabyGender(String gender){
+        Utility.writeStringSharedPreferences(Constant.GENDER,gender,context);
+    }
+
+    public String getBabyGender(){
+        return Utility.readStringSharedPreferences(Constant.GENDER,context);
     }
 
     public static Date getLastDayTurnedOff(Context context) throws Exception{
@@ -87,6 +100,14 @@ public class LocalLoadSaveHelper {
         }
 
         Utility.writeStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,date,context);
+    }
+
+    public void  saveNotificationSize(int size){
+        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_SIZE,size,context);
+    }
+
+    public int getNotificationTotalSize(){
+        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_SIZE,context);
     }
 
 

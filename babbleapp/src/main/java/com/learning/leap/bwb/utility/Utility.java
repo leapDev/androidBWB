@@ -20,19 +20,18 @@ import com.amazonaws.regions.Regions;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.tipReminder.SetNotficationsBroadcastReciver;
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 
 public class Utility {
     private static final String sharedPreferencesFile = "Global";
 
 
     public  static CognitoCredentialsProvider getCredientail(Context context){
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+        return new CognitoCachingCredentialsProvider(
                 context.getApplicationContext(),  /* get the context for the application */
                 Constant.CognitoIdentityPoolId,    /* Identity Pool ID */
                 Regions.US_EAST_1           /* Region for your identity pool--US_EAST_1 or EU_WEST_1*/
         );
-        return credentialsProvider;
     }
     public static void displayAlertMessage(int errorTitle, int errorMessage,Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -73,7 +72,6 @@ public class Utility {
 
     }
 
-
     public static int readIntSharedPreferences(String sharedPreferenceKey,Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
         return mSharedPreferences.getInt(sharedPreferenceKey,0);
@@ -103,12 +101,18 @@ public class Utility {
         return  (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
-    public static void addCustomEvent(String event){
-        Answers.getInstance().logCustom(new CustomEvent(event));
+    public static void addCustomEvent(String event,String ID){
+        Answers.getInstance().logCustom(new CustomEvent(event)
+        .putCustomAttribute("ID",ID));
     }
 
-    public static void addCustomEventWithNotification(String event,String notificationString){
-        Answers.getInstance().logCustom(new CustomEvent(event).putCustomAttribute("Notification",notificationString));
+    public static void addCustomEventWithNotification(String event,String notificationString,String ID){
+        Answers.getInstance().logCustom(new CustomEvent(event).putCustomAttribute("Notification",notificationString).putCustomAttribute("ID",ID));
+    }
+
+    public static String getUserID(Context context){
+        LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
+        return saveHelper.getBabbleID();
     }
 
 

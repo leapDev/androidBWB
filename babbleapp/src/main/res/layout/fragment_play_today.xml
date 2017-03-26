@@ -51,6 +51,20 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/home_playtoday"/>
 
+    <Button
+        android:id="@+id/playTodayFragmentStopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:background="@drawable/rectangle_2_3x"
+        android:text="@string/stop"
+        android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"/>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

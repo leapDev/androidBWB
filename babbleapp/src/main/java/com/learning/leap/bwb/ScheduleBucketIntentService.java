@@ -6,9 +6,6 @@ import android.content.Intent;
 
 import com.learning.leap.bwb.helper.ScheduleBucket;
 
-/**
- * Created by ryangunn on 12/30/16.
- */
 
 public class ScheduleBucketIntentService extends IntentService {
 
@@ -19,9 +16,9 @@ public class ScheduleBucketIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        PlayTodayJob.schedule();
         ScheduleBucket scheduleBucket = new ScheduleBucket(context);
         scheduleBucket.diviedTheBucketIntoThree();
-        PlayTodayJob.schedule();
     }
 
     @Override

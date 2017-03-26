@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.learning.leap.bwb.PlayTodayPresenter;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.notification.NotificationViewViewInterface;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
 import com.learning.leap.bwb.utility.Constant;
@@ -25,10 +26,6 @@ import com.learning.leap.bwb.utility.Utility;
 
 import java.io.File;
 import java.io.FileInputStream;
-
-/**
- * Created by ryangunn on 10/20/16.
- */
 
 public class PlayTodayFragment extends android.support.v4.app.Fragment implements MediaPlayer.OnPreparedListener, NotificationViewViewInterface{
 
@@ -40,6 +37,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
     ImageView mHomeImageView;
     ImageView mSettingsImageView;
     ImageView mLibraryImageView;
+    Button stopButton;
     MediaPlayer mediaPlayer;
     Button mFavoriteButton;
     Boolean isPlaying = false;
@@ -64,6 +62,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
         mSettingsImageView = (ImageView)view.findViewById(R.id.playTodayFragmentSettingsImageView);
         mLibraryImageView = (ImageView)view.findViewById(R.id.playTodayFragmentLibraryImageView);
         mHomeImageView = (ImageView)view.findViewById(R.id.playTodayFragmentHomeImageView);
+        stopButton = (Button)view.findViewById(R.id.playTodayFragmentStopButton);
     }
 
     private void setUpBackground(View view){
@@ -81,12 +80,9 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
         presenter.attachView(this);
         presenter.onCreate();
         mediaPlayer = new MediaPlayer();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                releaseMediaPlayer();
-                isPlaying = false;
-            }
+        mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
+            releaseMediaPlayer();
+            isPlaying = false;
         });
 
     }
@@ -99,6 +95,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
         mHomeImageView.setOnClickListener(view -> onHomePress());
         mSettingsImageView.setOnClickListener(view -> onSettingsPress());
         mLibraryImageView.setOnClickListener(view -> onLibraryPress());
+        stopButton.setOnClickListener(view -> presenter.onStopButtonPress());
 
     }
 
@@ -115,7 +112,6 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
         player.start();
         isPlaying = true;
     }
-
 
     @Override
     public void hideNextButton() {
@@ -144,20 +140,16 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
 
     @Override
     public void playSound(String fileName) {
-        if (isPlaying){
-            releaseMediaPlayer();
-        }else {
             try {
                 setupMediaFile(fileName);
             } catch (Exception e) {
                 e.printStackTrace();
                 getActivity().finish();
             }
-        }
     }
 
     private void setupMediaFile(String fileName) throws Exception{
-        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName);
+        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName,Utility.getUserID(getActivity()));
         File file = new File(getActivity().getFilesDir(), fileName);
         FileInputStream is = new FileInputStream(file);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -169,7 +161,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
 
     @Override
     public void playVideo(String fileName) {
-        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName);
+        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName,Utility.getUserID(getActivity()));
         VideoActivity.showRemoteVideo(getActivity(),fileName);
     }
 
@@ -217,5 +209,26 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
         LibarayFragment libarayFragment = new LibarayFragment();
         ft.replace(R.id.detailFragment, libarayFragment);
         ft.commit();
+    }
+
+    @Override
+    public void hideStopButton() {
+        stopButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayStopButton() {
+        stopButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void stopPlayer() {
+        releaseMediaPlayer();
+    }
+
+    @Override
+    public String babyName() {
+        LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(getActivity());
+        return localLoadSaveHelper.getBabyName();
     }
 }

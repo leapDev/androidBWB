@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/notificationFragmentPromptTextView"
         android:layout_centerInParent="true"
-        android:text="fdsf"
+        android:text="No Prompts"
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
@@ -41,6 +41,21 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/library_playaudio"/>
 
+    <Button
+        android:id="@+id/notificationFragmentStopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:background="@drawable/rectangle_1_3x"
+        android:text="@string/stop"
+        android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"/>
+
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,20 +66,6 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/home_library"/>
 
-
-    <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/notificationFragmentPauseTextView"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_marginLeft="30dp"-->
-        <!--android:layout_marginStart="30dp"-->
-        <!--android:layout_marginTop="25dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:text="Pause"-->
-        <!--android:textColor="@android:color/black"-->
-        <!--android:textSize="30sp"/>-->
 
 
     <ImageView
@@ -89,7 +90,6 @@
         android:layout_marginBottom="100dp"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"/>
-
 
 
     <Button

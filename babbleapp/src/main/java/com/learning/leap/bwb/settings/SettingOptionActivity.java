@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.learning.leap.bwb.baseActivity.DetailActivity;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
 public class SettingOptionActivity extends AppCompatActivity {
@@ -24,15 +25,11 @@ public class SettingOptionActivity extends AppCompatActivity {
         ImageView homeImageView = (ImageView)findViewById(R.id.settingsFragmentHomeImageView);
         ImageView playToday = (ImageView)findViewById(R.id.settingsFragmentPlayTodayImageView);
         ImageView libraryImageView = (ImageView)findViewById(R.id.settingsFragmentLibararyImageView);
-
+        Utility.addCustomEvent(Constant.VIEWED_SETTINGS,Utility.getUserID(this));
         profileSettings.setOnClickListener(view -> userSettingsIntent());
-
         tipSettings.setOnClickListener(view -> tipsIntent());
-
         libraryImageView.setOnClickListener(view -> libraryIntent());
-
         playToday.setOnClickListener(view -> playTodayIntent());
-
         homeImageView.setOnClickListener(view -> homeIntent());
 
     }

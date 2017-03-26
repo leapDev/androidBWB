@@ -1,11 +1,14 @@
 package com.learning.leap.bwb.userInfo;
 
-import android.content.Context;
+
 import android.util.Log;
 
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.crashlytics.android.Crashlytics;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
+import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.models.Notification;
@@ -13,61 +16,47 @@ import com.learning.leap.bwb.models.Notification;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
-
-public class UserInfoPresenter implements UserInfoPresenterInterface {
+public class UserInfoPresenter{
    private UserInfoViewInterface userInfoViewInterface;
     private boolean newUser;
-    private Context context;
    private BabblePlayer babblePlayer;
-    private Subscription savePlayerSubscrtion;
-    private Subscription retriveNotificationsSubscrtion;
-    List<Notification> retrivenotifications;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    private NetworkCheckerInterface networkCheckerInterface;
+    private LocalLoadSaveHelper saveHelper;
+    private Realm realm;
+    private DynamoDBMapper mapper;
 
-
-    public UserInfoPresenter(Context context, Boolean newUser, UserInfoViewInterface userInfoViewInterface){
+    public UserInfoPresenter(Boolean newUser, UserInfoViewInterface userInfoViewInterface, LocalLoadSaveHelper saveHelper, NetworkCheckerInterface networkCheckerInterface, Realm realm, DynamoDBMapper mapper){
         this.newUser = newUser;
-        this.context = context;
         this.userInfoViewInterface = userInfoViewInterface;
+        this.networkCheckerInterface = networkCheckerInterface;
+        this.saveHelper = saveHelper;
+        this.realm = realm;
+        this.mapper = mapper;
     }
-    @Override
-    public void onCreate() {
 
-    }
 
-    @Override
     public void onDestory() {
-        if (savePlayerSubscrtion != null && !savePlayerSubscrtion.isUnsubscribed()){
-            savePlayerSubscrtion.unsubscribe();
-        }
-        if (retriveNotificationsSubscrtion != null && !retriveNotificationsSubscrtion.isUnsubscribed()){
-            retriveNotificationsSubscrtion.unsubscribe();
-        }
-    }
-
-    @Override
-    public void onResume() {
+        disposables.clear();
 
     }
 
-
-    @Override
-    public void updatePlayer() {
-        savePlayerSubscrtion = babblePlayer.savePlayerObservable(context)
-                .subscribe(s-> Log.d("did", "updatePlayer: "),
-                        s ->  userInfoViewInterface.displayErrorDialog(R.string.BabbleError, R.string.userSave),
-                        () -> updatePlayerOnCompleted());
+    private void updatePlayer() {
+         disposables.add(babblePlayer.savePlayerObservable(mapper,networkCheckerInterface,saveHelper).subscribe(c -> updatePlayerOnCompleted(),
+                 throwable -> userInfoViewInterface.displayErrorDialog(R.string.BabbleError, R.string.userSave)));
     }
 
     private void updatePlayerOnCompleted(){
-        if (Utility.isNetworkAvailable(context)) {
+        if (networkCheckerInterface.isConnected()) {
             if (newUser) {
                 retriveNotificationsFromAmazon();
             } else {
@@ -79,16 +68,14 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
     }
 
 
-    @Override
-    public void retriveNotificationsFromAmazon() {
-
-        retriveNotificationsSubscrtion = Observable.fromCallable(() ->babblePlayer.retriveNotifications(context,babblePlayer.getuserAgeInMonth()))
-                .doOnSubscribe(() -> userInfoViewInterface.displaySaveDialog())
+    private void retriveNotificationsFromAmazon() {
+        Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(),mapper)
+                .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> updateViewAfterRetrivingNotificationList(s),
-                           s -> updateViewAfterError(),
-                          () -> saveNotifications(retrivenotifications));
+                .subscribe(this::updateViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());
+        disposables.add(notificationDisposable);
+
     }
 
     private void updateViewAfterError(){
@@ -98,20 +85,18 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
 
     private void updateViewAfterRetrivingNotificationList(List<Notification>notifications){
         userInfoViewInterface.dismissSaveDialog();
-        if (notifications.size() == 0){
+        if (notifications == null || notifications.size() == 0){
             userInfoViewInterface.displayErrorDialog(R.string.BabbleError,R.string.noPromptsForUser);
         }else {
-            retrivenotifications = notifications;
+            saveNotifications(notifications);
         }
     }
 
-    @Override
-    public void saveNotifications(List<Notification> notifications) {
+    private void saveNotifications(List<Notification> notifications) {
         for (int i = 0; i< notifications.size(); i++){
             notifications.get(i).setId(i);
         }
-        Realm realm = Realm.getDefaultInstance();
-        Utility.writeIntSharedPreferences("notficationListSize",notifications.size(),context);
+        saveHelper.saveNotificationSize(notifications.size());
         realm.beginTransaction();
         realm.where(Notification.class).findAll().deleteAllFromRealm();
         realm.copyToRealm(notifications);
@@ -120,19 +105,18 @@ public class UserInfoPresenter implements UserInfoPresenterInterface {
         userInfoViewInterface.downloadIntent();
     }
 
-    @Override
+
     public void createBabblePlayer(BabblePlayer babblePlayer) {
         this.babblePlayer = babblePlayer;
     }
 
-    @Override
     public void loadPlayerFromSharedPref() {
         BabblePlayer localBabblePlayer = new BabblePlayer();
-       babblePlayer = localBabblePlayer.loadBabblePlayerFronSharedPref(context);
+       babblePlayer = localBabblePlayer.loadBabblePlayerFronSharedPref(saveHelper);
         userInfoViewInterface.displayUserInfo(babblePlayer);
     }
 
-    @Override
+
     public void checkUserInput() {
         babblePlayer.setuserAgeInMonth();
         if (babblePlayer.checkIfPlayerIsValid()){

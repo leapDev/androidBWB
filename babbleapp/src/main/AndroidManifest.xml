@@ -27,9 +27,6 @@
         <receiver android:name="com.learning.leap.bwb.tipReminder.VoteNotificationBroadcastReciever" />
 
 
-        <receiver android:name="com.learning.leap.bwb.tipReminder.SetNotficationsBroadcastReciver"
-                  android:exported="false"/>
-
         <receiver android:name="com.learning.leap.bwb.utility.ResetAlarmClockBrodcastReceiver"
                   android:enabled="false">
             <intent-filter>

@@ -8,9 +8,6 @@ import com.evernote.android.job.JobRequest;
 
 import java.util.Calendar;
 
-/**
- * Created by ryangunn on 12/28/16.
- */
 
 public class PlayTodayJob extends Job {
 

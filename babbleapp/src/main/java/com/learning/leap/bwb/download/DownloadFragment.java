@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.helper.ScheduleBucket;
+import com.learning.leap.bwb.utility.Constant;
+import com.learning.leap.bwb.utility.Utility;
 
 
 public class DownloadFragment extends Fragment implements DownloadViewInterface {
@@ -87,6 +90,13 @@ public class DownloadFragment extends Fragment implements DownloadViewInterface 
 
     @Override
     public void downloadCompleted() {
+        Utility.writeIntSharedPreferences(Constant.START_TIME,8,getActivity());
+        Utility.writeIntSharedPreferences(Constant.END_TIME,16,getActivity());
+        Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD,true,getActivity());
+        Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,getActivity());
+        Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,getActivity());
+        ScheduleBucket scheduleBucket = new ScheduleBucket(getActivity());
+        scheduleBucket.diviedTheBucketIntoThree();
         Intent homeIntent = new Intent(getActivity(),HomeActivity.class);
         startActivity(homeIntent);
     }

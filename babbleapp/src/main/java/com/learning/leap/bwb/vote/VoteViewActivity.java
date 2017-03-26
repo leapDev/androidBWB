@@ -6,10 +6,12 @@ import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.learning.leap.bwb.baseActivity.HomeActivity;
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.library.VideoActivity;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Constant;
@@ -26,6 +28,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     ImageView mVoteThumbDownImageView;
     TextView mVotePromptTextView;
     MediaPlayer mediaPlayer;
+    Button stopButton;
     Boolean isPlaying = false;
 
     @Override
@@ -39,12 +42,9 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         votePresenter = new VotePresenter(numberOfTips,bucketNumber,this);
         votePresenter.onCreate();
         setOnClickLisnter();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                releaseMediaPlayer();
-                isPlaying = false;
-            }
+        mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
+            releaseMediaPlayer();
+            isPlaying = false;
         });
 
     }
@@ -55,13 +55,21 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         mVoteThumbUpImageView = (ImageView)findViewById(R.id.voteFragmentThumbsUpImageView);
         mVoteThumbDownImageView = (ImageView)findViewById(R.id.voteFragmentThumbsDownImageView);
         mVotePromptTextView = (TextView)findViewById(R.id.voteFragmentPromptTextView);
+        stopButton = (Button)findViewById(R.id.voteFragmentStopButton);
     }
 
     private void setOnClickLisnter(){
         mPlaySoundImageView.setOnClickListener(view -> votePresenter.onPlayAudioPress());
         mPlayVideoImageView.setOnClickListener(view -> votePresenter.onPlayVideoPress());
-        mVoteThumbDownImageView.setOnClickListener(view -> votePresenter.thumbDownButtonTapped());
-        mVoteThumbUpImageView.setOnClickListener(view -> votePresenter.thumbUpButtonTapped());
+        mVoteThumbDownImageView.setOnClickListener(view ->{
+            Utility.addCustomEvent(Constant.THUMBS_DOWN,Utility.getUserID(this));
+            votePresenter.thumbDownButtonTapped();
+        });
+        mVoteThumbUpImageView.setOnClickListener(view -> {
+            Utility.addCustomEvent(Constant.THUMBS_UP,Utility.getUserID(this));
+            votePresenter.thumbUpButtonTapped();
+        });
+        stopButton.setOnClickListener(view -> votePresenter.onStopButtonPress());
     }
 
     public void onPrepared(MediaPlayer player) {
@@ -87,25 +95,22 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
 
     @Override
     public void displayPrompt(String prompt) {
+        Utility.addCustomEventWithNotification(Constant.VIEWED_NOTIFICATIONS,prompt,Utility.getUserID(this));
         mVotePromptTextView.setText(prompt);
     }
 
     @Override
     public void playSound(String fileName) {
-        if (isPlaying){
-            releaseMediaPlayer();
-        }else {
             try {
                 setupMediaFile(fileName);
             } catch (Exception e) {
                 e.printStackTrace();
                 this.finish();
             }
-        }
     }
 
     private void setupMediaFile(String fileName) throws Exception{
-        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName);
+        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName,Utility.getUserID(this));
         File file = new File(this.getFilesDir(), fileName);
         FileInputStream is = new FileInputStream(file);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -116,7 +121,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     }
     @Override
     public void playVideo(String fileName) {
-        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName);
+        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName,Utility.getUserID(this));
         VideoActivity.showRemoteVideo(this,fileName);
     }
 
@@ -138,5 +143,26 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     @Override
     public void hideVideoButton() {
         mPlayVideoImageView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideStopButton() {
+        stopButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayStopButton() {
+        stopButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void stopPlayer() {
+        releaseMediaPlayer();
+    }
+
+    @Override
+    public String babyName() {
+        LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
+        return localLoadSaveHelper.getBabyName();
     }
 }
