@@ -10,5 +10,6 @@ public interface UserInfoViewInterface{
     void displayUserInfo(BabblePlayer babblePlayer);
     void displaySaveDialog();
     void dismissSaveDialog();
+    String getGender();
 
 }

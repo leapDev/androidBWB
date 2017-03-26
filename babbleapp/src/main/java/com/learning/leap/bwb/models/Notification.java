@@ -1,15 +1,20 @@
 package com.learning.leap.bwb.models;
 
+import android.util.Log;
+
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
-import rx.Observable;
+import io.realm.internal.Context;
 
 @DynamoDBTable(tableName = "Notifications")
 public class Notification extends RealmObject {
@@ -145,13 +150,22 @@ public class Notification extends RealmObject {
         return  (fileName.equals("no file"));
     }
 
+    public String updateMessage(String babyName) {
+        if (mMessage.toLowerCase().contains("your baby")) {
+           return mMessage.replaceAll("your baby",babyName);
+        }else if (mMessage.toLowerCase().contains("your child")){
+          return mMessage.replaceAll("your child",babyName);
+        } else {
+            return mMessage;
+        }
+    }
+
     public Observable<RealmResults<Notification>> getNotificationFromRealm(Realm realm){
-        return realm.where(Notification.class).findAll().asObservable();
+        return Observable.fromCallable(() -> realm.where(Notification.class).findAll());
     }
 
     public Observable<RealmResults<Notification>> getPlayTodayFromRealm(Realm realm){
-        return realm.where(Notification.class).equalTo("mPlayToday",true).findAll().asObservable();
-
+        return Observable.fromCallable(() -> realm.where(Notification.class).equalTo("mPlayToday",true).findAll());
     }
 
 }

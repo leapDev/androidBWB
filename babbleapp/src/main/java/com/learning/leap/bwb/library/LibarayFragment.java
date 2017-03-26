@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.notification.NotificaitonPresenter;
@@ -35,13 +36,14 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
     ImageView mAudioButton;
     ImageView mVideoButton;
     ImageView mHomeImageView;
+    Button stopButton;
     Button mFavoriteButton;
     ImageView mSettingButton;
     ImageView mPlayToday;
     MediaPlayer mediaPlayer;
     Boolean isPlaying = false;
     Boolean mFavoirte;
-    TextView pauseTextView;
+
 
     @Nullable
     @Override
@@ -62,22 +64,17 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
         mHomeImageView = (ImageView)view.findViewById(R.id.notificationFragmentHomeImageView);
         mHomeImageView.setOnClickListener(homeButton -> notificationPresenter.onHomeButtonPressed());
         mNextImageView.setOnClickListener(nextImageClick -> notificationPresenter.onNextPress());
-
         mPreviousImageView.setOnClickListener(previousButton -> notificationPresenter.onBackPress());
-
         mAudioButton.setOnClickListener(audioButton -> notificationPresenter.onPlayAudioPress());
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                releaseMediaPlayer();
-                isPlaying = false;
-            }
+        mediaPlayer.setOnCompletionListener(mediaPlayer1 -> {
+            releaseMediaPlayer();
+            isPlaying = false;
         });
 
         mVideoButton.setOnClickListener(videoButton -> notificationPresenter.onPlayVideoPress());
         mSettingButton.setOnClickListener(settingButton -> notificationPresenter.onSettingPressed());
         mPlayToday.setOnClickListener(playTodayButton -> notificationPresenter.onPlayTodayPressed());
+        stopButton.setOnClickListener(view1 -> notificationPresenter.onStopButtonPress());
     }
 
     private void setUpBackground(View view){
@@ -95,6 +92,7 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
         mHomeImageView = (ImageView)view.findViewById(R.id.notificationFragmentHomeImageView);
         mFavoriteButton = (Button) view.findViewById(R.id.notificationFragmentFavoriteButton);
         mSettingButton = (ImageView)view.findViewById(R.id.notificationFragmentSettingsImageView);
+        stopButton = (Button)view.findViewById(R.id.notificationFragmentStopButton);
         mPlayToday = (ImageView)view.findViewById(R.id.notificationFragmentPlayTodayImageView);
     }
 
@@ -106,7 +104,6 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
         mediaPlayer.release();
         mediaPlayer = new MediaPlayer();
     }
-
 
     public void onPrepared(MediaPlayer player) {
         player.start();
@@ -127,20 +124,16 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
 
     @Override
     public void playSound(String fileName) {
-        if (isPlaying){
-            releaseMediaPlayer();
-        }else {
             try {
                 setupMediaFile(fileName);
             } catch (Exception e) {
                 e.printStackTrace();
                 getActivity().finish();
             }
-        }
     }
 
     private void setupMediaFile(String fileName) throws Exception{
-        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName);
+        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName,Utility.getUserID(getActivity()));
         File file = new File(getActivity().getFilesDir(), fileName);
         FileInputStream is = new FileInputStream(file);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -152,8 +145,13 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
 
     @Override
     public void playVideo(String fileName) {
-        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName);
+        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName,Utility.getUserID(getActivity()));
         VideoActivity.showRemoteVideo(getActivity(),fileName);
+    }
+
+    @Override
+    public void stopPlayer() {
+        releaseMediaPlayer();
     }
 
     @Override
@@ -220,5 +218,21 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
     @Override
     public void onLibraryPress() {
 
+    }
+
+    @Override
+    public void hideStopButton() {
+        stopButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayStopButton() {
+        stopButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public String babyName() {
+        LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(getActivity());
+        return localLoadSaveHelper.getBabyName();
     }
 }

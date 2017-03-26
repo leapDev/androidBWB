@@ -3,12 +3,9 @@ package com.learning.leap.bwb.notification;
 import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
 import com.learning.leap.bwb.baseInterface.ViewInterface;
 
-/**
- * Created by ryangunn on 12/16/16.
- */
 
 public class NotificaitonPresenter extends BaseNotificationPresenter implements NotificationPresenterInterface {
-    protected NotificationViewViewInterface notificationViewInterface;
+    private NotificationViewViewInterface notificationViewInterface;
 
     @Override
     public void onCreate() {
@@ -21,6 +18,8 @@ public class NotificaitonPresenter extends BaseNotificationPresenter implements 
 
         if (notifications.size() == 0){
            hideAllButtons();
+        }else {
+            displayPrompt();
         }
     }
 
@@ -66,6 +65,9 @@ public class NotificaitonPresenter extends BaseNotificationPresenter implements 
             notificationViewInterface.hideNextButton();
         }else {
             notificationViewInterface.displayNextButton();
+            if (isPlaying){
+                onStopButtonPress();
+            }
         }
     }
 

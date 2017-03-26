@@ -12,6 +12,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.learning.leap.bwb.utility.NetworkChecker;
+import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 
@@ -19,13 +21,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.exceptions.Exceptions;
-import rx.schedulers.Schedulers;
+
 
 
 @DynamoDBTable(tableName = "BabblePlayers3")
@@ -34,9 +39,15 @@ public class BabblePlayer extends RealmObject {
     private String mBabbleID;
     private String mBabyBirthday;
     private String mBabyName;
-    private int mZipCode;
+    private int mZipCode = 0;
     private int userAgeInMonth;
     private Date birthdayDate;
+    private String babyGender = "Not Now";
+
+    public BabblePlayer(){
+
+    }
+
 
     @DynamoDBHashKey(attributeName = "BabbleID")
     public String getBabbleID() {
@@ -74,6 +85,15 @@ public class BabblePlayer extends RealmObject {
         mZipCode = zipCode;
     }
 
+    @DynamoDBAttribute(attributeName = "BabyGender")
+    public String getBabyGender() {
+        return babyGender;
+    }
+
+    public void setBabyGender(String babyGender) {
+        this.babyGender = babyGender;
+    }
+
     public int getuserAgeInMonth() {
         return userAgeInMonth;
     }
@@ -86,7 +106,7 @@ public class BabblePlayer extends RealmObject {
 
     }
 
-    public Date getBirthdayDate() {
+    private Date getBirthdayDate() {
         return birthdayDate;
     }
 
@@ -94,85 +114,79 @@ public class BabblePlayer extends RealmObject {
         this.birthdayDate = birthdayDate;
     }
 
-    private void saveBabbleUser(DynamoDBMapper mapper, android.content.Context context) {
+    private void saveBabbleUser(DynamoDBMapper mapper,LocalLoadSaveHelper saveHelper) {
         mapper.save(this);
-        saveCurrentBabblePlayerSharedPreference(context);
+        saveCurrentBabblePlayerSharedPreference(saveHelper);
     }
 
-    private void saveCurrentBabblePlayerSharedPreference(android.content.Context context){
-        LocalLoadSaveHelper.saveBabyBirthDay(this.getBabyBirthday(),context);
-        LocalLoadSaveHelper.saveBabyName(this.getBabyName(),context);
-        LocalLoadSaveHelper.saveBabbleID(this.getBabbleID(),context);
-        LocalLoadSaveHelper.saveZipCode(this.getZipCode(),context);
+    private void saveCurrentBabblePlayerSharedPreference(LocalLoadSaveHelper saveHelper){
+        saveHelper.saveBabyBirthDay(this.getBabyBirthday());
+        saveHelper.saveBabyName(this.getBabyName());
+        saveHelper.saveBabbleID(this.getBabbleID());
+        saveHelper.saveZipCode(this.getZipCode());
+        saveHelper.saveBabyGender(this.getBabyGender());
 
     }
 
-    public rx.Observable<Void> savePlayerObservable(final android.content.Context context) {
-        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(Utility.getCredientail(context));
-        final DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-        return rx.Observable.create(new rx.Observable.OnSubscribe<Void>() {
-            @Override
-            public void call(Subscriber<? super Void> subscriber) {
-                try {
-                    if (Utility.isNetworkAvailable(context)) {
-                        saveBabbleUser(mapper, context);
-                        subscriber.onCompleted();
-                    }else {
-                        throw new Exception();
-                    }
-                }catch (Exception e){
-                    subscriber.onError(e);
-                }
+    public Observable<Object> savePlayerObservable(DynamoDBMapper mapper, NetworkCheckerInterface checker,LocalLoadSaveHelper saveHelper) {
 
+        return Observable.fromCallable(() -> {
+            if (checker.isConnected()) {
+                saveBabbleUser(mapper,saveHelper);
+            } else {
+                throw new Exception();
             }
+            return new Object();
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+
     }
 
-    public PaginatedScanList<Notification> retriveNotifications(Context context, int babyAge) throws Exception{
-        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(Utility.getCredientail(context));
-        DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-        scanExpression.setLimit(2000);
-        HashMap<String, AttributeValue> attributeValue = new HashMap<>();
-        String age = Integer.toString(babyAge);
-        AttributeValue falseAttributeValue = new AttributeValue();
-        falseAttributeValue.setS("false");
-        AttributeValue ageAttributeValue = new AttributeValue();
-        ageAttributeValue.setN(age);
-        attributeValue.put(":val", ageAttributeValue);
-        attributeValue.put(":val2", falseAttributeValue);
-        scanExpression.setExpressionAttributeValues(attributeValue);
-        scanExpression.setFilterExpression("StartMonthNumber<=:val AND EndMonthNumber>=:val AND Deleted=:val2");
-        return mapper.scan(Notification.class, scanExpression);
+    public Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge,DynamoDBMapper mapper){
+        return Observable.fromCallable(() -> {
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            scanExpression.setLimit(2000);
+            HashMap<String, AttributeValue> attributeValue = new HashMap<>();
+            String age = Integer.toString(babyAge);
+            AttributeValue falseAttributeValue = new AttributeValue();
+            falseAttributeValue.setS("false");
+            AttributeValue ageAttributeValue = new AttributeValue();
+            ageAttributeValue.setN(age);
+            attributeValue.put(":val", ageAttributeValue);
+            attributeValue.put(":val2", falseAttributeValue);
+            scanExpression.setExpressionAttributeValues(attributeValue);
+            scanExpression.setFilterExpression("StartMonthNumber<=:val AND EndMonthNumber>=:val AND Deleted=:val2");
+            return mapper.scan(Notification.class, scanExpression);
+        });
     }
 
     public static boolean homeScreenAgeCheck(Context context){
-        String sharedPrefBirthDay = LocalLoadSaveHelper.getBabyBirthDay(context);
-        int sharedPrefBirthDayInMonth = LocalLoadSaveHelper.getUserBirthdayInMonth(context);
-        BabblePlayer updatedBabblePlayer = new BabblePlayer();
-        updatedBabblePlayer.setBabyBirthday(sharedPrefBirthDay);
-        updatedBabblePlayer.setuserAgeInMonth();
-        if (checkIfAgeIsInRange(0,2,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(3)){
-            return true;
-        }else if (checkIfAgeIsInRange(3,5,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(6)){
-            return true;
-        }else if (checkIfAgeIsInRange(6,8,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(9)){
-            return true;
-        }else if (checkIfAgeIsInRange(9,11,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(12)){
-            return true;
-        }else if (checkIfAgeIsInRange(12,17,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(18)){
-            return true;
-        }else if (checkIfAgeIsInRange(18,23,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(24)){
-            return true;
-        }else if (checkIfAgeIsInRange(24,29,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(30)){
-            return true;
-        }else if (checkIfAgeIsInRange(30,35,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(36)){
-            return true;
-        }else if (checkIfAgeIsInRange(36,47,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(48)){
-            return true;
-        }else {
-            return false;
-        }
+        //String sharedPrefBirthDay = LocalLoadSaveHelper.getBabyBirthDay();
+       // int sharedPrefBirthDayInMonth = LocalLoadSaveHelper.getUserBirthdayInMonth();
+//        BabblePlayer updatedBabblePlayer = new BabblePlayer();
+//        updatedBabblePlayer.setBabyBirthday(sharedPrefBirthDay);
+//        updatedBabblePlayer.setuserAgeInMonth();
+//        if (checkIfAgeIsInRange(0,2,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(3)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(3,5,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(6)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(6,8,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(9)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(9,11,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(12)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(12,17,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(18)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(18,23,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(24)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(24,29,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(30)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(30,35,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(36)){
+//            return true;
+//        }else if (checkIfAgeIsInRange(36,47,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(48)){
+//            return true;
+//        }else {
+//            return false;
+//        }
+        return false;
     }
 
     private static Boolean checkIfAgeIsInRange(int startMonth,int endMonth, int age){
@@ -184,27 +198,21 @@ public class BabblePlayer extends RealmObject {
     }
 
 
-    public float daysBetween(Date birthday){
+    private float daysBetween(Date birthday){
         Date date = new Date();
         return (float)( (date.getTime() - birthday.getTime()) / (1000 * 60 * 60 * 24));
     }
 
-    public BabblePlayer loadBabblePlayerFronSharedPref(android.content.Context context){
+    public BabblePlayer loadBabblePlayerFronSharedPref(LocalLoadSaveHelper saveHelper){
         BabblePlayer babblePlayer = new BabblePlayer();
-        babblePlayer.setBabyBirthday(LocalLoadSaveHelper.getBabyBirthDay(context));
-        babblePlayer.setBabyName(LocalLoadSaveHelper.getBabyName(context));
-        babblePlayer.setZipCode(LocalLoadSaveHelper.getZipCode(context));
+        babblePlayer.setBabyBirthday(saveHelper.getBabyBirthDay());
+        babblePlayer.setBabyName(saveHelper.getBabyName());
+        babblePlayer.setZipCode(saveHelper.getZipCode());
+        babblePlayer.setBabyGender(saveHelper.getBabyGender());
         return babblePlayer;
     }
 
 
-
-    public BabblePlayer loadPlayerFromMapper(Context context) {
-        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(Utility.getCredientail(context));
-         DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
-        String userID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        return mapper.load(BabblePlayer.class,userID);
-    }
 
     public boolean checkDate(){
         String pattern = "MM/dd/yyyy";
@@ -212,7 +220,7 @@ public class BabblePlayer extends RealmObject {
         format.setLenient(false);
         try {
             this.setBirthdayDate(format.parse(this.getBabyBirthday()));
-        }catch (ParseException e) {
+        }catch (Exception e) {
             return false;
         }
         return true;
@@ -228,7 +236,7 @@ public class BabblePlayer extends RealmObject {
 
     }
 
-    public boolean checkName() {
+    private boolean checkName() {
         return !checkNameIsEmpty() && !checkNameIsTooLong();
     }
 

@@ -12,14 +12,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ryangunn on 12/18/16.
- */
-
 public class AWSDownload {
    private ArrayList<String> filesToDownloads = new ArrayList<>();
    private static final String BUCKET_NAME = "leapbtob";
-    DownloadPresneterInterface downloadPresneterInterface;
+    private DownloadPresneterInterface downloadPresneterInterface;
     private TransferUtility mTransferUtility;
    private Context context;
     private int totalCount = 0;

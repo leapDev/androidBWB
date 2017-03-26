@@ -1,92 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/tip_bg"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/tip_bg" />
 
 
     </FrameLayout>
 
     <TextView
+        android:id="@+id/voteFragmentPromptTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/voteFragmentPromptTextView"
         android:layout_centerInParent="true"
-        android:text="Loading. . ."
-        android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
+        android:text="Loading. . ."
         android:textColor="@android:color/black"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
     <ImageView
+        android:id="@+id/voteFragmentPlayAudioImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/voteFragmentPlayAudioImageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="30dp"
         android:layout_marginStart="30dp"
-        android:src="@drawable/tip_playaudio"/>
+        android:src="@drawable/tip_playaudio" />
 
-    <ImageView
+    <Button
+        android:id="@+id/voteFragmentStopButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/voteFragmentPlayVideoImageView"
-        android:layout_alignParentRight= "true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginEnd="30dp"
-        android:src="@drawable/tip_playvideo"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/tip_thumbsup"
-        android:id="@+id/voteFragmentThumbsUpImageView"
+        android:layout_height="70dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rectangle_3_3x"
+        android:text="@string/stop"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/voteFragmentPlayVideoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/tip_playvideo" />
+
+    <ImageView
+        android:id="@+id/voteFragmentThumbsUpImageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@id/voteFragmentPromptTextView"
         android:layout_marginBottom="100dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="50dp"
-        android:layout_marginStart="20dp"/>
+        android:src="@drawable/tip_thumbsup" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/didYouLikeThis"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="120dp"
-        android:textSize="22sp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@id/voteFragmentThumbsUpImageView"
+        android:layout_toLeftOf="@+id/voteFragmentThumbsDownImageView"
         android:layout_toRightOf="@id/voteFragmentThumbsUpImageView"
+        android:layout_toStartOf="@+id/voteFragmentThumbsDownImageView"
+        android:gravity="center"
+        android:text="@string/didYouLikeThis"
         android:textColor="@android:color/black"
-        android:layout_marginLeft="10dp" />
+        android:textSize="20sp" />
 
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/tip_thumbsdown"
         android:id="@+id/voteFragmentThumbsDownImageView"
-        android:layout_below="@+id/voteFragmentPromptTextView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/voteFragmentThumbsUpImageView"
         android:layout_alignLeft="@+id/voteFragmentPlayVideoImageView"
         android:layout_alignStart="@+id/voteFragmentPlayVideoImageView"
+        android:layout_below="@+id/voteFragmentPromptTextView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="60dp"
-        android:layout_alignBottom="@+id/voteFragmentThumbsUpImageView" />
+        android:src="@drawable/tip_thumbsdown" />
 
 
 </RelativeLayout>

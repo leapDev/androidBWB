@@ -15,6 +15,7 @@ import com.learning.leap.bwb.baseActivity.DetailActivity;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.tipSettings.TipSettingsPresenters;
 import com.learning.leap.bwb.tipSettings.TipSettingsViewInterface;
+import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
 public class TipSettingsActivity extends AppCompatActivity implements TipSettingsViewInterface {
@@ -30,6 +31,7 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
     Button saveButton;
     Switch sendTipsTodaySwitch;
     TipSettingsPresenters tipSettingsPresenters;
+
 
 
     @Override
@@ -182,13 +184,18 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
     }
 
     @Override
-    public void saveCompleted() {
+    public void saveCompleted(boolean turnOffTips) {
+        if (turnOffTips){
+            Utility.addCustomEvent(Constant.TURNED_OFF_NOTIFICATIONS_FOR_DAY,Utility.getUserID(this));
+        }
+        Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS,Utility.getUserID(this));
         this.finish();
     }
 
     @Override
     public void onHomePress() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(homeIntent);
     }
 

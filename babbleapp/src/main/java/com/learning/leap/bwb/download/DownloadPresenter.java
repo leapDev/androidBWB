@@ -11,8 +11,9 @@ import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.models.AWSDownload;
 import com.learning.leap.bwb.models.Notification;
 
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
-import rx.Subscription;
+
 
 
 
@@ -22,7 +23,7 @@ public class DownloadPresenter implements DownloadPresneterInterface {
    private Context context;
    private AWSDownload awsDownload;
     private int filesDownloadAtPaused = 0;
-  private Subscription realmNotificationSubscription;
+  private Disposable realmNotificationSubscription;
 
     public DownloadPresenter(Context context, DownloadViewInterface downloadViewInterface){
         this.context = context;
@@ -36,13 +37,6 @@ public class DownloadPresenter implements DownloadPresneterInterface {
 
     @Override
     public void downloadCompleted() {
-        Utility.writeIntSharedPreferences(Constant.START_TIME,8,context);
-        Utility.writeIntSharedPreferences(Constant.END_TIME,16,context);
-        Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD,true,context);
-        Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,context);
-        Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,context);
-        ScheduleBucket scheduleBucket = new ScheduleBucket(context);
-        scheduleBucket.diviedTheBucketIntoThree();
         downloadViewInterface.downloadCompleted();
     }
 
@@ -57,15 +51,14 @@ public class DownloadPresenter implements DownloadPresneterInterface {
         TransferUtility transferUtility = new TransferUtility(mAmazonS3, context.getApplicationContext());
         awsDownload = new AWSDownload(context,transferUtility,this);
         realmNotificationSubscription = new Notification().getNotificationFromRealm(Realm.getDefaultInstance())
-                                        .doOnNext(notifications -> awsDownload.addNotificationsFilesToList(notifications))
-                                        .doOnError(throwable -> downloadViewInterface.displayErrorMessage())
-                                        .subscribe();
+                                        .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
+                                                   throwable -> downloadViewInterface.displayErrorMessage());
     }
 
     @Override
     public void onDestory() {
-        if (realmNotificationSubscription != null && !realmNotificationSubscription.isUnsubscribed()){
-            realmNotificationSubscription.unsubscribe();
+        if (realmNotificationSubscription != null && !realmNotificationSubscription.isDisposed()){
+            realmNotificationSubscription.dispose();
         }
     }
 

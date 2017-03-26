@@ -27,7 +27,8 @@ public class VoteNotificationBroadcastReciever extends BroadcastReceiver {
         voteIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent notificationPendingIntent = PendingIntent.getActivity(context,100,voteIntent,PendingIntent.FLAG_CANCEL_CURRENT);
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        String babyName = LocalLoadSaveHelper.getBabyName(context);
+        LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
+        String babyName = saveHelper.getBabyName();
         Resources res =context.getResources();
         String text = String.format(res.getString(R.string.notification_message), babyName);
         Notification notification = getNotification(text,notificationPendingIntent,context);

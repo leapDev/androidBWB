@@ -31,7 +31,7 @@ public class SplashActivity extends AppCompatActivity {
     private void userInfoIntent(){
         Intent userInfoIntent = new Intent(SplashActivity.this,UserInfoActivity.class);
         userInfoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        userInfoIntent.putExtra("newUser",true);
+        userInfoIntent.putExtra(Constant.NEW_USER,true);
         startActivity(userInfoIntent);
     }
 

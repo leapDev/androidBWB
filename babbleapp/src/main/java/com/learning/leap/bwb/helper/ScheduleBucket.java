@@ -9,6 +9,9 @@ import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.models.Notification;
 import com.learning.leap.bwb.tipReminder.TipReminder;
 
+import org.reactivestreams.Subscriber;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,10 +19,11 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Action;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Observable;
-import rx.Subscriber;
+
 
 
 public class ScheduleBucket {
@@ -40,27 +44,17 @@ public class ScheduleBucket {
         int indexForUserEndTime = Utility.readIntSharedPreferences(Constant.END_TIME,context);
         String[]  userStartTime = Arrays.copyOfRange(allStartTime,indexForUserStartTime,allStartTime.length);
         String[] userEndTime = Arrays.copyOfRange(allEndTime,0,indexForUserEndTime);
-        Observable<String> userStartTimeObservable = Observable.from(userStartTime);
-        Observable<String>userEndTimeObservable = Observable.from(userEndTime);
+        Observable<String> userStartTimeObservable = Observable.fromArray(userStartTime);
+        Observable<String>userEndTimeObservable = Observable.fromArray(userEndTime);
         ArrayList<String> userTimeWithOutDuplicateds = new ArrayList<>();
-        Observable.concat(userStartTimeObservable,userEndTimeObservable).distinct().subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-                removePlayToday();
-                getNumberOfTipsPerNotification();
-                getThreeBuckets(userTimeWithOutDuplicateds.toArray(new String[userTimeWithOutDuplicateds.size()]));
-            }
+        Observable.concat(userStartTimeObservable,userEndTimeObservable).distinct()
+                .subscribe(userTimeWithOutDuplicateds::add,
+                        Throwable::printStackTrace, () -> {
+                            removePlayToday();
+                            getNumberOfTipsPerNotification();
+                            getThreeBuckets(userTimeWithOutDuplicateds.toArray(new String[userTimeWithOutDuplicateds.size()]));
+                        });
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onNext(String s) {
-                userTimeWithOutDuplicateds.add(s);
-            }
-        });
 
     }
 
@@ -140,7 +134,6 @@ public class ScheduleBucket {
             return  date;
 
         }catch (ParseException ex){
-            Log.d("did", "startBucket: " +ex);
             return null;
         }
     }

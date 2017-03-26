@@ -31,15 +31,13 @@ public class VotePresenter extends BaseNotificationPresenter {
         return index == numberOfTips - 1;
     }
 
-    protected void thumbUpButtonTapped(){
+    void thumbUpButtonTapped(){
        updateRandomNotification(true);
-        Utility.addCustomEventWithNotification(Constant.THUMBS_UP,notifications.get(index).getSoundFileName());
         checkForHomeIntent();
     }
 
-    protected void thumbDownButtonTapped(){
+    void thumbDownButtonTapped(){
         updateRandomNotification(false);
-        Utility.addCustomEventWithNotification(Constant.THUMBS_DOWN,notifications.get(index).getSoundFileName());
         checkForHomeIntent();
     }
 

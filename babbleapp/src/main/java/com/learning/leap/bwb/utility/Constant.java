@@ -29,17 +29,16 @@ public class Constant {
     public static final String VIEWED_BY_SETTINGS = "ViewedBySettings";
     public static final String NOT_NOW_CLICKED = "NotNowClicked";
     public static final String OK_CLICKED = "OKClicked";
-    public static final String APP_LOADED_RECEIVED_NOTIFICATION= "App Loaded Received Notification";
-    public static final String APP_WAS_NOT_LOADED_FINDING_LAST_SCHEDULE_NOTIFICATION = "App Was Not Loaded Finding Last Scheduled Notification";
-    public static final String VIEWED_FOR_PROFESSIONALS = "Viewed For Professionals";
     public static final String THUMBS_UP = "ThumbsUp";
     public static final String THUMBS_DOWN = "ThumbsDown";
     public static final String NUM_OF_TIPS = "NumberOfTips";
     public static final String NUM_OF_TIPS_INDEX = "NumberOfTipsIndex";
-    public static final String NOTIFICATION_IN_TRAY = "NOTIFICATION_IN_TRAY";
-    public static final String NOT_SURE = "NOTSURE";
     public static final String UPDATE = "UPDATE";
     public static final String BWB = "Beginning With Babble";
     public static final String USER_BDAY_IN_MONTH = "USER_BDAY_IN_MONTH";
-
+    public static final String GENDER = "GENDER";
+    public static final String NEW_USER = "newUser";
+    public static final String TIP_SCHEUDLED_TIME = "TIP_SCHUEDLED_TIME";
+    public static final String NOTIFICATION_SIZE = "notficationListSize";
+    public static final String TIP_ID = "TIP_ID";
 }

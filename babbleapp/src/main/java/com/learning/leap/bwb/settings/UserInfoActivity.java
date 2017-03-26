@@ -7,17 +7,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.userInfo.UserInfoPresenter;
 import com.learning.leap.bwb.userInfo.UserInfoViewInterface;
+import com.learning.leap.bwb.utility.Constant;
+import com.learning.leap.bwb.utility.NetworkChecker;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.models.Notification;
 
 import java.util.List;
+
+import io.realm.Realm;
 
 public class UserInfoActivity extends AppCompatActivity implements UserInfoViewInterface {
     EditText birthDayEditText;
@@ -27,8 +35,13 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
     TextView pleaseTapHereTextView;
     Boolean newUser;
     ProgressDialog mDialog;
-    List<Notification> awsNotifications;
     UserInfoPresenter userInfoPresenter;
+    RadioButton maleRadioButton;
+    RadioButton femaleRadioButton;
+    RadioButton notNowRadioButton;
+    String gender;
+    NetworkChecker checker;
+    LocalLoadSaveHelper saveHelper;
 
 
     @Override
@@ -36,8 +49,12 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_user_profile);
         setUpViews();
-        newUser = getIntent().getBooleanExtra("newUser",false);
-        userInfoPresenter = new UserInfoPresenter(this,newUser,this);
+        newUser = getIntent().getBooleanExtra(Constant.NEW_USER,false);
+         saveHelper = new LocalLoadSaveHelper(this);
+         checker = new NetworkChecker(this);
+        AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
+        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
+        userInfoPresenter = new UserInfoPresenter(newUser,this,saveHelper,checker,Realm.getDefaultInstance(),mapper);
         if (!newUser){
            userInfoPresenter.loadPlayerFromSharedPref();
         }
@@ -49,6 +66,9 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
         firstNameEditText = (EditText) findViewById(R.id.userProfileFragmentFirstNameEditText);
         saveButton = (Button)findViewById(R.id.userProfileFragmentSaveButton);
         pleaseTapHereTextView = (TextView)findViewById(R.id.pleaseTapHereTextView);
+        maleRadioButton = (RadioButton)findViewById(R.id.maleRadioButton);
+        femaleRadioButton = (RadioButton)findViewById(R.id.femaleRadioButton);
+        notNowRadioButton = (RadioButton)findViewById(R.id.notNowRadioButton);
         setupOnClickListners();
     }
 
@@ -76,6 +96,16 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
 
     }
 
+    private void setGender(){
+        if (maleRadioButton.isChecked()){
+            gender ="Male";
+        }else if (femaleRadioButton.isChecked()){
+            gender = "Female";
+        }else {
+            gender = "Not Now";
+        }
+    }
+
 
     private BabblePlayer createBabblePlayer(){
         BabblePlayer babblePlayer = new BabblePlayer();
@@ -83,6 +113,8 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
         babblePlayer.setZipCode(setZipCode());
         babblePlayer.setBabyBirthday(birthDayEditText.getText().toString().trim());
         babblePlayer.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+        setGender();
+        babblePlayer.setBabyGender(gender);
         return babblePlayer;
     }
 
@@ -102,6 +134,7 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
 
     @Override
     public void dismissActivity() {
+        Utility.addCustomEvent(Constant.CHANGE_PROFILE_SETTINGS,Utility.getUserID(this));
         UserInfoActivity.this.finish();
     }
 
@@ -116,11 +149,28 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
         birthDayEditText.setText(babblePlayer.getBabyBirthday());
         firstNameEditText.setText(babblePlayer.getBabyName());
         zipCodeEditText.setText(String.valueOf(babblePlayer.getZipCode()));
+        switch (babblePlayer.getBabyGender()) {
+            case "Male":
+                maleRadioButton.setChecked(true);
+                break;
+            case "Female":
+                femaleRadioButton.setChecked(true);
+                break;
+            default:
+                notNowRadioButton.setChecked(true);
+                break;
+        }
+    }
+
+    @Override
+    public String getGender() {
+        setGender();
+        return gender;
     }
 
     @Override
     public void displaySaveDialog() {
-        this.runOnUiThread(() -> createDialog() );
+        this.runOnUiThread(this::createDialog);
     }
 
     private void createDialog(){

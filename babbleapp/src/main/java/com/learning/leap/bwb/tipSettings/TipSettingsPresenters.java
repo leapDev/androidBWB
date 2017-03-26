@@ -14,6 +14,8 @@ public class TipSettingsPresenters {
    private Context context;
    private UserTipSettings userTipSettings;
     private TipSettingsViewInterface tipSettingsViewInterface;
+    private boolean turnOffTTips = false;
+
 
     public TipSettingsPresenters(Context context, TipSettingsViewInterface tipSettingsViewInterface){
         this.context = context;
@@ -34,10 +36,8 @@ public class TipSettingsPresenters {
         if (!userTipSettings.endTimeIsBeforeStart()){
             userTipSettings.saveIndexes();
             userTipSettings.saveTurnOnTips();
-            tipSettingsViewInterface.saveCompleted();
-            Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS);
             deleteAnserNotifications();
-            tipSettingsViewInterface.saveCompleted();
+            tipSettingsViewInterface.saveCompleted(turnOffTTips);
         }else {
             tipSettingsViewInterface.displayErrorMessage();
         }
@@ -147,6 +147,7 @@ public class TipSettingsPresenters {
     public void turnOfSwitchChangedListner(boolean turnOff){
         displaySaveButton();
         userTipSettings.setSendTipsToday(turnOff);
+        turnOffTTips = turnOff;
     }
 
     private void displayEndTime(){

@@ -46,4 +46,6 @@
     <string name="remindMeLater">Update Later</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
+    <string name="stop">STOP</string>
+    <string name="comeBackTommrow">Come back tomorrow for more ways to talk, listen and connect with your baby!</string>
 </resources>
