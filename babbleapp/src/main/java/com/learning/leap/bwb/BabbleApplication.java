@@ -1,6 +1,7 @@
 package com.learning.leap.bwb;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -12,7 +13,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 
-public class BabbleApplication extends Application {
+public class BabbleApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {

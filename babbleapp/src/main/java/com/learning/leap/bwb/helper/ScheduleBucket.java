@@ -38,12 +38,21 @@ public class ScheduleBucket {
 
 
     public void diviedTheBucketIntoThree(){
-        String[] allStartTime = context.getResources().getStringArray(R.array.start_times_settings_array);
-        String[] allEndTime = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
         int indexForUserStartTime = Utility.readIntSharedPreferences(Constant.START_TIME,context);
         int indexForUserEndTime = Utility.readIntSharedPreferences(Constant.END_TIME,context);
-        String[]  userStartTime = Arrays.copyOfRange(allStartTime,indexForUserStartTime,allStartTime.length);
-        String[] userEndTime = Arrays.copyOfRange(allEndTime,0,indexForUserEndTime);
+        setUpBucket(indexForUserStartTime,indexForUserEndTime);
+
+    }
+
+    public void scheduleForFirstTime(){
+        setUpBucket(8,16);
+    }
+
+    private void setUpBucket(int startIndex, int endIndex){
+        String[] allStartTime = context.getResources().getStringArray(R.array.start_times_settings_array);
+        String[] allEndTime = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
+        String[]  userStartTime = Arrays.copyOfRange(allStartTime, startIndex,allStartTime.length);
+        String[] userEndTime = Arrays.copyOfRange(allEndTime,0, endIndex);
         Observable<String> userStartTimeObservable = Observable.fromArray(userStartTime);
         Observable<String>userEndTimeObservable = Observable.fromArray(userEndTime);
         ArrayList<String> userTimeWithOutDuplicateds = new ArrayList<>();
@@ -54,7 +63,6 @@ public class ScheduleBucket {
                             getNumberOfTipsPerNotification();
                             getThreeBuckets(userTimeWithOutDuplicateds.toArray(new String[userTimeWithOutDuplicateds.size()]));
                         });
-
 
     }
 

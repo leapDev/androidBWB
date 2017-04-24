@@ -96,7 +96,7 @@ public class DownloadFragment extends Fragment implements DownloadViewInterface 
         Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,getActivity());
         Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,getActivity());
         ScheduleBucket scheduleBucket = new ScheduleBucket(getActivity());
-        scheduleBucket.diviedTheBucketIntoThree();
+        scheduleBucket.scheduleForFirstTime();
         Intent homeIntent = new Intent(getActivity(),HomeActivity.class);
         startActivity(homeIntent);
     }

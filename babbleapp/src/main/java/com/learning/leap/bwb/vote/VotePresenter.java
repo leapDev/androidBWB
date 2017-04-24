@@ -25,6 +25,14 @@ public class VotePresenter extends BaseNotificationPresenter {
     public void onCreate(){
         setBaseNotificationViewInterface(voteViewInterface);
         getRealmResults();
+
+
+        if (notifications.size() == 0){
+            voteViewInterface.homeIntent();
+        }else {
+            displayPrompt();
+        }
+
     }
 
     private Boolean doHomeIntent(){

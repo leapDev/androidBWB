@@ -47,7 +47,6 @@ public class Utility {
     }
     public static void writeIntSharedPreferences(String sharedPreferenceKey, int intToWrite,Context context){
         SharedPreferences mSharedPreferences;
-
         mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putInt(sharedPreferenceKey,intToWrite);
