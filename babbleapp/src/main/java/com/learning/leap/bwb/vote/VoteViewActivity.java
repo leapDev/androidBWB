@@ -62,11 +62,11 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         mPlaySoundImageView.setOnClickListener(view -> votePresenter.onPlayAudioPress());
         mPlayVideoImageView.setOnClickListener(view -> votePresenter.onPlayVideoPress());
         mVoteThumbDownImageView.setOnClickListener(view ->{
-            Utility.addCustomEvent(Constant.THUMBS_DOWN,Utility.getUserID(this));
+            Utility.addCustomEvent(Constant.THUMBS_DOWN,Utility.getUserID(this),votePresenter.getTag());
             votePresenter.thumbDownButtonTapped();
         });
         mVoteThumbUpImageView.setOnClickListener(view -> {
-            Utility.addCustomEvent(Constant.THUMBS_UP,Utility.getUserID(this));
+            Utility.addCustomEvent(Constant.THUMBS_UP,Utility.getUserID(this),votePresenter.getTag());
             votePresenter.thumbUpButtonTapped();
         });
         stopButton.setOnClickListener(view -> votePresenter.onStopButtonPress());
@@ -95,7 +95,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
 
     @Override
     public void displayPrompt(String prompt) {
-        Utility.addCustomEventWithNotification(Constant.VIEWED_NOTIFICATIONS,prompt,Utility.getUserID(this));
+        Utility.addCustomEvent(Constant.VIEWED_NOTIFICATIONS,Utility.getUserID(this),votePresenter.getTag());
         mVotePromptTextView.setText(prompt);
     }
 
@@ -110,7 +110,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     }
 
     private void setupMediaFile(String fileName) throws Exception{
-        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName,Utility.getUserID(this));
+        Utility.addCustomEvent(Constant.PLAYED_SOUND,Utility.getUserID(this),votePresenter.getTag());
         File file = new File(this.getFilesDir(), fileName);
         FileInputStream is = new FileInputStream(file);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -121,7 +121,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     }
     @Override
     public void playVideo(String fileName) {
-        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName,Utility.getUserID(this));
+        Utility.addCustomEvent(Constant.PLAYED_VIDEO,Utility.getUserID(this),votePresenter.getTag());
         VideoActivity.showRemoteVideo(this,fileName);
     }
 

@@ -41,4 +41,5 @@ public class Constant {
     public static final String TIP_SCHEUDLED_TIME = "TIP_SCHUEDLED_TIME";
     public static final String NOTIFICATION_SIZE = "notficationListSize";
     public static final String TIP_ID = "TIP_ID";
+    public static final String SAVED_BABY_AGE = "SAVED_BABY_AGE";
 }

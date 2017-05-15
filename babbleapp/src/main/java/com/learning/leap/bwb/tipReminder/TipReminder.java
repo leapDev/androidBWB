@@ -61,7 +61,7 @@ public class TipReminder {
         }
     }
 
-    private void setReminder(Date notificationDate){
+    public void setReminder(Date notificationDate){
 
         Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
         alarmIntent.putExtra("id",bucketNumber);
@@ -82,6 +82,7 @@ public class TipReminder {
 //            calendar.add(Calendar.HOUR,1);
 //            setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
 //        }
+        Utility.addCustomEvent(Constant.TIP_SCHEUDLED_TIME,Utility.getUserID(context),null);
         Answers.getInstance().logCustom(new CustomEvent(Constant.TIP_SCHEUDLED_TIME)
                              .putCustomAttribute("Time",convertDate(calendar.getTime()))
                              .putCustomAttribute("ID",Utility.getUserID(context)));

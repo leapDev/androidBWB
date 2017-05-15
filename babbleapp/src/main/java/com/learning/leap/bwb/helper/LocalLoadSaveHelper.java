@@ -54,11 +54,20 @@ public class LocalLoadSaveHelper {
         Utility.writeStringSharedPreferences(Constant.BABY_BIRTHDAY,babyBirthDay,context);
     }
 
+    public boolean checkedSaveBabyAged(){
+        return Utility.readBoolSharedPreferences(Constant.SAVED_BABY_AGE,context);
+    }
+
+    public void updatedSavedBabyAged(boolean savedBabyAged){
+        Utility.writeBoolenSharedPreferences(Constant.SAVED_BABY_AGE,savedBabyAged,context);
+    }
+
+
     public int getZipCode(){
         return Utility.readIntSharedPreferences(Constant.ZIP_CODE,context);
     }
 
-    public static void saveUserBirthDayInMonth(int month,Context context){
+    public  void saveUserBirthDayInMonth(int month){
         Utility.writeIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,month,context);
     }
 

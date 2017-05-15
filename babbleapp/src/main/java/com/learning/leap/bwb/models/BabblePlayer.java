@@ -48,7 +48,6 @@ public class BabblePlayer extends RealmObject {
 
     }
 
-
     @DynamoDBHashKey(attributeName = "BabbleID")
     public String getBabbleID() {
         return mBabbleID;
@@ -121,6 +120,7 @@ public class BabblePlayer extends RealmObject {
 
     private void saveCurrentBabblePlayerSharedPreference(LocalLoadSaveHelper saveHelper){
         saveHelper.saveBabyBirthDay(this.getBabyBirthday());
+        saveHelper.saveUserBirthDayInMonth(this.getuserAgeInMonth());
         saveHelper.saveBabyName(this.getBabyName());
         saveHelper.saveBabbleID(this.getBabbleID());
         saveHelper.saveZipCode(this.getZipCode());
@@ -159,34 +159,47 @@ public class BabblePlayer extends RealmObject {
         });
     }
 
+    public static void saveUpdatedInfo(Context context){
+        LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
+        String sharedPrefBirthDay = saveHelper.getBabyBirthDay();
+        BabblePlayer updatedBabblePlayer = new BabblePlayer();
+        updatedBabblePlayer.setBabyBirthday(sharedPrefBirthDay);
+        updatedBabblePlayer.setuserAgeInMonth();
+        saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth());
+    }
     public static boolean homeScreenAgeCheck(Context context){
-        //String sharedPrefBirthDay = LocalLoadSaveHelper.getBabyBirthDay();
-       // int sharedPrefBirthDayInMonth = LocalLoadSaveHelper.getUserBirthdayInMonth();
-//        BabblePlayer updatedBabblePlayer = new BabblePlayer();
-//        updatedBabblePlayer.setBabyBirthday(sharedPrefBirthDay);
-//        updatedBabblePlayer.setuserAgeInMonth();
-//        if (checkIfAgeIsInRange(0,2,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(3)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(3,5,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(6)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(6,8,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(9)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(9,11,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(12)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(12,17,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(18)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(18,23,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(24)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(24,29,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(30)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(30,35,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(36)){
-//            return true;
-//        }else if (checkIfAgeIsInRange(36,47,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(48)){
-//            return true;
-//        }else {
-//            return false;
-//        }
-        return false;
+        LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
+        String sharedPrefBirthDay = saveHelper.getBabyBirthDay();
+        BabblePlayer updatedBabblePlayer = new BabblePlayer();
+        updatedBabblePlayer.setBabyBirthday(sharedPrefBirthDay);
+        updatedBabblePlayer.setuserAgeInMonth();
+        if (!saveHelper.checkedSaveBabyAged()){
+            saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth());
+            saveHelper.updatedSavedBabyAged(true);
+        }
+        int sharedPrefBirthDayInMonth = saveHelper.getUserBirthdayInMonth();
+        if (checkIfAgeIsInRange(0,3,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(4)){
+            return true;
+        }else if (checkIfAgeIsInRange(4,6,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(7)){
+            return true;
+        }else if (checkIfAgeIsInRange(7,9,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(10)){
+            return true;
+        }else if (checkIfAgeIsInRange(10,12,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(13)){
+            return true;
+        }else if (checkIfAgeIsInRange(13,18,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(19)){
+            return true;
+        }else if (checkIfAgeIsInRange(19,24,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(25)){
+            return true;
+        }else if (checkIfAgeIsInRange(25,30,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(31)){
+            return true;
+        }else if (checkIfAgeIsInRange(31,36,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(37)){
+            return true;
+        }else if (checkIfAgeIsInRange(37,48,sharedPrefBirthDayInMonth) && updatedBabblePlayer.updatedAgeCheck(49)){
+            return true;
+        }else {
+            return false;
+        }
+
     }
 
     private static Boolean checkIfAgeIsInRange(int startMonth,int endMonth, int age){

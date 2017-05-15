@@ -27,25 +27,24 @@ public class DownloadFragment extends Fragment implements DownloadViewInterface 
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        downloadPresenter = new DownloadPresenter(getActivity(),this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        downloadPresenter.onResume();
+        //downloadPresenter.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        downloadPresenter.onPaused();
+       // downloadPresenter.onPaused();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-      downloadPresenter.onDestory();
+      //downloadPresenter.onDestory();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class DownloadFragment extends Fragment implements DownloadViewInterface 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         setUpProgressBar(view);
-       downloadPresenter.onCreate();
+       //downloadPresenter.onCreate();
 
     }
 
@@ -90,14 +89,9 @@ public class DownloadFragment extends Fragment implements DownloadViewInterface 
 
     @Override
     public void downloadCompleted() {
-        Utility.writeIntSharedPreferences(Constant.START_TIME,8,getActivity());
-        Utility.writeIntSharedPreferences(Constant.END_TIME,16,getActivity());
-        Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD,true,getActivity());
-        Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,getActivity());
-        Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,getActivity());
-        ScheduleBucket scheduleBucket = new ScheduleBucket(getActivity());
-        scheduleBucket.scheduleForFirstTime();
+
         Intent homeIntent = new Intent(getActivity(),HomeActivity.class);
         startActivity(homeIntent);
     }
+
 }

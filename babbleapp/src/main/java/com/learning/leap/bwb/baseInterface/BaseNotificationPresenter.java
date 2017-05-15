@@ -1,9 +1,12 @@
 package com.learning.leap.bwb.baseInterface;
 
 import com.learning.leap.bwb.models.Notification;
+import com.learning.leap.bwb.notification.NotificationPresenterInterface;
+import com.learning.leap.bwb.notification.NotificationViewViewInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -11,27 +14,24 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 
-public class BaseNotificationPresenter {
-    protected int index = 0;
-    protected int totalCount = 0;
-    private BaseNotificationViewInterface baseNotificationViewInterface;
-    protected ArrayList<Notification> notifications;
-    private final CompositeDisposable disposables = new CompositeDisposable();
-    private String babyName;
-    protected boolean isPlaying;
+public abstract class BaseNotificationPresenter implements NotificationPresenterInterface {
+    public NotificationViewViewInterface notificationViewInterface;
+    public int index = 0;
+    public int totalCount = 0;
+    public   BaseNotificationViewInterface baseNotificationViewInterface;
+    public ArrayList<Notification> notifications = new ArrayList<>();
+    public  final CompositeDisposable disposables = new CompositeDisposable();
+    public String babyName;
+    public boolean isPlaying;
 
     public void onDestory() {
         disposables.clear();
     }
 
-    protected void getRealmResults(){
-        babyName = baseNotificationViewInterface.babyName();
-        Notification notification = new Notification();
-        Disposable disposable = notification.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
-        disposables.add(disposable);
-    }
 
-    protected void updateView(){
+    public abstract void getRealmResults();
+
+    public void updateView(){
         if (isPlaying){
             onStopButtonPress();
         }
@@ -40,13 +40,14 @@ public class BaseNotificationPresenter {
         soundButtonCheck();
     }
 
-    protected void setNotifications(RealmResults<Notification> notificationRealmResults){
-        notifications = new ArrayList<>(notificationRealmResults);
+    public void setNotifications(RealmResults<Notification> notificationRealmResults){
+        notifications.addAll(notificationRealmResults);
         Collections.shuffle(notifications);
         totalCount = notifications.size();
     }
 
-    protected void soundButtonCheck(){
+
+    public void soundButtonCheck(){
         if (notificationAtIndex().noSoundFile()){
             baseNotificationViewInterface.hideSoundButton();
         }else {
@@ -54,13 +55,18 @@ public class BaseNotificationPresenter {
         }
     }
 
-    protected void videoButtonCheck(){
+    public void videoButtonCheck(){
         if (notificationAtIndex().noVideFile()){
             baseNotificationViewInterface.hideVideoButton();
         }else {
             baseNotificationViewInterface.displayVideoButton();
         }
     }
+
+    public String getTag(){
+        return notificationAtIndex().getTag();
+    }
+
 
     protected Notification notificationAtIndex(){
         return notifications.get(index);
@@ -100,5 +106,104 @@ public class BaseNotificationPresenter {
 
     protected void setBaseNotificationViewInterface(BaseNotificationViewInterface baseNotificationViewInterface) {
         this.baseNotificationViewInterface = baseNotificationViewInterface;
+    }
+
+    @Override
+    public void onCreate() {
+        setBaseNotificationViewInterface(notificationViewInterface);
+        getRealmResults();
+        notificationViewInterface.hidePreviousButton();
+        if (notifications.size() <= 1){
+            notificationViewInterface.hideNextButton();
+        }
+
+        if (notifications.size() == 0){
+            hideAllButtons();
+        }else {
+            displayPrompt();
+        }
+    }
+
+
+    @Override
+    public void onNextPress() {
+        index++;
+        nextButtonCheck();
+        previousButtonCheck();
+        displayPrompt();
+        soundButtonCheck();
+        videoButtonCheck();
+    }
+
+    @Override
+    public void onBackPress() {
+        index--;
+        previousButtonCheck();
+        nextButtonCheck();
+        displayPrompt();
+        soundButtonCheck();
+        videoButtonCheck();
+    }
+
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void attachView(ViewInterface viewInterface) {
+        notificationViewInterface = (NotificationViewViewInterface)viewInterface;
+    }
+
+
+    private Boolean indexIs0(){
+        return index == 0;
+    }
+
+    private void nextButtonCheck(){
+        if (index == totalCount -1){
+            notificationViewInterface.hideNextButton();
+        }else {
+            notificationViewInterface.displayNextButton();
+            if (isPlaying){
+                onStopButtonPress();
+            }
+        }
+    }
+
+    private void previousButtonCheck(){
+        if (indexIs0()){
+            notificationViewInterface.hidePreviousButton();
+        }else {
+            notificationViewInterface.displayPreviousButton();
+        }
+    }
+
+    private void hideAllButtons(){
+        notificationViewInterface.hideNextButton();
+        notificationViewInterface.hidePreviousButton();
+        notificationViewInterface.hideSoundButton();
+        notificationViewInterface.hideVideoButton();
+    }
+
+    @Override
+    public void onHomeButtonPressed() {
+        notificationViewInterface.onHomePress();
+    }
+
+    @Override
+    public void onLibraryPressed() {
+        notificationViewInterface.onLibraryPress();
+    }
+
+    @Override
+    public void onSettingPressed() {
+        notificationViewInterface.onSettingsPress();
+    }
+
+    @Override
+    public void onPlayTodayPressed() {
+        notificationViewInterface.onPlayToday();
     }
 }

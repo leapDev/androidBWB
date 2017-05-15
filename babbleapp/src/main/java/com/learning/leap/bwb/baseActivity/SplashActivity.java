@@ -20,24 +20,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
-        Boolean didDownload = Utility.readBoolSharedPreferences(Constant.DID_DOWNLOAD,this);
-        if (didDownload){
-          homeIntent();
-        }else {
-            userInfoIntent();
-        }
+        Utility.newUserCheck(this);
     }
 
-    private void userInfoIntent(){
-        Intent userInfoIntent = new Intent(SplashActivity.this,UserInfoActivity.class);
-        userInfoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        userInfoIntent.putExtra(Constant.NEW_USER,true);
-        startActivity(userInfoIntent);
-    }
-
-    private void homeIntent(){
-        Intent homeIntent = new Intent(this,HomeActivity.class);
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(homeIntent);
-    }
 }

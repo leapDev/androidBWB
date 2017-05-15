@@ -2,11 +2,13 @@ package com.learning.leap.bwb.vote;
 
 import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
 import com.learning.leap.bwb.helper.AnswerNotification;
+import com.learning.leap.bwb.models.Notification;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
 import java.util.Date;
 
+import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 
 
@@ -22,11 +24,18 @@ public class VotePresenter extends BaseNotificationPresenter {
         this.voteViewInterface = voteViewInterface;
     }
 
+    @Override
+    public void getRealmResults() {
+        babyName = baseNotificationViewInterface.babyName();
+        Notification notification = new Notification();
+        Disposable disposable = notification.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
+        disposables.add(disposable);
+    }
+
+    @Override
     public void onCreate(){
         setBaseNotificationViewInterface(voteViewInterface);
         getRealmResults();
-
-
         if (notifications.size() == 0){
             voteViewInterface.homeIntent();
         }else {

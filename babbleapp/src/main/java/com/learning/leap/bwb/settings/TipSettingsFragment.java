@@ -66,7 +66,7 @@ public class TipSettingsFragment extends Fragment {
                 Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS_INDEX,maxNumberOfTipIndex,getActivity());
                 Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS,userMaxTipInt,getActivity());
                deleteAnswerNotifications();
-                Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS,Utility.getUserID(getActivity()));
+                Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS,Utility.getUserID(getActivity()),null);
                 setTipRemdinder();
                 getActivity().finish();
             }
@@ -105,12 +105,9 @@ public class TipSettingsFragment extends Fragment {
             }
         });
 
-        mMinusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (maxNumberOfTipIndex != 0) {
-                    updateTextView(false);
-                }
+        mMinusButton.setOnClickListener(view1 -> {
+            if (maxNumberOfTipIndex != 0) {
+                updateTextView(false);
             }
         });
 
@@ -118,31 +115,22 @@ public class TipSettingsFragment extends Fragment {
         ImageView homeImageView = (ImageView)view.findViewById(R.id.tipSettingsFragmentHomeImageView);
         ImageView playToday = (ImageView)view.findViewById(R.id.tipSettingsFragmentPlayTodayImageView);
 
-        libraryImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent libraryIntent = new Intent(getActivity(), DetailActivity.class);
-                libraryIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.LIBRARY);
-                getActivity().startActivity(libraryIntent);
+        libraryImageView.setOnClickListener(view12 -> {
+            Intent libraryIntent = new Intent(getActivity(), DetailActivity.class);
+            libraryIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.LIBRARY);
+            getActivity().startActivity(libraryIntent);
 
-            }
         });
 
-        homeImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
-                getActivity().startActivity(homeIntent);
-            }
+        homeImageView.setOnClickListener(view13 -> {
+            Intent homeIntent = new Intent(getActivity(), HomeActivity.class);
+            getActivity().startActivity(homeIntent);
         });
 
-        playToday.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent playTodayIntent = new Intent(getActivity(), DetailActivity.class);
-                playTodayIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.PLAY_TODAY);
-                getActivity().startActivity(playTodayIntent);
-            }
+        playToday.setOnClickListener(view14 -> {
+            Intent playTodayIntent = new Intent(getActivity(), DetailActivity.class);
+            playTodayIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.PLAY_TODAY);
+            getActivity().startActivity(playTodayIntent);
         });
 
         setOnClickListnerForFirstBox();
@@ -150,46 +138,23 @@ public class TipSettingsFragment extends Fragment {
 
         Switch turnOffSwitch = (Switch)view.findViewById(R.id.tipSettingsFragmentSwitch);
         turnOffSwitch.setChecked(turnOffTips);
-        turnOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                displaySaveButton();
-                turnOffTips = b;
-            }
+        turnOffSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            displaySaveButton();
+            turnOffTips = b;
         });
 
     }
 
     private void setOnClickListnerForFirstBox(){
-        mFirstTipBoxPlusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateFirstTipBox(true);
-            }
-        });
+        mFirstTipBoxPlusButton.setOnClickListener(view -> updateFirstTipBox(true));
 
-        mFirstTipBoxMinusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateFirstTipBox(false);
-            }
-        });
+        mFirstTipBoxMinusButton.setOnClickListener(view -> updateFirstTipBox(false));
     }
 
     private void setOnClickListnerSecondBox(){
-        mSecondTipBoxMinusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateSecondTipBox(false);
-            }
-        });
+        mSecondTipBoxMinusButton.setOnClickListener(view -> updateSecondTipBox(false));
 
-        mSecondTipBoxPlusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateSecondTipBox(true);
-            }
-        });
+        mSecondTipBoxPlusButton.setOnClickListener(view -> updateSecondTipBox(true));
     }
 
     private void updateFirstTipBox(Boolean plusSignTapped){
@@ -262,17 +227,12 @@ public class TipSettingsFragment extends Fragment {
 
     private void deleteAnswerNotifications(){
         final Realm realm = Realm.getDefaultInstance();
-        realm.where(AnswerNotification.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<AnswerNotification>>() {
+        realm.where(AnswerNotification.class).findAllAsync().addChangeListener(element -> realm.executeTransaction(new Realm.Transaction() {
             @Override
-            public void onChange(final RealmResults<AnswerNotification> element) {
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        element.deleteAllFromRealm();
-                    }
-                });
+            public void execute(Realm realm1) {
+                element.deleteAllFromRealm();
             }
-        });
+        }));
     }
 
     private void setTipRemdinder(){

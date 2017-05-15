@@ -134,7 +134,7 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
 
     @Override
     public void dismissActivity() {
-        Utility.addCustomEvent(Constant.CHANGE_PROFILE_SETTINGS,Utility.getUserID(this));
+        Utility.addCustomEvent(Constant.CHANGE_PROFILE_SETTINGS,Utility.getUserID(this),null);
         UserInfoActivity.this.finish();
     }
 

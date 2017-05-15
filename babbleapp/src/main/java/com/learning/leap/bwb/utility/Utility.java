@@ -1,7 +1,6 @@
 package com.learning.leap.bwb.utility;
 
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +19,11 @@ import com.amazonaws.regions.Regions;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.baseActivity.HomeActivity;
+import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
+import com.learning.leap.bwb.models.ActionHistory;
+import com.learning.leap.bwb.settings.UserInfoActivity;
 
 public class Utility {
     private static final String sharedPreferencesFile = "Global";
@@ -44,6 +47,38 @@ public class Utility {
             }
         });
         builder.show();
+    }
+
+    public static void newUserCheck(Context context){
+        Boolean didDownload = Utility.readBoolSharedPreferences(Constant.DID_DOWNLOAD,context);
+        Boolean needUpdate = Utility.readBoolSharedPreferences(Constant.UPDATE,context);
+        if (didDownload && !needUpdate){
+            homeIntent(context);
+        }else if (needUpdate){
+            downloadIntent(context);
+        }else {
+            userInfoIntent(context);
+        }
+    }
+
+    private static void userInfoIntent(Context context){
+        Intent userInfoIntent = new Intent(context,UserInfoActivity.class);
+        userInfoIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        userInfoIntent.putExtra(Constant.NEW_USER,true);
+        context.startActivity(userInfoIntent);
+    }
+
+    private static void downloadIntent(Context context){
+        Intent downloadIntent = new Intent(context, DownloadActivity.class);
+        downloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        downloadIntent.putExtra(Constant.UPDATE,true);
+        context.startActivity(downloadIntent);
+    }
+
+    public static void homeIntent(Context context){
+        Intent homeIntent = new Intent(context,HomeActivity.class);
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(homeIntent);
     }
     public static void writeIntSharedPreferences(String sharedPreferenceKey, int intToWrite,Context context){
         SharedPreferences mSharedPreferences;
@@ -100,14 +135,12 @@ public class Utility {
         return  (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
-    public static void addCustomEvent(String event,String ID){
+    public static void addCustomEvent(String event,String ID,String tag){
+        ActionHistory.createActionHistoryItem(ID,event,tag);
         Answers.getInstance().logCustom(new CustomEvent(event)
         .putCustomAttribute("ID",ID));
     }
 
-    public static void addCustomEventWithNotification(String event,String notificationString,String ID){
-        Answers.getInstance().logCustom(new CustomEvent(event).putCustomAttribute("Notification",notificationString).putCustomAttribute("ID",ID));
-    }
 
     public static String getUserID(Context context){
         LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);

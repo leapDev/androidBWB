@@ -8,6 +8,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 
+import java.util.regex.Pattern;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.realm.Realm;
@@ -151,13 +153,9 @@ public class Notification extends RealmObject {
     }
 
     public String updateMessage(String babyName) {
-        if (mMessage.toLowerCase().contains("your baby")) {
-           return mMessage.replaceAll("your baby",babyName);
-        }else if (mMessage.toLowerCase().contains("your child")){
-          return mMessage.replaceAll("your child",babyName);
-        } else {
-            return mMessage;
-        }
+
+        return mMessage.replaceAll("(?i)" + Pattern.quote("your baby"),babyName)
+                .replaceAll("(?i)" + Pattern.quote("your child"),babyName);
     }
 
     public Observable<RealmResults<Notification>> getNotificationFromRealm(Realm realm){
@@ -165,7 +163,9 @@ public class Notification extends RealmObject {
     }
 
     public Observable<RealmResults<Notification>> getPlayTodayFromRealm(Realm realm){
-        return Observable.fromCallable(() -> realm.where(Notification.class).equalTo("mPlayToday",true).findAll());
+        return Observable.fromCallable(() -> realm.where(Notification.class)
+                .equalTo("mPlayToday",true)
+                .findAll());
     }
 
 }

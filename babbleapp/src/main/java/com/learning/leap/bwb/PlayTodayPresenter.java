@@ -1,7 +1,11 @@
 package com.learning.leap.bwb;
 
+import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
+import com.learning.leap.bwb.baseInterface.ViewInterface;
 import com.learning.leap.bwb.models.Notification;
 import com.learning.leap.bwb.notification.NotificaitonPresenter;
+import com.learning.leap.bwb.notification.NotificationPresenterInterface;
+import com.learning.leap.bwb.notification.NotificationViewViewInterface;
 
 import org.reactivestreams.Subscriber;
 
@@ -10,21 +14,15 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 
-public class PlayTodayPresenter extends NotificaitonPresenter {
-    private Disposable playTodayDisopsable;
+public class PlayTodayPresenter extends  BaseNotificationPresenter  {
 
     @Override
-    public void onDestory() {
-        if (playTodayDisopsable != null && !playTodayDisopsable.isDisposed()){
-            playTodayDisopsable.dispose();
-        }
-        super.onDestory();
-    }
-
-    @Override
-    protected void getRealmResults() {
+    public void getRealmResults() {
+        babyName = notificationViewInterface.babyName();
         Notification notification = new Notification();
-        playTodayDisopsable = notification.getPlayTodayFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
+        Disposable disposable = notification.getPlayTodayFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
+        disposables.add(disposable);
     }
+
 }
 

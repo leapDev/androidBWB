@@ -7,10 +7,11 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="date"
         android:layout_marginTop="120dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
+        android:inputType="text"
+        android:imeOptions="actionNext"
         android:hint="@string/userBirthdayHint"
         android:id="@+id/userProfileFragmentBirtdayEditText"
         android:gravity="center"
@@ -23,6 +24,7 @@
         android:inputType="textPersonName"
         android:hint="@string/userFirstNameHint"
         android:ems="10"
+        android:imeOptions="actionNext"
         android:layout_marginBottom="20dp"
         android:id="@+id/userProfileFragmentFirstNameEditText"
         android:gravity="center"
@@ -38,6 +40,7 @@
         android:id="@+id/userProfileFragmentZipCodeEditText"
         android:layout_marginBottom="20dp"
         android:gravity="center"
+        android:imeOptions="actionDone"
         android:layout_gravity="center_horizontal"
         android:textColor="@android:color/black"/>
 

@@ -140,6 +140,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
 
     @Override
     public void playSound(String fileName) {
+        Utility.addCustomEvent(Constant.PLAYED_SOUND,Utility.getUserID(getActivity()),presenter.getTag());
             try {
                 setupMediaFile(fileName);
             } catch (Exception e) {
@@ -149,7 +150,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
     }
 
     private void setupMediaFile(String fileName) throws Exception{
-        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName,Utility.getUserID(getActivity()));
+        Utility.addCustomEvent(Constant.VIEWED_NOTIFICATIONS,Utility.getUserID(getActivity()),presenter.getTag());
         File file = new File(getActivity().getFilesDir(), fileName);
         FileInputStream is = new FileInputStream(file);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -161,7 +162,7 @@ public class PlayTodayFragment extends android.support.v4.app.Fragment implement
 
     @Override
     public void playVideo(String fileName) {
-        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName,Utility.getUserID(getActivity()));
+        Utility.addCustomEvent(Constant.PLAYED_VIDEO,Utility.getUserID(getActivity()),presenter.getTag());
         VideoActivity.showRemoteVideo(getActivity(),fileName);
     }
 

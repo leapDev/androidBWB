@@ -186,9 +186,9 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
     @Override
     public void saveCompleted(boolean turnOffTips) {
         if (turnOffTips){
-            Utility.addCustomEvent(Constant.TURNED_OFF_NOTIFICATIONS_FOR_DAY,Utility.getUserID(this));
+            Utility.addCustomEvent(Constant.TURNED_OFF_NOTIFICATIONS_FOR_DAY,Utility.getUserID(this),null);
         }
-        Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS,Utility.getUserID(this));
+        Utility.addCustomEvent(Constant.CHANGED_NOTIFICATION_SETTINGS,Utility.getUserID(this),null);
         this.finish();
     }
 

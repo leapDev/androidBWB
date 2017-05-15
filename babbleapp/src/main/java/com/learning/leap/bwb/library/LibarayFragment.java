@@ -124,6 +124,7 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
 
     @Override
     public void playSound(String fileName) {
+        Utility.addCustomEvent(Constant.PLAYED_SOUND,Utility.getUserID(getActivity()),notificationPresenter.getTag());
             try {
                 setupMediaFile(fileName);
             } catch (Exception e) {
@@ -133,7 +134,7 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
     }
 
     private void setupMediaFile(String fileName) throws Exception{
-        Utility.addCustomEventWithNotification(Constant.PLAYED_SOUND, fileName,Utility.getUserID(getActivity()));
+        Utility.addCustomEvent(Constant.VIEWED_NOTIFICATIONS,Utility.getUserID(getActivity()),notificationPresenter.getTag());
         File file = new File(getActivity().getFilesDir(), fileName);
         FileInputStream is = new FileInputStream(file);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -145,7 +146,7 @@ public class LibarayFragment extends Fragment implements NotificationViewViewInt
 
     @Override
     public void playVideo(String fileName) {
-        Utility.addCustomEventWithNotification(Constant.PLAYED_VIDEO,fileName,Utility.getUserID(getActivity()));
+        Utility.addCustomEvent(Constant.PLAYED_VIDEO,Utility.getUserID(getActivity()),notificationPresenter.getTag());
         VideoActivity.showRemoteVideo(getActivity(),fileName);
     }
 
