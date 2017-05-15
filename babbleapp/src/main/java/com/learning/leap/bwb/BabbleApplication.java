@@ -10,6 +10,8 @@ import com.crashlytics.android.answers.Answers;
 import com.evernote.android.job.JobManager;
 
 
+import java.util.Set;
+
 import io.fabric.sdk.android.Fabric;
 import io.realm.DynamicRealm;
 import io.realm.Realm;
@@ -38,6 +40,14 @@ public class BabbleApplication extends Application{
     RealmMigration migration = (realm, oldVersion, newVersion) -> {;
         RealmSchema schema = realm.getSchema();
         if (oldVersion == 0){
+             Set<String> fields = schema.get("BabblePlayer").getFieldNames();
+            String babyGender = "babyGender";
+            for (String field:fields){
+                if (field.equals(babyGender)){
+                    oldVersion++;
+                    return;
+                }
+            }
             schema.get("BabblePlayer").addField("babyGender",String.class);
             oldVersion++;
         }
