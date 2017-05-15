@@ -36,7 +36,9 @@ public class BabbleApplication extends Application{
     }
 
     RealmMigration migration = (realm, oldVersion, newVersion) -> {;
+        RealmSchema schema = realm.getSchema();
         if (oldVersion == 0){
+            schema.get("BabblePlayer").addField("babyGender",String.class);
             oldVersion++;
         }
     };
