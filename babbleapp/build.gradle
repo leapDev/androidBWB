@@ -23,8 +23,8 @@ android {
         applicationId "com.learning.leap.bwb"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 14
-        versionName '1.14'
+        versionCode 15
+        versionName '1.15'
         multiDexEnabled true
 
     }
@@ -35,6 +35,22 @@ android {
         }
     }
     productFlavors {
+        regular{
+            applicationIdSuffix ".regular"
+            versionNameSuffix "-regular"
+        }
+
+        treatment {
+            applicationIdSuffix ".treatment"
+            versionNameSuffix "-treatment"
+        }
+
+
+        control {
+            applicationIdSuffix ".control"
+            versionNameSuffix "-control"
+        }
+
     }
 
 

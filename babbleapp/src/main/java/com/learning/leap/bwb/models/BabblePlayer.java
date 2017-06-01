@@ -12,6 +12,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.learning.leap.bwb.Player;
+import com.learning.leap.bwb.research.ResearchNotifications;
 import com.learning.leap.bwb.utility.NetworkChecker;
 import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 import com.learning.leap.bwb.utility.Utility;
@@ -34,7 +36,7 @@ import io.realm.annotations.PrimaryKey;
 
 
 @DynamoDBTable(tableName = "BabblePlayers3")
-public class BabblePlayer extends RealmObject {
+public class BabblePlayer extends RealmObject implements Player {
     @PrimaryKey
     private String mBabbleID;
     private String mBabyBirthday;
@@ -141,6 +143,10 @@ public class BabblePlayer extends RealmObject {
 
     }
 
+    public Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper){
+        return null;
+    }
+
     public Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge,DynamoDBMapper mapper){
         return Observable.fromCallable(() -> {
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
@@ -167,6 +173,12 @@ public class BabblePlayer extends RealmObject {
         updatedBabblePlayer.setuserAgeInMonth();
         saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth());
     }
+
+    @Override
+    public void savePlayerToRealm() {
+        Realm.getDefaultInstance().copyToRealmOrUpdate(this);
+    }
+
     public static boolean homeScreenAgeCheck(Context context){
         LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
         String sharedPrefBirthDay = saveHelper.getBabyBirthDay();

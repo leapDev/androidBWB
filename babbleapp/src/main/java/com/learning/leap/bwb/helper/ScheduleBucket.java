@@ -2,7 +2,9 @@ package com.learning.leap.bwb.helper;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
+import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Utility;
@@ -79,7 +81,12 @@ public class ScheduleBucket {
 
 
     private void getNumberOfTipsPerNotification(){
-        int numberOfTotalTips = Utility.readIntSharedPreferences(Constant.NUM_OF_TIPS,context);
+        int numberOfTotalTips;
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+            numberOfTotalTips = 5;
+        }else {
+            numberOfTotalTips = Utility.readIntSharedPreferences(Constant.NUM_OF_TIPS, context);
+        }
         switch (numberOfTotalTips){
             case 3:
                 setTipsForBuckets(1,1,1);

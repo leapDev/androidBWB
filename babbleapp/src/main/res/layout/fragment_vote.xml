@@ -83,8 +83,25 @@
         android:src="@drawable/tip_thumbsup" />
 
     <TextView
+        android:id="@+id/likeTipID"
         android:layout_width="wrap_content"
         android:layout_height="70dp"
+        android:layout_alignBottom="@+id/voteFragmentThumbsDownImageView"
+        android:layout_marginBottom="20dp"
+        android:layout_toLeftOf="@+id/voteFragmentThumbsDownImageView"
+        android:layout_toStartOf="@+id/voteFragmentThumbsDownImageView"
+        android:gravity="center"
+        android:text="@string/didYouLikeThis"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/voteFragmentOkButton"
+        android:text="OK"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="120dp"
         android:layout_marginLeft="5dp"
@@ -94,9 +111,8 @@
         android:layout_toRightOf="@id/voteFragmentThumbsUpImageView"
         android:layout_toStartOf="@+id/voteFragmentThumbsDownImageView"
         android:gravity="center"
-        android:text="@string/didYouLikeThis"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
 
 
     <ImageView

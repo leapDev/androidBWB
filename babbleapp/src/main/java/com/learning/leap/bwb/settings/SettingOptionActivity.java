@@ -26,6 +26,7 @@ public class SettingOptionActivity extends AppCompatActivity {
         ImageView playToday = (ImageView)findViewById(R.id.settingsFragmentPlayTodayImageView);
         ImageView libraryImageView = (ImageView)findViewById(R.id.settingsFragmentLibararyImageView);
         Utility.addCustomEvent(Constant.VIEWED_SETTINGS,Utility.getUserID(this),null);
+        Utility.hideButtonCheck(playToday,libraryImageView);
         profileSettings.setOnClickListener(view -> userSettingsIntent());
         tipSettings.setOnClickListener(view -> tipsIntent());
         libraryImageView.setOnClickListener(view -> libraryIntent());

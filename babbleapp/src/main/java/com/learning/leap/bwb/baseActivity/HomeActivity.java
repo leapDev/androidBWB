@@ -3,20 +3,26 @@ package com.learning.leap.bwb.baseActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.learning.leap.bwb.ActionHistoryIntentService;
+import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.models.BabblePlayer;
+import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
+
+import java.util.Date;
 
 import io.reactivex.disposables.Disposable;
 
@@ -38,9 +44,14 @@ public class HomeActivity extends AppCompatActivity  {
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
-        poweredByTextView.setOnClickListener(view -> openWebsite());
         Utility.addCustomEvent(Constant.ACCESSED_APP,Utility.getUserID(this),null);
-
+        if (BuildConfig.FLAVOR.equals("regular")) {
+            poweredByTextView.setOnClickListener(view -> openWebsite());
+        }else {
+            leapLogo.setVisibility(View.GONE);
+            poweredByTextView.setVisibility(View.GONE);
+        }
+        Utility.hideButtonCheck(libararyImageView,playToday);
 //
         if (Utility.isNetworkAvailable(this)){
             ActionHistoryIntentService.startActionHistoryIntent(this);
@@ -52,8 +63,8 @@ public class HomeActivity extends AppCompatActivity  {
 //        homeImageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.add(Calendar.MINUTE,1);
+//                java.util.Calendar calendar = java.util.Calendar.getInstance();
+//                calendar.add(java.util.Calendar.MINUTE,1);
 //                TipReminder tipReminder = new TipReminder(4,1,new Date(),calendar.getTime(),HomeActivity.this);
 //                tipReminder.setReminder(calendar.getTime());
 //

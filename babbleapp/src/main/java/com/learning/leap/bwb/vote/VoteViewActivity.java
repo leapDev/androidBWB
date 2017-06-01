@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.library.VideoActivity;
@@ -26,6 +27,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     ImageView mPlayVideoImageView;
     ImageView mVoteThumbUpImageView;
     ImageView mVoteThumbDownImageView;
+    Button okayButton;
     TextView mVotePromptTextView;
     MediaPlayer mediaPlayer;
     Button stopButton;
@@ -56,6 +58,17 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         mVoteThumbDownImageView = (ImageView)findViewById(R.id.voteFragmentThumbsDownImageView);
         mVotePromptTextView = (TextView)findViewById(R.id.voteFragmentPromptTextView);
         stopButton = (Button)findViewById(R.id.voteFragmentStopButton);
+        okayButton = (Button)findViewById(R.id.voteFragmentOkButton);
+        if (BuildConfig.FLAVOR.equals("control")) {
+            TextView likeTip = (TextView)findViewById(R.id.likeTipID);
+            likeTip.setVisibility(View.GONE);
+            mVoteThumbDownImageView.setVisibility(View.GONE);
+            mVoteThumbUpImageView.setVisibility(View.GONE);
+            okayButton.setVisibility(View.VISIBLE);
+            okayButton.setOnClickListener(v -> {
+                homeIntent();
+            });
+        }
     }
 
     private void setOnClickLisnter(){
@@ -89,7 +102,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     @Override
     public void homeIntent() {
         Intent homeIntent = new Intent(this, HomeActivity.class);
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(homeIntent);
     }
 

@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         android:id="@+id/tipSettingsBackground"
         android:paddingBottom="5dp"
+        android:src="@drawable/settings_bg"
         android:scaleType="fitXY"/>
 
     <RelativeLayout
@@ -128,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/MaxNumberOfTips"
-                android:id="@+id/textView"
+                android:id="@+id/maxTipsTextView"
                 android:textColor="@android:color/black"/>
 
             <LinearLayout

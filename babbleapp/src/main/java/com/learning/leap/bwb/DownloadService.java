@@ -20,6 +20,8 @@ import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.models.AWSDownload;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.models.Notification;
+import com.learning.leap.bwb.research.ResearchNotifications;
+import com.learning.leap.bwb.research.ResearchPlayers;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -78,40 +80,81 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void startDownload(){
         if (!started){
-            AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
-            TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
-            awsDownload = new AWSDownload(this, transferUtility, this);
-            realmNotificationSubscription = new Notification().getNotificationFromRealm(Realm.getDefaultInstance())
-                    .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
-                            throwable -> errorHasOccured());
-            int filesDownloadAtPaused = 0;
-            awsDownload.downloadFiles(filesDownloadAtPaused);
-            started = true;
+            if (BuildConfig.FLAVOR.equals("control")){
+                AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
+                TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
+                awsDownload = new AWSDownload(this, transferUtility, this);
+                realmNotificationSubscription = new ResearchNotifications().getNotificationFromRealm(Realm.getDefaultInstance())
+                        .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
+                                throwable -> errorHasOccured());
+                int filesDownloadAtPaused = 0;
+                awsDownload.downloadFiles(filesDownloadAtPaused);
+                started = true;
+                disposables.add(realmNotificationSubscription);
+            }else {
+                AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
+                TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
+                awsDownload = new AWSDownload(this, transferUtility, this);
+                realmNotificationSubscription = new Notification().getNotificationFromRealm(Realm.getDefaultInstance())
+                        .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
+                                throwable -> errorHasOccured());
+                int filesDownloadAtPaused = 0;
+                awsDownload.downloadFiles(filesDownloadAtPaused);
+                started = true;
+                disposables.add(realmNotificationSubscription);
+            }
         }
     }
 
 
     private void updateNotifications(){
 
-        BabblePlayer babblePlayer = new BabblePlayer();
-        LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
-        Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
-        babblePlayer = babblePlayer.loadBabblePlayerFronSharedPref(localLoadSaveHelper);
-        AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
-        DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
-        Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(),mapper)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(notifications -> {
-                    saveNotifications(notifications);
-                    startDownload();
-                }, throwable -> {
-                    errorHasOccured();
-                });
-        disposables.add(notificationDisposable);
+        if (BuildConfig.FLAVOR.equals("control")){
+            ResearchPlayers players = new ResearchPlayers();
+            LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
+            Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
+            AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
+            DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
+            Disposable notificationDisposable = players.retriveNotifications(mapper)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(notifications -> {
+                        saveNWNotifications(notifications);
+                        startDownload();
+                    }, throwable -> {
+                        errorHasOccured();
+                    });
+            disposables.add(notificationDisposable);
+
+        }else {
+            BabblePlayer babblePlayer = new BabblePlayer();
+            LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
+            Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
+            babblePlayer = babblePlayer.loadBabblePlayerFronSharedPref(localLoadSaveHelper);
+            AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
+            DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
+            Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(), mapper)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(notifications -> {
+                        saveNotifications(notifications);
+                        startDownload();
+                    }, throwable -> {
+                        errorHasOccured();
+                    });
+            disposables.add(notificationDisposable);
+        }
     }
 
     private void saveNotifications(PaginatedScanList<Notification> notifications) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.deleteAll();
+        realm.copyToRealm(notifications);
+        realm.commitTransaction();
+    }
+
+    private void saveNWNotifications(PaginatedScanList<ResearchNotifications> notifications) {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.deleteAll();
@@ -154,7 +197,11 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
         ScheduleBucket scheduleBucket = new ScheduleBucket(this);
         scheduleBucket.scheduleForFirstTime();
         if (update){
-            BabblePlayer.saveUpdatedInfo(this);
+            if (!BuildConfig.FLAVOR.equals("regular")){
+                ResearchPlayers.saveUpdatedInfo(this);
+            }else {
+                BabblePlayer.saveUpdatedInfo(this);
+            }
         }
     }
 }

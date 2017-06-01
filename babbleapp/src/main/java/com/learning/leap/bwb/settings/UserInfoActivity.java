@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -12,9 +14,14 @@ import android.widget.TextView;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.learning.leap.bwb.BuildConfig;
+import com.learning.leap.bwb.DownloadService;
+import com.learning.leap.bwb.Player;
+import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
+import com.learning.leap.bwb.research.ResearchPlayers;
 import com.learning.leap.bwb.userInfo.UserInfoPresenter;
 import com.learning.leap.bwb.userInfo.UserInfoViewInterface;
 import com.learning.leap.bwb.utility.Constant;
@@ -69,6 +76,10 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
         maleRadioButton = (RadioButton)findViewById(R.id.maleRadioButton);
         femaleRadioButton = (RadioButton)findViewById(R.id.femaleRadioButton);
         notNowRadioButton = (RadioButton)findViewById(R.id.notNowRadioButton);
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+            zipCodeEditText.setVisibility(View.GONE);
+            firstNameEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        }
         setupOnClickListners();
     }
 
@@ -107,15 +118,28 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
     }
 
 
-    private BabblePlayer createBabblePlayer(){
-        BabblePlayer babblePlayer = new BabblePlayer();
-        babblePlayer.setBabyName(firstNameEditText.getText().toString().trim());
-        babblePlayer.setZipCode(setZipCode());
-        babblePlayer.setBabyBirthday(birthDayEditText.getText().toString().trim());
-        babblePlayer.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        setGender();
-        babblePlayer.setBabyGender(gender);
-        return babblePlayer;
+    private Player createBabblePlayer(){
+
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+            ResearchPlayers players = new ResearchPlayers();
+            players.setBabyName(firstNameEditText.getText().toString().trim());
+            players.setZipCode(setZipCode());
+            players.setBabyBirthday(birthDayEditText.getText().toString().trim());
+            players.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+            setGender();
+            players.setBabyGender(gender);
+            return players;
+        }else {
+            BabblePlayer babblePlayer = new BabblePlayer();
+            babblePlayer.setBabyName(firstNameEditText.getText().toString().trim());
+            babblePlayer.setZipCode(setZipCode());
+            babblePlayer.setBabyBirthday(birthDayEditText.getText().toString().trim());
+            babblePlayer.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
+            setGender();
+            babblePlayer.setBabyGender(gender);
+            return babblePlayer;
+        }
+
     }
 
     private int setZipCode(){
@@ -140,12 +164,14 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
 
     @Override
     public void downloadIntent() {
-        Intent downloadIntent = new Intent(UserInfoActivity.this,DownloadActivity.class);
-        startActivity(downloadIntent);
+
+            Intent downloadIntent = new Intent(UserInfoActivity.this, DownloadActivity.class);
+            startActivity(downloadIntent);
+
     }
 
     @Override
-    public void displayUserInfo(BabblePlayer babblePlayer) {
+    public void displayUserInfo(Player babblePlayer) {
         birthDayEditText.setText(babblePlayer.getBabyBirthday());
         firstNameEditText.setText(babblePlayer.getBabyName());
         zipCodeEditText.setText(String.valueOf(babblePlayer.getZipCode()));
