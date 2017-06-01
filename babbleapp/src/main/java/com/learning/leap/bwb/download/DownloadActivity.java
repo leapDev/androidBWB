@@ -124,7 +124,7 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
     public void downloadCompleted() {
         if (bound) {
             Intent homeIntent = new Intent(this, HomeActivity.class);
-            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
         }
     }

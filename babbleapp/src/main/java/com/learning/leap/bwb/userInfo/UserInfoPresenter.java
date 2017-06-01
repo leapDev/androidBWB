@@ -77,7 +77,7 @@ public class UserInfoPresenter{
     private void retriveNotificationsFromAmazon() {
         if (BuildConfig.FLAVOR.equals("control")){
             Disposable notificationDisposable = babblePlayer.retriveNotifications(mapper)
-                    .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
+                    .doOnSubscribe(disposable -> userInfoViewInterface.dismissSaveDialog())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::updateNWViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());

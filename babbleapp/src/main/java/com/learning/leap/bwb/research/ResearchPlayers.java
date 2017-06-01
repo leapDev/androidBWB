@@ -145,10 +145,23 @@ public class ResearchPlayers extends RealmObject implements Player {
     }
 
     @Override
-    public Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge, DynamoDBMapper mapper) {
-        return null;
+    public Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge,DynamoDBMapper mapper){
+        return Observable.fromCallable(() -> {
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            scanExpression.setLimit(2000);
+            HashMap<String, AttributeValue> attributeValue = new HashMap<>();
+            String age = Integer.toString(babyAge);
+            AttributeValue falseAttributeValue = new AttributeValue();
+            falseAttributeValue.setS("false");
+            AttributeValue ageAttributeValue = new AttributeValue();
+            ageAttributeValue.setN(age);
+            attributeValue.put(":val", ageAttributeValue);
+            attributeValue.put(":val2", falseAttributeValue);
+            scanExpression.setExpressionAttributeValues(attributeValue);
+            scanExpression.setFilterExpression("StartMonthNumber<=:val AND EndMonthNumber>=:val AND Deleted=:val2");
+            return mapper.scan(Notification.class, scanExpression);
+        });
     }
-
     public Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper){
         return Observable.fromCallable(() -> {
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
