@@ -49,20 +49,31 @@ public class ScheduleBucket {
     }
 
     private void setUpBucket(int startIndex, int endIndex){
+        endIndex++;
         String[] allStartTime = context.getResources().getStringArray(R.array.start_times_settings_array);
         String[] allEndTime = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
         String[]  userStartTime = Arrays.copyOfRange(allStartTime, startIndex,allStartTime.length);
-        String[] userEndTime = Arrays.copyOfRange(allEndTime,0, endIndex);
-        Observable<String> userStartTimeObservable = Observable.fromArray(userStartTime);
-        Observable<String>userEndTimeObservable = Observable.fromArray(userEndTime);
+        int endStartArrayIndex = -1;
+        for (int i = 0; (i < userStartTime.length); i++){
+            if (userStartTime[i].equals(Arrays.asList(allEndTime).get(endIndex))){
+                endStartArrayIndex = i;
+            }
+        }
         ArrayList<String> userTimeWithOutDuplicateds = new ArrayList<>();
-        Observable.concat(userStartTimeObservable,userEndTimeObservable).distinct()
-                .subscribe(userTimeWithOutDuplicateds::add,
-                        Throwable::printStackTrace, () -> {
-                            removePlayToday();
-                            getNumberOfTipsPerNotification();
-                            getThreeBuckets(userTimeWithOutDuplicateds.toArray(new String[userTimeWithOutDuplicateds.size()]));
-                        });
+        if (endStartArrayIndex != -1){
+            String[] userTimes = Arrays.copyOfRange(userStartTime,0,endStartArrayIndex);
+            userTimeWithOutDuplicateds = new ArrayList<>(Arrays.asList(userTimes));
+        }else {
+            if (endIndex >= 22){
+                String[] userEndTime = Arrays.copyOfRange(allEndTime,endIndex, allEndTime.length);
+                userTimeWithOutDuplicateds.addAll(Arrays.asList(userStartTime));
+                userTimeWithOutDuplicateds.addAll(Arrays.asList(userEndTime));
+            }
+        }
+        removePlayToday();
+
+        getNumberOfTipsPerNotification();
+        getThreeBuckets(userTimeWithOutDuplicateds.toArray(new String[userTimeWithOutDuplicateds.size()]));
 
     }
 
