@@ -42,4 +42,7 @@ public class Constant {
     public static final String NOTIFICATION_SIZE = "notficationListSize";
     public static final String TIP_ID = "TIP_ID";
     public static final String SAVED_BABY_AGE = "SAVED_BABY_AGE";
+    public static final String I_WILL_LATER = "IWillLater";
+    public static final String YES = "Yes";
+    public static final String NO = "No";
 }

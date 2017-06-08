@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.learning.leap.bwb.BuildConfig;
@@ -27,7 +28,11 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
     ImageView mPlayVideoImageView;
     ImageView mVoteThumbUpImageView;
     ImageView mVoteThumbDownImageView;
-    Button okayButton;
+    Button yesButton;
+    Button noButton;
+    Button willLaterButton;
+    TextView northwesternTitle;
+    LinearLayout northWesternLinearLayout;
     TextView mVotePromptTextView;
     MediaPlayer mediaPlayer;
     Button stopButton;
@@ -58,14 +63,30 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         mVoteThumbDownImageView = (ImageView)findViewById(R.id.voteFragmentThumbsDownImageView);
         mVotePromptTextView = (TextView)findViewById(R.id.voteFragmentPromptTextView);
         stopButton = (Button)findViewById(R.id.voteFragmentStopButton);
-        okayButton = (Button)findViewById(R.id.voteFragmentOkButton);
+        yesButton = (Button)findViewById(R.id.voteFragmentYesButton);
+        noButton = (Button)findViewById(R.id.voteFragmenNokButton);
+        willLaterButton = (Button)findViewById(R.id.voteFragmentWillLaterButton);
+        northwesternTitle =(TextView)findViewById(R.id.northWesternTitleTextView);
+        northWesternLinearLayout = (LinearLayout)findViewById(R.id.northWesterLinearLayout);
         if (BuildConfig.FLAVOR.equals("control")) {
             TextView likeTip = (TextView)findViewById(R.id.likeTipID);
             likeTip.setVisibility(View.GONE);
             mVoteThumbDownImageView.setVisibility(View.GONE);
             mVoteThumbUpImageView.setVisibility(View.GONE);
-            okayButton.setVisibility(View.VISIBLE);
-            okayButton.setOnClickListener(v -> {
+            northWesternLinearLayout.setVisibility(View.VISIBLE);
+            northwesternTitle.setVisibility(View.VISIBLE);
+            yesButton.setOnClickListener(v -> {
+                Utility.addCustomEvent(Constant.YES,Utility.getUserID(this),null);
+                homeIntent();
+            });
+
+            noButton.setOnClickListener(v -> {
+                Utility.addCustomEvent(Constant.NO,Utility.getUserID(this),null);
+                homeIntent();
+            });
+
+            willLaterButton.setOnClickListener(v -> {
+                Utility.addCustomEvent(Constant.I_WILL_LATER,Utility.getUserID(this),null);
                 homeIntent();
             });
         }
