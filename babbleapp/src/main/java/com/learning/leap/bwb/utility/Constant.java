@@ -45,4 +45,6 @@ public class Constant {
     public static final String I_WILL_LATER = "IWillLater";
     public static final String YES = "Yes";
     public static final String NO = "No";
+    public static final String UpdatedScheduleBuckets = "UPDATED_SCHEDULE_BUCKETS";
+    public static final String UpdatedTOPLAYTODAYJOB = "UPDATED_PLAY_TODAY_JOB";
 }

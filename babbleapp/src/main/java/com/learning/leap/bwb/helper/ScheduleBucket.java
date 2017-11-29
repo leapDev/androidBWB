@@ -1,9 +1,13 @@
 package com.learning.leap.bwb.helper;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
+import com.learning.leap.bwb.AlarmReciver;
 import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
@@ -37,6 +41,19 @@ public class ScheduleBucket {
 
     public ScheduleBucket(Context context){
         this.context = context;
+    }
+    public static PendingIntent getAlarmPendingIntent(Context context){
+        Intent intent = new Intent(context, AlarmReciver.class);
+        return PendingIntent.getBroadcast(context,10,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    public static void setTipsNotifications(Context context){
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY,1);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.add(Calendar.DATE,1);
+        alarmManager.setRepeating(AlarmManager.RTC,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,getAlarmPendingIntent(context));
     }
 
 

@@ -22,10 +22,10 @@ public class VoteNotificationBroadcastReciever extends BroadcastReceiver {
         Intent voteIntent = new Intent(context, VoteViewActivity.class);
         int numOfTips = intent.getIntExtra("NumberOfTips",1);
         voteIntent.putExtra("NumberOfTips", numOfTips);
-        int id = intent.getIntExtra("id", 0);
+        int id = intent.getIntExtra("id", 100);
         voteIntent.putExtra("BucketNumber",id);
-        voteIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context,100,voteIntent,PendingIntent.FLAG_CANCEL_CURRENT);
+        voteIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context,id,voteIntent,PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
         String babyName = saveHelper.getBabyName();

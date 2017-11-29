@@ -1,10 +1,13 @@
 package com.learning.leap.bwb.models;
 
+import android.app.AlarmManager;
 import android.content.Context;
 
 import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -135,7 +138,7 @@ public class UserTipSettings {
         if (!sendTipsToday){
             JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
         }else {
-            PlayTodayJob.schedule();
+           PlayTodayJob.schedule();
         }
         Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY, sendTipsToday,context);
     }

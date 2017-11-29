@@ -63,7 +63,6 @@ public class TipReminder {
     }
 
     public void setReminder(Date notificationDate){
-
         Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
         alarmIntent.putExtra("id",bucketNumber);
         alarmIntent.putExtra("NumberOfTips",numberOfTips);

@@ -68,7 +68,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         willLaterButton = (Button)findViewById(R.id.voteFragmentWillLaterButton);
         northwesternTitle =(TextView)findViewById(R.id.northWesternTitleTextView);
         northWesternLinearLayout = (LinearLayout)findViewById(R.id.northWesterLinearLayout);
-        if (BuildConfig.FLAVOR.equals("control")) {
+        if (!BuildConfig.FLAVOR.equals("regular")) {
             TextView likeTip = (TextView)findViewById(R.id.likeTipID);
             likeTip.setVisibility(View.GONE);
             mVoteThumbDownImageView.setVisibility(View.GONE);
@@ -122,9 +122,7 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
 
     @Override
     public void homeIntent() {
-        Intent homeIntent = new Intent(this, HomeActivity.class);
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(homeIntent);
+        finish();
     }
 
     @Override

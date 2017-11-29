@@ -80,7 +80,7 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void startDownload(){
         if (!started){
-            if (BuildConfig.FLAVOR.equals("control")){
+            if (BuildConfig.FLAVOR.equals("talk1")){
                 AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
                 TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
                 awsDownload = new AWSDownload(this, transferUtility, this);
@@ -109,7 +109,7 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void updateNotifications(){
 
-        if (BuildConfig.FLAVOR.equals("control")){
+        if (BuildConfig.FLAVOR.equals("talk1")){
             ResearchPlayers players = new ResearchPlayers();
             LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
             Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
@@ -196,6 +196,9 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
         Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,this);
         ScheduleBucket scheduleBucket = new ScheduleBucket(this);
         scheduleBucket.scheduleForFirstTime();
+        PlayTodayJob.schedule();
+        Utility.writeBoolenSharedPreferences(Constant.UpdatedScheduleBuckets,true,this);
+        Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
         if (update){
             if (!BuildConfig.FLAVOR.equals("regular")){
                 ResearchPlayers.saveUpdatedInfo(this);

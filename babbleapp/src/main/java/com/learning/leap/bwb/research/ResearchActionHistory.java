@@ -29,7 +29,7 @@ import io.realm.RealmResults;
  * Created by ryanlgunn8 on 5/31/17.
  */
 
-@DynamoDBTable(tableName = "ActionHistory")
+@DynamoDBTable(tableName = "ResearchActionHistory")
 public class ResearchActionHistory extends RealmObject {
     private String mActionHistoryID;
     private String mCreated;

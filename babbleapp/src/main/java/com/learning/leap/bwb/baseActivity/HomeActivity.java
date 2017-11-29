@@ -12,9 +12,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.evernote.android.job.JobManager;
 import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.BuildConfig;
+import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.download.DownloadActivity;
+import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
@@ -29,6 +32,7 @@ import io.reactivex.disposables.Disposable;
 
 public class HomeActivity extends AppCompatActivity  {
     Disposable updateDisposable;
+    private int bucketNumber = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,13 @@ public class HomeActivity extends AppCompatActivity  {
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
         Utility.addCustomEvent(Constant.ACCESSED_APP,Utility.getUserID(this),null);
+
+        if (!Utility.readBoolSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,this)){
+            JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
+            PlayTodayJob.schedule();
+            Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
+
+        }
         if (BuildConfig.FLAVOR.equals("regular")) {
             poweredByTextView.setOnClickListener(view -> openWebsite());
         }else {
@@ -58,18 +69,25 @@ public class HomeActivity extends AppCompatActivity  {
         }
 
 
-
+//
 //        ImageView homeImageView = (ImageView) findViewById(R.id.homeFragmentHomeIcon);
 //        homeImageView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //                java.util.Calendar calendar = java.util.Calendar.getInstance();
 //                calendar.add(java.util.Calendar.MINUTE,1);
-//                TipReminder tipReminder = new TipReminder(4,1,new Date(),calendar.getTime(),HomeActivity.this);
+//                TipReminder tipReminder = new TipReminder(getBucketNumber(),1,new Date(),calendar.getTime(),HomeActivity.this);
 //                tipReminder.setReminder(calendar.getTime());
 //
 //            }
 //        });
+
+    }
+
+    private int getBucketNumber(){
+
+        bucketNumber++;
+        return bucketNumber;
 
     }
 

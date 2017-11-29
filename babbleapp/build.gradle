@@ -18,13 +18,13 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.learning.leap.bwb"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 15
-        versionName '1.15'
+        versionCode 21
+        versionName '1.21'
         multiDexEnabled true
 
     }
@@ -34,21 +34,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "main"
     productFlavors {
         regular{
             applicationIdSuffix ".regular"
             versionNameSuffix "-regular"
+            dimension "main"
         }
 
-        treatment {
-            applicationIdSuffix ".treatment"
-            versionNameSuffix "-treatment"
+        talk1 {
+            applicationIdSuffix ".talk_1"
+            versionNameSuffix "-talk_1"
+            dimension "main"
         }
 
 
-        control {
-            applicationIdSuffix ".control"
-            versionNameSuffix "-control"
+        talk2 {
+            applicationIdSuffix ".talk_2"
+            versionNameSuffix "-talk_2"
+            dimension "main"
         }
 
     }
@@ -61,17 +66,18 @@ android {
 }
 
 apply plugin: 'realm-android'
-apply plugin: 'me.tatarka.retrolambda'
+
 
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    google()
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.evernote:android-job:1.1.8'
+    compile 'com.evernote:android-job:1.2.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
