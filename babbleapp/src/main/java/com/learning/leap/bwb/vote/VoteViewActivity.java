@@ -77,16 +77,19 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
             northwesternTitle.setVisibility(View.VISIBLE);
             yesButton.setOnClickListener(v -> {
                 Utility.addCustomEvent(Constant.YES,Utility.getUserID(this),null);
+                votePresenter.thumbUpButtonTapped();
                 homeIntent();
             });
 
             noButton.setOnClickListener(v -> {
                 Utility.addCustomEvent(Constant.NO,Utility.getUserID(this),null);
+                votePresenter.thumbDownButtonTapped();
                 homeIntent();
             });
 
             willLaterButton.setOnClickListener(v -> {
                 Utility.addCustomEvent(Constant.I_WILL_LATER,Utility.getUserID(this),null);
+                votePresenter.thumbDownButtonTapped();
                 homeIntent();
             });
         }

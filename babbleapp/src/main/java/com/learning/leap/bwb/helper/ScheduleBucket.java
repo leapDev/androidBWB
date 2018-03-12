@@ -59,41 +59,37 @@ public class ScheduleBucket {
 
     public void diviedTheBucketIntoThree(){
         int indexForUserStartTime = Utility.readIntSharedPreferences(Constant.START_TIME,context);
-        int indexForUserEndTime = Utility.readIntSharedPreferences(Constant.END_TIME,context);
+        int indexForUserEndTime = Utility.readIntSharedPreferences(Constant.ALL_TIME_END_TIME,context);
+        if (indexForUserEndTime == 0){
+            indexForUserEndTime = getAllTimeIndex();
+            Utility.writeIntSharedPreferences(Constant.ALL_TIME_END_TIME,indexForUserEndTime,context);
+
+        }
         setUpBucket(indexForUserStartTime,indexForUserEndTime);
 
     }
 
+    private int getAllTimeIndex() {
+        int endTime = Utility.readIntSharedPreferences(Constant.END_TIME,context);
+        String[] allEndTimes = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
+        String currentEndTime = allEndTimes[endTime];
+        ArrayList<String> allTimes = new ArrayList<>(Arrays.asList(context.getResources().getStringArray(R.array.all_times_settings_array)));
+        return allTimes.indexOf(currentEndTime);
+    }
+
     public void scheduleForFirstTime(){
-        setUpBucket(8,16);
+        setUpBucket(8,22);
     }
 
     private void setUpBucket(int startIndex, int endIndex){
         endIndex++;
-        String[] allStartTime = context.getResources().getStringArray(R.array.start_times_settings_array);
-        String[] allEndTime = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
-        String[]  userStartTime = Arrays.copyOfRange(allStartTime, startIndex,allStartTime.length);
-        int endStartArrayIndex = -1;
-        for (int i = 0; (i < userStartTime.length); i++){
-            if (userStartTime[i].equals(Arrays.asList(allEndTime).get(endIndex))){
-                endStartArrayIndex = i;
-            }
-        }
-        ArrayList<String> userTimeWithOutDuplicateds = new ArrayList<>();
-        if (endStartArrayIndex != -1){
-            String[] userTimes = Arrays.copyOfRange(userStartTime,0,endStartArrayIndex);
-            userTimeWithOutDuplicateds = new ArrayList<>(Arrays.asList(userTimes));
-        }else {
-            if (endIndex >= 22){
-                String[] userEndTime = Arrays.copyOfRange(allEndTime,endIndex, allEndTime.length);
-                userTimeWithOutDuplicateds.addAll(Arrays.asList(userStartTime));
-                userTimeWithOutDuplicateds.addAll(Arrays.asList(userEndTime));
-            }
-        }
+        String[] allTimes = context.getResources().getStringArray(R.array.all_times_settings_array);
+        String[] userTimes = Arrays.copyOfRange(allTimes,startIndex,endIndex);
+        ArrayList<String> userTimeWithOutDuplicateds = new ArrayList<>(Arrays.asList(userTimes));
         removePlayToday();
         if (BuildConfig.FLAVOR.equals("regular")) {
             getNumberOfTipsPerNotification();
-            getThreeBuckets(userTimeWithOutDuplicateds.toArray(new String[userTimeWithOutDuplicateds.size()]));
+            getThreeBuckets(userTimes);
         }else {
             northwestBucket(userTimeWithOutDuplicateds);
         }
