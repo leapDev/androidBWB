@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.learning.leap.bwb.models.ActionHistory;
-import com.learning.leap.bwb.research.ResearchActionHistory;
 import com.learning.leap.bwb.utility.Constant;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -37,11 +36,7 @@ public class ActionHistoryIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            disposables.add(ResearchActionHistory.uploadActionHistory(context));
-        }else {
             disposables.add(ActionHistory.uploadActionHistory(context));
-        }
     }
 
 

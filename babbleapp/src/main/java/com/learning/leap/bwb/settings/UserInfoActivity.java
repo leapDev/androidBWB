@@ -119,17 +119,6 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
 
 
     private Player createBabblePlayer(){
-
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            ResearchPlayers players = new ResearchPlayers();
-            players.setBabyName(firstNameEditText.getText().toString().trim());
-            players.setZipCode(setZipCode());
-            players.setBabyBirthday(birthDayEditText.getText().toString().trim());
-            players.setBabbleID(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-            setGender();
-            players.setBabyGender(gender);
-            return players;
-        }else {
             BabblePlayer babblePlayer = new BabblePlayer();
             babblePlayer.setBabyName(firstNameEditText.getText().toString().trim());
             babblePlayer.setZipCode(setZipCode());
@@ -138,8 +127,6 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
             setGender();
             babblePlayer.setBabyGender(gender);
             return babblePlayer;
-        }
-
     }
 
     private int setZipCode(){

@@ -111,17 +111,17 @@ public class Utility {
     }
 
     public static int readIntSharedPreferences(String sharedPreferenceKey,Context context){
-        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
         return mSharedPreferences.getInt(sharedPreferenceKey,0);
     }
 
     public static String readStringSharedPreferences(String sharedPreferenceKey,Context context){
-        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
         return mSharedPreferences.getString(sharedPreferenceKey, null);
     }
 
     public static Boolean readBoolSharedPreferences(String sharedPreferenceKey,Context context){
-        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
         return mSharedPreferences.getBoolean(sharedPreferenceKey,false);
     }
 
@@ -140,14 +140,9 @@ public class Utility {
     }
 
     public static void addCustomEvent(String event,String ID,String tag){
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            ResearchActionHistory.createActionHistoryItem(ID,event,tag);
-            Answers.getInstance().logCustom(new CustomEvent(event).putCustomAttribute("ID",ID));
-        }else {
             ActionHistory.createActionHistoryItem(ID, event, tag);
             Answers.getInstance().logCustom(new CustomEvent(event)
                     .putCustomAttribute("ID", ID));
-        }
     }
 
 

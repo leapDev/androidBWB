@@ -13,7 +13,6 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanLis
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.learning.leap.bwb.Player;
-import com.learning.leap.bwb.research.ResearchNotifications;
 import com.learning.leap.bwb.utility.NetworkChecker;
 import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 import com.learning.leap.bwb.utility.Utility;
@@ -143,9 +142,6 @@ public class BabblePlayer extends RealmObject implements Player {
 
     }
 
-    public Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper){
-        return null;
-    }
 
     public Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge,DynamoDBMapper mapper){
         return Observable.fromCallable(() -> {

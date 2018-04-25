@@ -7,7 +7,6 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanLis
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.research.ResearchNotifications;
 import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 
 import java.util.Date;
@@ -28,7 +27,6 @@ public interface Player {
      String babyGender = "Not Now";
     Observable<Object> savePlayerObservable(DynamoDBMapper mapper, NetworkCheckerInterface checker, LocalLoadSaveHelper saveHelper);
     Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge, DynamoDBMapper mapper);
-    Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper);
     void setuserAgeInMonth();
     Boolean checkNameIsTooLong();
     Boolean checkIfPlayerIsValid();

@@ -11,8 +11,6 @@ import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.Player;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
-import com.learning.leap.bwb.research.ResearchNotifications;
-import com.learning.leap.bwb.research.ResearchPlayers;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 import com.learning.leap.bwb.utility.Utility;
@@ -75,21 +73,12 @@ public class UserInfoPresenter{
 
 
     private void retriveNotificationsFromAmazon() {
-        if (BuildConfig.FLAVOR.equals("control")){
-            Disposable notificationDisposable = babblePlayer.retriveNotifications(mapper)
-                    .doOnSubscribe(disposable -> userInfoViewInterface.dismissSaveDialog())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::updateNWViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());
-            disposables.add(notificationDisposable);
-        }else {
             Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(), mapper)
                     .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::updateViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());
             disposables.add(notificationDisposable);
-        }
     }
 
     private void updateViewAfterError(){
@@ -106,14 +95,6 @@ public class UserInfoPresenter{
         }
     }
 
-    private void updateNWViewAfterRetrivingNotificationList(List<ResearchNotifications>notifications){
-        userInfoViewInterface.dismissSaveDialog();
-        if (notifications == null || notifications.size() == 0){
-            userInfoViewInterface.displayErrorDialog(R.string.BabbleError,R.string.noPromptsForUser);
-        }else {
-            saveNWNotifications(notifications);
-        }
-    }
 
     private void saveNotifications(List<Notification> notifications) {
         for (int i = 0; i< notifications.size(); i++){
@@ -128,18 +109,7 @@ public class UserInfoPresenter{
         userInfoViewInterface.downloadIntent();
     }
 
-    private void saveNWNotifications(List<ResearchNotifications> notifications) {
-        for (int i = 0; i< notifications.size(); i++){
-            notifications.get(i).setId(i);
-        }
-        saveHelper.saveNotificationSize(notifications.size());
-        realm.beginTransaction();
-        realm.where(Notification.class).findAll().deleteAllFromRealm();
-        realm.copyToRealm(notifications);
-        babblePlayer.savePlayerToRealm();
-        realm.commitTransaction();
-        userInfoViewInterface.downloadIntent();
-    }
+
 
 
     public void createBabblePlayer(Player babblePlayer) {
@@ -147,16 +117,9 @@ public class UserInfoPresenter{
     }
 
     public void loadPlayerFromSharedPref() {
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            ResearchPlayers researchPlayers = new ResearchPlayers();
-            babblePlayer = researchPlayers.loadBabblePlayerFronSharedPref(saveHelper);
-            userInfoViewInterface.displayUserInfo(babblePlayer);
-        }else {
             BabblePlayer localBabblePlayer = new BabblePlayer();
             babblePlayer = localBabblePlayer.loadBabblePlayerFronSharedPref(saveHelper);
             userInfoViewInterface.displayUserInfo(babblePlayer);
-        }
-
     }
 
 

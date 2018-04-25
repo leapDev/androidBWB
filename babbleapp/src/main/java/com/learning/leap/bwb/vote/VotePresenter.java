@@ -4,7 +4,6 @@ import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
 import com.learning.leap.bwb.helper.AnswerNotification;
 import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.research.ResearchNotifications;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -29,15 +28,9 @@ public class VotePresenter extends BaseNotificationPresenter {
     @Override
     public void getRealmResults() {
         babyName = baseNotificationViewInterface.babyName();
-        if (BuildConfig.FLAVOR.equals("control")){
-            ResearchNotifications researchNotifications = new ResearchNotifications();
-            Disposable disposable = researchNotifications.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
-            disposables.add(disposable);
-        }else {
             Notification notification = new Notification();
             Disposable disposable = notification.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
             disposables.add(disposable);
-        }
     }
 
     @Override
