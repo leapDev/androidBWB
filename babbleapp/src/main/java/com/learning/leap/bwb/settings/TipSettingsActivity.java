@@ -104,7 +104,6 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
         ImageView libraryImageView = (ImageView)findViewById(R.id.tipSettingsFragmentLibararyImageView);
         ImageView homeImageView = (ImageView)findViewById(R.id.tipSettingsFragmentHomeImageView);
         ImageView playToday = (ImageView)findViewById(R.id.tipSettingsFragmentPlayTodayImageView);
-        Utility.hideButtonCheck(playToday,libraryImageView);
         libraryImageView.setOnClickListener(view -> onLibraryPress());
         homeImageView.setOnClickListener(view -> onHomePress());
         playToday.setOnClickListener(view -> onPlayToday());

@@ -125,12 +125,9 @@ public class UserInfoPresenter{
 
     public void checkUserInput() {
         babblePlayer.setuserAgeInMonth();
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            babblePlayer.setZipCode(00000);
-        }
         if (babblePlayer.checkIfPlayerIsValid()){
             updatePlayer();
-        }else if (!babblePlayer.checkZipCode() && BuildConfig.FLAVOR.equals("regular")){
+        }else if (!babblePlayer.checkZipCode()){
             userInfoViewInterface.displayErrorDialog(R.string.userZipCodeErrorTitle,R.string.userZipCodeError);
         }else if (babblePlayer.checkNameIsEmpty()){
             userInfoViewInterface.displayErrorDialog(R.string.userNameNameErrorTitle,R.string.userNameEmptyError);

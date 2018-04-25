@@ -130,7 +130,6 @@ public class TipSettingsFragment extends Fragment {
         ImageView libraryImageView = (ImageView)view.findViewById(R.id.tipSettingsFragmentLibararyImageView);
         ImageView homeImageView = (ImageView)view.findViewById(R.id.tipSettingsFragmentHomeImageView);
         ImageView playToday = (ImageView)view.findViewById(R.id.tipSettingsFragmentPlayTodayImageView);
-        Utility.hideButtonCheck(libraryImageView,playToday);
 
         libraryImageView.setOnClickListener(view12 -> {
             Intent libraryIntent = new Intent(getActivity(), DetailActivity.class);

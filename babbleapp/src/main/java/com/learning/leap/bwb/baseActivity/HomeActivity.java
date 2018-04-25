@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity  {
             leapLogo.setVisibility(View.GONE);
             poweredByTextView.setVisibility(View.GONE);
         }
-        Utility.hideButtonCheck(libararyImageView,playToday);
+
 //
         if (Utility.isNetworkAvailable(this)){
             ActionHistoryIntentService.startActionHistoryIntent(this);

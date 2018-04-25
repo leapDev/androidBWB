@@ -12,21 +12,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
-import android.view.View;
-import android.widget.Button;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.models.ActionHistory;
-import com.learning.leap.bwb.research.ResearchActionHistory;
 import com.learning.leap.bwb.settings.UserInfoActivity;
 
 public class Utility {
@@ -111,17 +107,17 @@ public class Utility {
     }
 
     public static int readIntSharedPreferences(String sharedPreferenceKey,Context context){
-        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
         return mSharedPreferences.getInt(sharedPreferenceKey,0);
     }
 
     public static String readStringSharedPreferences(String sharedPreferenceKey,Context context){
-        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
         return mSharedPreferences.getString(sharedPreferenceKey, null);
     }
 
     public static Boolean readBoolSharedPreferences(String sharedPreferenceKey,Context context){
-        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = context.getSharedPreferences(sharedPreferencesFile, Context.MODE_APPEND);
         return mSharedPreferences.getBoolean(sharedPreferenceKey,false);
     }
 
@@ -140,9 +136,9 @@ public class Utility {
     }
 
     public static void addCustomEvent(String event,String ID,String tag){
-            ActionHistory.createActionHistoryItem(ID, event, tag);
-            Answers.getInstance().logCustom(new CustomEvent(event)
-                    .putCustomAttribute("ID", ID));
+        ActionHistory.createActionHistoryItem(ID,event,tag);
+        Answers.getInstance().logCustom(new CustomEvent(event)
+        .putCustomAttribute("ID",ID));
     }
 
 
@@ -193,12 +189,5 @@ public class Utility {
 
     public static DisplayMetrics getDisplayMetrics(Context context){
         return  context.getResources().getDisplayMetrics();
-    }
-
-    public static void hideButtonCheck(View playToday, View library){
-        if (BuildConfig.FLAVOR.equals("control")) {
-            library.setVisibility(View.GONE);
-            playToday.setVisibility(View.GONE);
-        }
     }
 }
