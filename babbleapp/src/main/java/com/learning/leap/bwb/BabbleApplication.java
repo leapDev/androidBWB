@@ -56,37 +56,71 @@ public class BabbleApplication extends Application{
         }
 
         if (oldVersion == 1){
-            schema.create("ResearchNotifications")
-                    .addField("mCreated", String.class)
-                    .addField("mTag", String.class)
-                    .addField("mAgeRange",String.class)
-                    .addField("mDeleted",String.class)
-                    .addField("mEndMonth",String.class)
-                    .addField("mMessage",String.class)
-                    .addField("mSoundFileName",String.class)
-                    .addField("mStartMonth",String.class)
-                    .addField("mVideoFileName",String.class)
-                    .addField("mPlayToday",Boolean.class)
-                    .addField("mFavorite",Boolean.class);
+            if (schema.get("ResearchNotifications") == null) {
+                schema.create("ResearchNotifications")
+                        .addField("mCreated", String.class)
+                        .addField("mTag", String.class)
+                        .addField("mAgeRange", String.class)
+                        .addField("mDeleted", String.class)
+                        .addField("mEndMonth", String.class)
+                        .addField("mMessage", String.class)
+                        .addField("mSoundFileName", String.class)
+                        .addField("mStartMonth", String.class)
+                        .addField("mVideoFileName", String.class)
+                        .addField("mPlayToday", Boolean.class)
+                        .addField("mFavorite", Boolean.class)
+                        .addField("id",int.class,FieldAttribute.PRIMARY_KEY);
+            }
+            if (schema.get("ResearchActionHistory") == null) {
+                schema.create("ResearchActionHistory")
+                        .addField("mActionHistoryID", String.class)
+                        .addField("mCreated", String.class)
+                        .addField("mBabbleID", String.class)
+                        .addField("mActionTime", String.class)
+                        .addField("mActionMessage", String.class)
+                        .addField("mNotificationID", String.class)
+                        .addRealmObjectField("mNotification", schema.get("Notification"));
+            }
 
-            schema.create("ResearchActionHistory")
-                    .addField("mActionHistoryID", String.class)
-                    .addField("mCreated", String.class)
-                    .addField("mBabbleID",String.class)
-                    .addField("mActionTime",String.class)
-                    .addField("mActionMessage",String.class)
-                    .addField("mNotificatinID",String.class)
-                    .addRealmObjectField("mNotification",schema.get("Notification"));
+            if (schema.get("ResearchPlayers") == null) {
+                schema.create("ResearchPlayers")
+                        .addField("mBabbleID", String.class, FieldAttribute.PRIMARY_KEY)
+                        .addField("mBabyBirthday", String.class)
+                        .addField("mBabyName", String.class)
+                        .addField("mZipCode", int.class)
+                        .addField("userAgeInMonth", int.class)
+                        .addField("birthdayDate", Date.class)
+                        .addField("babyGender", String.class);
+            }
+            oldVersion++;
+        }
+        if (oldVersion == 2){
+            Set<String> fields = schema.get("ResearchActionHistory").getFieldNames();
+            String notificaitonID = "mNotificationID";
+            boolean addNotificationIDField = true;
+            for (String field:fields){
+                if (field.equals(notificaitonID)){
+                    addNotificationIDField = false;
+                }
+                if (field.equals("mNotificatinID")){
+                    schema.get("ResearchActionHistory").removeField("mNotificatinID");
+                }
+            }
+            if (addNotificationIDField) {
+                schema.get("ResearchActionHistory").addField(notificaitonID, String.class);
+            }
 
-            schema.create("ResearchPlayers")
-                    .addField("mBabbleID", String.class, FieldAttribute.PRIMARY_KEY)
-                    .addField("mBabyBirthday", String.class)
-                    .addField("mBabyName",String.class)
-                    .addField("mZipCode",int.class)
-                    .addField("userAgeInMonth",int.class)
-                    .addField("birthdayDate",Date.class)
-                    .addField("babyGender",String.class);
-            //oldVersion++;
+            Set<String> notificationFields = schema.get("ResearchNotifications").getFieldNames();
+            boolean addIDField = true;
+            for (String field:notificationFields){
+                if (field.equals("id")){
+                   addIDField = false;
+                }
+            }
+
+            if (addIDField){
+                schema.get("ResearchNotifications").addField("id",int.class,FieldAttribute.PRIMARY_KEY);
+            }
         }
     };
 

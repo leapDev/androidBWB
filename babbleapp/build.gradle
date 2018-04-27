@@ -18,7 +18,7 @@ repositories {
 
 android {
     signingConfigs {
-        config {
+        regular_release {
             keyAlias 'leap'
             keyPassword 'Leap1234!'
             storeFile file('/Users/ryanlgunn8/Desktop/leapKeystore.jks')
@@ -40,6 +40,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.regular_release
+        }
+        debug {
         }
     }
     flavorDimensions "main"
