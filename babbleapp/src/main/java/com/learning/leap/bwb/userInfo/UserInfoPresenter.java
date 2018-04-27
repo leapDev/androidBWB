@@ -1,33 +1,22 @@
 package com.learning.leap.bwb.userInfo;
 
 
-import android.util.Log;
-import android.view.View;
-
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
-import com.crashlytics.android.Crashlytics;
 import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.Player;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.research.ResearchNotifications;
 import com.learning.leap.bwb.research.ResearchPlayers;
-import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.NetworkCheckerInterface;
-import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.models.Notification;
 
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
@@ -75,14 +64,14 @@ public class UserInfoPresenter{
 
 
     private void retriveNotificationsFromAmazon() {
-        if (BuildConfig.FLAVOR.equals("control")){
-            Disposable notificationDisposable = babblePlayer.retriveNotifications(mapper)
-                    .doOnSubscribe(disposable -> userInfoViewInterface.dismissSaveDialog())
+        if (BuildConfig.FLAVOR.equals("talk2")){
+            Disposable notificationDisposable = babblePlayer.retriveNorthWestenNotifications(mapper)
+                    .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::updateNWViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());
             disposables.add(notificationDisposable);
-        }else {
+        } else {
             Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(), mapper)
                     .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
                     .subscribeOn(Schedulers.io())

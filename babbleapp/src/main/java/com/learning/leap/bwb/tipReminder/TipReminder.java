@@ -78,11 +78,6 @@ public class TipReminder {
         }
 
         setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
-        if (BuildConfig.FLAVOR.equals("regular")) {
-
-        }else {
-
-        }
         //Add follow up message
 //        if (bucketNumber == 3){
 //            calendar.add(Calendar.HOUR,1);

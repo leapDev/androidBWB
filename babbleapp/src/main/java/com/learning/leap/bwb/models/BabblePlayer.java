@@ -143,7 +143,7 @@ public class BabblePlayer extends RealmObject implements Player {
 
     }
 
-    public Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper){
+    public Observable<PaginatedScanList<ResearchNotifications>> retriveNorthWestenNotifications(DynamoDBMapper mapper){
         return null;
     }
 

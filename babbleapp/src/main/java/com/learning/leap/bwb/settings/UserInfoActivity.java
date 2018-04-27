@@ -208,6 +208,8 @@ public class UserInfoActivity extends AppCompatActivity implements UserInfoViewI
 
     @Override
     public void dismissSaveDialog() {
-        this.runOnUiThread(() -> mDialog.dismiss());
+        if (mDialog != null) {
+            this.runOnUiThread(() -> mDialog.dismiss());
+        }
     }
 }

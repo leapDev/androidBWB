@@ -162,7 +162,7 @@ public class ResearchPlayers extends RealmObject implements Player {
             return mapper.scan(Notification.class, scanExpression);
         });
     }
-    public Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper){
+    public Observable<PaginatedScanList<ResearchNotifications>> retriveNorthWestenNotifications(DynamoDBMapper mapper){
         return Observable.fromCallable(() -> {
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             scanExpression.setLimit(2000);

@@ -28,7 +28,7 @@ public interface Player {
      String babyGender = "Not Now";
     Observable<Object> savePlayerObservable(DynamoDBMapper mapper, NetworkCheckerInterface checker, LocalLoadSaveHelper saveHelper);
     Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge, DynamoDBMapper mapper);
-    Observable<PaginatedScanList<ResearchNotifications>> retriveNotifications(DynamoDBMapper mapper);
+    Observable<PaginatedScanList<ResearchNotifications>> retriveNorthWestenNotifications(DynamoDBMapper mapper);
     void setuserAgeInMonth();
     Boolean checkNameIsTooLong();
     Boolean checkIfPlayerIsValid();

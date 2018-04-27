@@ -201,7 +201,7 @@ public class Utility {
     }
 
     public static void hideButtonCheck(View playToday, View library){
-        if (BuildConfig.FLAVOR.equals("control")) {
+        if (BuildConfig.FLAVOR.equals("talk2")) {
             library.setVisibility(View.GONE);
             playToday.setVisibility(View.GONE);
         }

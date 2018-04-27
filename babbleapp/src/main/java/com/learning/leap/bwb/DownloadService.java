@@ -28,7 +28,6 @@ import com.learning.leap.bwb.utility.Utility;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
@@ -80,7 +79,7 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void startDownload(){
         if (!started){
-            if (BuildConfig.FLAVOR.equals("talk1")){
+            if (BuildConfig.FLAVOR.equals("talk2")){
                 AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
                 TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
                 awsDownload = new AWSDownload(this, transferUtility, this);
@@ -109,13 +108,13 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void updateNotifications(){
 
-        if (BuildConfig.FLAVOR.equals("talk1")){
+        if (BuildConfig.FLAVOR.equals("talk2")){
             ResearchPlayers players = new ResearchPlayers();
             LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
             Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
             AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
             DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
-            Disposable notificationDisposable = players.retriveNotifications(mapper)
+            Disposable notificationDisposable = players.retriveNorthWestenNotifications(mapper)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(notifications -> {

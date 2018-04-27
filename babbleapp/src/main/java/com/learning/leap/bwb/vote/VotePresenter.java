@@ -29,7 +29,7 @@ public class VotePresenter extends BaseNotificationPresenter {
     @Override
     public void getRealmResults() {
         babyName = baseNotificationViewInterface.babyName();
-        if (BuildConfig.FLAVOR.equals("control")){
+        if (BuildConfig.FLAVOR.equals("talk2")){
             ResearchNotifications researchNotifications = new ResearchNotifications();
             Disposable disposable = researchNotifications.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
             disposables.add(disposable);
