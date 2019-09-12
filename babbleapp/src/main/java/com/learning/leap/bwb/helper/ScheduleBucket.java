@@ -15,8 +15,6 @@ import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.models.Notification;
 import com.learning.leap.bwb.tipReminder.TipReminder;
 
-import org.reactivestreams.Subscriber;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +23,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Action;
@@ -186,12 +185,14 @@ public class ScheduleBucket {
         String endTime = bucket[bucket.length-1];
         Date firstDateForTheBucket = updateConvertDateToToday(convertStringToDate(firstTime));
         Date endDateForTheBucket = updateConvertDateToToday(convertStringToDate(endTime));
-        TipReminder tipReminder = new TipReminder(bucketNumber,numberOfTips,firstDateForTheBucket,endDateForTheBucket,context);
-        tipReminder.setNotificationForBucket();
+        if (endDateForTheBucket != null && firstDateForTheBucket !=null) {
+            TipReminder tipReminder = new TipReminder(bucketNumber, numberOfTips, firstDateForTheBucket, endDateForTheBucket, context);
+            tipReminder.setNotificationForBucket();
+        }
     }
 
     private Date convertStringToDate(String time){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         Date date;
         try {
             date = simpleDateFormat.parse(time);
@@ -202,13 +203,17 @@ public class ScheduleBucket {
         }
     }
     private Date updateConvertDateToToday(Date date){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        Calendar updatedCal = Calendar.getInstance();
-        updatedCal.set(Calendar.HOUR_OF_DAY,calendar.get(Calendar.HOUR_OF_DAY));
-        updatedCal.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE));
-        updatedCal.set(Calendar.SECOND,0);
-        return updatedCal.getTime();
+        if (date != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            Calendar updatedCal = Calendar.getInstance();
+            updatedCal.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+            updatedCal.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+            updatedCal.set(Calendar.SECOND, 0);
+            return updatedCal.getTime();
+        }else{
+            return null;
+        }
     }
 
 

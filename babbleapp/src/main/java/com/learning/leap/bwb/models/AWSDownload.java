@@ -87,7 +87,9 @@ public class AWSDownload {
             @Override
             public void onError(int id, Exception ex) {
                 ex.printStackTrace();
-                downloadPresneterInterface.errorHasOccured();
+                filesdownloaded++;
+                downloadFiles(filesdownloaded);
+                //downloadPresneterInterface.errorHasOccured();
             }
         });
     }
