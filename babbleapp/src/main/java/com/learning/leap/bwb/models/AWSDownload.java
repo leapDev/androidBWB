@@ -67,7 +67,6 @@ public class AWSDownload {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED){
-
                     downloadPresneterInterface.updateProgress(getProgress());
                     if (downloadHasNotCompleted()) {
                         filesdownloaded++;
@@ -87,7 +86,9 @@ public class AWSDownload {
             @Override
             public void onError(int id, Exception ex) {
                 ex.printStackTrace();
-                downloadPresneterInterface.errorHasOccured();
+                filesdownloaded++;
+                downloadFiles(filesdownloaded);
+                //downloadPresneterInterface.errorHasOccured();
             }
         });
     }

@@ -5,9 +5,10 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
-import android.view.Display;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ import com.learning.leap.bwb.utility.Utility;
 import java.io.File;
 import java.io.FileInputStream;
 
-public class PlayTodayFragment extends android.support.v4.app.Fragment implements MediaPlayer.OnPreparedListener, NotificationViewViewInterface{
+public class PlayTodayFragment extends Fragment implements MediaPlayer.OnPreparedListener, NotificationViewViewInterface{
 
     TextView mNotficationPrompt;
     ImageView mNextImageView;

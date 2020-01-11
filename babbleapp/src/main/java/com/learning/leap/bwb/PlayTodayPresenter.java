@@ -7,7 +7,6 @@ import com.learning.leap.bwb.notification.NotificaitonPresenter;
 import com.learning.leap.bwb.notification.NotificationPresenterInterface;
 import com.learning.leap.bwb.notification.NotificationViewViewInterface;
 
-import org.reactivestreams.Subscriber;
 
 import io.reactivex.disposables.Disposable;
 import io.realm.Realm;

@@ -2,17 +2,17 @@ package com.learning.leap.bwb.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.baseActivity.DetailActivity;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
@@ -21,8 +21,6 @@ import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.helper.AnswerNotification;
 
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 
 
 public class TipSettingsFragment extends Fragment {
@@ -53,7 +51,8 @@ public class TipSettingsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        turnOffTips = Utility.readBoolSharedPreferences(Constant.SEND_TIPS_TODAY,getActivity());
+
+            turnOffTips = Utility.readBoolSharedPreferences(Constant.SEND_TIPS_TODAY, getActivity());
         mSaveButton = (Button)view.findViewById(R.id.tipSettingSaveButton);
         mSaveButton.setVisibility(View.INVISIBLE);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -96,12 +95,9 @@ public class TipSettingsFragment extends Fragment {
         mNumberofTipsTextView = (TextView)view.findViewById(R.id.tipSettingsMaxNumberTipTextView);
         int numberOfUserTips = Utility.readIntSharedPreferences(Constant.NUM_OF_TIPS_INDEX,getActivity());
         mNumberofTipsTextView.setText(maxTips[numberOfUserTips]);
-        mPlusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (maxNumberOfTipIndex != 7){
-                   updateTextView(true);
-                }
+        mPlusButton.setOnClickListener(view15 -> {
+            if (maxNumberOfTipIndex != 7){
+               updateTextView(true);
             }
         });
 
@@ -111,9 +107,27 @@ public class TipSettingsFragment extends Fragment {
             }
         });
 
+        Switch turnOffSwitch = (Switch)view.findViewById(R.id.tipSettingsFragmentSwitch);
+        turnOffSwitch.setChecked(turnOffTips);
+        turnOffSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            displaySaveButton();
+            turnOffTips = b;
+        });
+
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+            mNumberofTipsTextView.setVisibility(View.GONE);
+            mPlusButton.setVisibility(View.GONE);
+            mMinusButton.setVisibility(View.GONE);
+            turnOffSwitch.setVisibility(View.GONE);
+            TextView maxTips =  (TextView)view.findViewById(R.id.maxTipsTextView);
+            maxTips.setVisibility(View.GONE);
+
+        }
+
         ImageView libraryImageView = (ImageView)view.findViewById(R.id.tipSettingsFragmentLibararyImageView);
         ImageView homeImageView = (ImageView)view.findViewById(R.id.tipSettingsFragmentHomeImageView);
         ImageView playToday = (ImageView)view.findViewById(R.id.tipSettingsFragmentPlayTodayImageView);
+        Utility.hideButtonCheck(libraryImageView,playToday);
 
         libraryImageView.setOnClickListener(view12 -> {
             Intent libraryIntent = new Intent(getActivity(), DetailActivity.class);
@@ -136,12 +150,6 @@ public class TipSettingsFragment extends Fragment {
         setOnClickListnerForFirstBox();
         setOnClickListnerSecondBox();
 
-        Switch turnOffSwitch = (Switch)view.findViewById(R.id.tipSettingsFragmentSwitch);
-        turnOffSwitch.setChecked(turnOffTips);
-        turnOffSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
-            displaySaveButton();
-            turnOffTips = b;
-        });
 
     }
 

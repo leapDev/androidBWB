@@ -13,6 +13,7 @@ public class Constant {
     public static final String DID_DOWNLOAD = "Did_Download";
     public static final String START_TIME = "START_TIME";
     public static final String END_TIME = "END_TIME";
+    public static final String ALL_TIME_END_TIME = "ALL_TIME_END_TIME";
     public static final String SEND_TIPS_TODAY = "SEND_TIPS_TODAY";
     public static final String VIEWED_SETTINGS = "ViewedSettings";
     public static final String CHANGE_PROFILE_SETTINGS = "ChangeProfileSettings";
@@ -42,4 +43,9 @@ public class Constant {
     public static final String NOTIFICATION_SIZE = "notficationListSize";
     public static final String TIP_ID = "TIP_ID";
     public static final String SAVED_BABY_AGE = "SAVED_BABY_AGE";
+    public static final String I_WILL_LATER = "IWillLater";
+    public static final String YES = "Yes";
+    public static final String NO = "No";
+    public static final String UpdatedScheduleBuckets = "UPDATED_SCHEDULE_BUCKETS";
+    public static final String UpdatedTOPLAYTODAYJOB = "UPDATED_PLAY_TODAY_JOB";
 }

@@ -1,12 +1,18 @@
 package com.learning.leap.bwb.models;
 
+import android.app.AlarmManager;
 import android.content.Context;
 
 import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class UserTipSettings {
@@ -16,6 +22,7 @@ public class UserTipSettings {
     private int endTimeIndex;
     private String[] startTimes;
     private String[] endTimes;
+    private ArrayList<String> allTime;
     private static final String[] maxTips = {"3","4","5","6","7","8","9","10"};
     private Boolean sendTipsToday;
 
@@ -26,6 +33,7 @@ public class UserTipSettings {
     public void loadUserTipsSettings(){
         setStartTimes();
         setEndTimes();
+        setAllTimes();
         loadUserNumberOfTipsIndexFromSharedPref();
         loadEndTimeIndexFromShartedPref();
         loadStartTimeIndexFromSharedPref();
@@ -49,6 +57,11 @@ public class UserTipSettings {
 
     private void setEndTimes(){
         endTimes = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
+    }
+
+    private void setAllTimes(){
+        String[] alltimes = context.getResources().getStringArray(R.array.all_times_settings_array);
+        allTime = new ArrayList<>(Arrays.asList(alltimes));
     }
 
     private Boolean hidePlusButton(int index, int max) {
@@ -135,7 +148,7 @@ public class UserTipSettings {
         if (!sendTipsToday){
             JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
         }else {
-            PlayTodayJob.schedule();
+           PlayTodayJob.schedule();
         }
         Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY, sendTipsToday,context);
     }
@@ -144,8 +157,13 @@ public class UserTipSettings {
         return startTimeIndex > 6 && startTimeIndex > endTimeIndex && endTimeIndex < startTimeIndex -6;
 
     }
+
+    private int findEndTimeIndex(){
+        return allTime.indexOf(endTimeAtIndex());
+    }
     public void  saveIndexes(){
         Utility.writeIntSharedPreferences(Constant.START_TIME,startTimeIndex,context);
+        Utility.writeIntSharedPreferences(Constant.ALL_TIME_END_TIME,findEndTimeIndex(),context);
         Utility.writeIntSharedPreferences(Constant.END_TIME,endTimeIndex,context);
         int userMaxTipInt = Integer.parseInt(userMaxNumberOfTipsAtIndex());
         Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS_INDEX,userNumberOfTipsIndex,context);

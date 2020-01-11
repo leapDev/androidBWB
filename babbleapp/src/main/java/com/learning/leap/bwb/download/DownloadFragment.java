@@ -3,9 +3,9 @@ package com.learning.leap.bwb.download;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,6 @@ import android.widget.TextView;
 
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.helper.ScheduleBucket;
-import com.learning.leap.bwb.utility.Constant;
-import com.learning.leap.bwb.utility.Utility;
 
 
 public class DownloadFragment extends Fragment implements DownloadViewInterface {

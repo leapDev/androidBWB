@@ -2,7 +2,7 @@ package com.learning.leap.bwb.settings;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.DetailActivity;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
@@ -48,6 +49,9 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
     private void setUpViews(){
         saveButton = (Button)findViewById(R.id.tipSettingSaveButton);
         sendTipsTodaySwitch = (Switch)findViewById(R.id.tipSettingsFragmentSwitch);
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+            sendTipsTodaySwitch.setVisibility(View.GONE);
+        }
         setUpPlusAndMinusButtons();
         setUpTextViews();
         setOnClickListners();
@@ -61,6 +65,11 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
     private void setUpPlusAndMinusButtons(){
         maxNumberOfTipsPlusButton = (Button)findViewById(R.id.tipSettingsMaxTipNumberPlusButton);
         maxNumberOfTipsMinusButton = (Button)findViewById(R.id.tipsettingsMaxNumberTipMinusButton);
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+           maxNumberOfTipsMinusButton.setVisibility(View.GONE);
+            maxNumberOfTipsPlusButton.setVisibility(View.GONE);
+
+        }
         endTimeMinusButton = (Button)findViewById(R.id.tipSettingsEndTimeMinusButton);
         endTimePlusButton = (Button)findViewById(R.id.tipSettingsEndTimePlusButton);
         startTimeMinusButton = (Button)findViewById(R.id.tipSettingsStartTimeMinusButton);
@@ -70,6 +79,12 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
         numberofTipsTextView = (TextView)findViewById(R.id.tipSettingsMaxNumberTipTextView);
         startTimeTextView = (TextView) findViewById(R.id.tipSettingsStartTimeTextView);
         endTimeTextView = (TextView) findViewById(R.id.tipSettingsEndTimeTextView);
+        if (!BuildConfig.FLAVOR.equals("regular")) {
+            numberofTipsTextView.setVisibility(View.GONE);
+            TextView maxTips =  (TextView)findViewById(R.id.maxTipsTextView);
+            maxTips.setVisibility(View.GONE);
+
+        }
     }
 
     private void setOnClickListners(){
@@ -87,6 +102,7 @@ public class TipSettingsActivity extends AppCompatActivity implements TipSetting
         ImageView libraryImageView = (ImageView)findViewById(R.id.tipSettingsFragmentLibararyImageView);
         ImageView homeImageView = (ImageView)findViewById(R.id.tipSettingsFragmentHomeImageView);
         ImageView playToday = (ImageView)findViewById(R.id.tipSettingsFragmentPlayTodayImageView);
+        Utility.hideButtonCheck(playToday,libraryImageView);
         libraryImageView.setOnClickListener(view -> onLibraryPress());
         homeImageView.setOnClickListener(view -> onHomePress());
         playToday.setOnClickListener(view -> onPlayToday());

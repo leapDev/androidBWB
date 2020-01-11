@@ -7,6 +7,7 @@ import android.os.Build;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.helper.AnswerNotification;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
@@ -62,7 +63,6 @@ public class TipReminder {
     }
 
     public void setReminder(Date notificationDate){
-
         Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
         alarmIntent.putExtra("id",bucketNumber);
         alarmIntent.putExtra("NumberOfTips",numberOfTips);
@@ -78,6 +78,7 @@ public class TipReminder {
         }
 
         setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
+        //Add follow up message
 //        if (bucketNumber == 3){
 //            calendar.add(Calendar.HOUR,1);
 //            setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
