@@ -4,29 +4,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.learning.leap.bwb.R;
 
 import java.io.File;
 
 public class VideoActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
-    EMVideoView emVideoView;
+    VideoView emVideoView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
-     emVideoView = (EMVideoView)findViewById(R.id.videoView);
-        emVideoView.setOnPreparedListener(new OnPreparedListener() {
-            @Override
-            public void onPrepared() {
-                emVideoView.start();
-            }
-        });
+
+     emVideoView = findViewById(R.id.videoView);
+        emVideoView.setOnPreparedListener(() -> emVideoView.start());
 
 
         String url = null;

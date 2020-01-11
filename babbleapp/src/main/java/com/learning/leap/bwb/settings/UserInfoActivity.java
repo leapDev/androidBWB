@@ -3,7 +3,7 @@ package com.learning.leap.bwb.settings;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,9 +15,7 @@ import android.widget.TextView;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.learning.leap.bwb.BuildConfig;
-import com.learning.leap.bwb.DownloadService;
 import com.learning.leap.bwb.Player;
-import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
@@ -28,9 +26,6 @@ import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.NetworkChecker;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.models.BabblePlayer;
-import com.learning.leap.bwb.models.Notification;
-
-import java.util.List;
 
 import io.realm.Realm;
 

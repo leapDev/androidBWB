@@ -3,11 +3,10 @@ package com.learning.leap.bwb;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.learning.leap.bwb.models.ActionHistory;
 import com.learning.leap.bwb.research.ResearchActionHistory;
-import com.learning.leap.bwb.utility.Constant;
 
 import io.reactivex.disposables.CompositeDisposable;
 

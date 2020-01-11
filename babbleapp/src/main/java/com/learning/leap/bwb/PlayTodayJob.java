@@ -2,14 +2,12 @@ package com.learning.leap.bwb;
 
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.evernote.android.job.DailyJob;
-import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
 import com.learning.leap.bwb.helper.ScheduleBucket;
 
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 

@@ -2,7 +2,7 @@ package com.learning.leap.bwb.settings;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,11 +11,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.learning.leap.bwb.BuildConfig;
-import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.DetailActivity;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
-import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.tipSettings.TipSettingsPresenters;
 import com.learning.leap.bwb.tipSettings.TipSettingsViewInterface;
 import com.learning.leap.bwb.utility.Constant;

@@ -67,7 +67,6 @@ public class AWSDownload {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED){
-
                     downloadPresneterInterface.updateProgress(getProgress());
                     if (downloadHasNotCompleted()) {
                         filesdownloaded++;
