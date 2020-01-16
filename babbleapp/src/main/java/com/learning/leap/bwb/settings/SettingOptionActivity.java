@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.learning.leap.bwb.baseActivity.DetailActivity;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.settings.userInfo.UserInfoActivity;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -41,7 +42,7 @@ public class SettingOptionActivity extends AppCompatActivity {
     }
 
     private void userSettingsIntent(){
-        Intent userSettingIntent = new Intent(SettingOptionActivity.this,UserInfoActivity.class);
+        Intent userSettingIntent = new Intent(SettingOptionActivity.this, UserInfoActivity.class);
         userSettingIntent.putExtra("newUser",false);
         startActivity(userSettingIntent);
     }

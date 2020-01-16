@@ -26,7 +26,7 @@ import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.models.ActionHistory;
 import com.learning.leap.bwb.research.ResearchActionHistory;
-import com.learning.leap.bwb.settings.UserInfoActivity;
+import com.learning.leap.bwb.settings.userInfo.UserInfoActivity;
 
 public class Utility {
     private static final String sharedPreferencesFile = "Global";

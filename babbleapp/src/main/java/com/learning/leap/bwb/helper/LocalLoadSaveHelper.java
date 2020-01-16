@@ -1,103 +1,109 @@
 package com.learning.leap.bwb.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
 
 
 public class LocalLoadSaveHelper {
 
-    public Context context;
-    public LocalLoadSaveHelper(Context context){
-        this.context = context;
+    public SharedPreferences sharedPreferences;
+    @Inject
+    public LocalLoadSaveHelper(SharedPreferences sharedPreferences){
+        this.sharedPreferences = sharedPreferences;
+
     }
 
 
 
-    public int getNotificationMaxTime(){
-        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,context);
-    }
-    public void saveNotificationMaxTime(int time){
-        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,time,context);
-    }
-
-    public int getNotificationMinTime(){
-        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,context);
-    }
-    public void saveNotificationMinTime(int time){
-        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,time,context);
-    }
-
-    public void clearBabbleID(){
-        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,"",context);
-    }
+//    public int getNotificationMaxTime(){
+//        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,context);
+//    }
+//    public void saveNotificationMaxTime(int time){
+//        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,time,context);
+//    }
+//
+//    public int getNotificationMinTime(){
+//        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,context);
+//    }
+//    public void saveNotificationMinTime(int time){
+//        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,time,context);
+//    }
+//
+//    public void clearBabbleID(){
+//        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,"",context);
+//    }
 
     public String getBabbleID(){
-       return Utility.readStringSharedPreferences(Constant.BABBLE_ID,context);
+       return sharedPreferences.getString(Constant.BABBLE_ID,"");
     }
 
     public void saveBabbleID(String babbleID){
-        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,babbleID,context);
+        sharedPreferences.edit().putString(Constant.BABBLE_ID,babbleID).apply();
     }
 
     public String getBabyBirthDay(){
-        return Utility.readStringSharedPreferences(Constant.BABY_BIRTHDAY,context);
+        return sharedPreferences.getString(Constant.BABY_BIRTHDAY,"");
     }
 
     public void saveBabyBirthDay(String babyBirthDay){
-        Utility.writeStringSharedPreferences(Constant.BABY_BIRTHDAY,babyBirthDay,context);
+        sharedPreferences.edit().putString(Constant.BABY_BIRTHDAY,babyBirthDay).apply();
     }
 
     public boolean checkedSaveBabyAged(){
-        return Utility.readBoolSharedPreferences(Constant.SAVED_BABY_AGE,context);
+        return sharedPreferences.getBoolean(Constant.SAVED_BABY_AGE,false);
     }
 
     public void updatedSavedBabyAged(boolean savedBabyAged){
-        Utility.writeBoolenSharedPreferences(Constant.SAVED_BABY_AGE,savedBabyAged,context);
+        sharedPreferences.edit().putBoolean(Constant.SAVED_BABY_AGE,savedBabyAged).apply();
     }
 
 
     public int getZipCode(){
-        return Utility.readIntSharedPreferences(Constant.ZIP_CODE,context);
+        return sharedPreferences.getInt(Constant.ZIP_CODE,0);
     }
 
     public  void saveUserBirthDayInMonth(int month){
-        Utility.writeIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,month,context);
+       sharedPreferences.edit().putInt(Constant.USER_BDAY_IN_MONTH,month).apply();
     }
 
     public int getUserBirthdayInMonth(){
-        return Utility.readIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,context);
+        return sharedPreferences.getInt(Constant.USER_BDAY_IN_MONTH,0);
     }
 
     public void saveZipCode(int zipCode){
-        Utility.writeIntSharedPreferences(Constant.ZIP_CODE,zipCode,context);
+        sharedPreferences.edit().putInt(Constant.ZIP_CODE,zipCode).apply();
     }
 
     public String getBabyName(){
-        return Utility.readStringSharedPreferences(Constant.BABY_NAME,context);
+        return sharedPreferences.getString(Constant.BABY_NAME,"");
     }
 
     public void saveBabyName(String babyName){
-        Utility.writeStringSharedPreferences(Constant.BABY_NAME,babyName,context);
+        sharedPreferences.edit().putString(Constant.BABY_NAME,babyName).apply();
     }
 
     public void saveBabyGender(String gender){
-        Utility.writeStringSharedPreferences(Constant.GENDER,gender,context);
+        sharedPreferences.edit().putString(Constant.GENDER,gender).apply();
     }
 
     public String getBabyGender(){
-        return Utility.readStringSharedPreferences(Constant.GENDER,context);
+        return sharedPreferences.getString(Constant.GENDER,"");
     }
 
     public static Date getLastDayTurnedOff(Context context) throws Exception{
         String date = Utility.readStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,context);
-        return new SimpleDateFormat("MM/dd/yyyy").parse(date);
+        return new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).parse(date);
     }
 
     public static void SaveLastDayTurnedOff(Boolean clear,Context context){
@@ -105,19 +111,19 @@ public class LocalLoadSaveHelper {
         if (clear){
            date = null;
         }else {
-           date = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+           date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         }
 
-        Utility.writeStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,date,context);
+        //sharedPreferences.edit().putInt(Constant.LAST_DAY_TURNED_OFF,date);
     }
 
     public void  saveNotificationSize(int size){
-        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_SIZE,size,context);
+        sharedPreferences.edit().putInt(Constant.NOTIFICATION_SIZE,size).apply();
     }
 
-    public int getNotificationTotalSize(){
-        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_SIZE,context);
-    }
+//    public int getNotificationTotalSize(){
+//        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_SIZE,context);
+//    }
 
 
 }

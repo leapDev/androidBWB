@@ -8,6 +8,8 @@ import androidx.multidex.MultiDexApplication;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.evernote.android.job.JobManager;
+import com.learning.leap.bwb.di.AppComponent;
+import com.learning.leap.bwb.di.DaggerAppComponent;
 
 
 import java.util.Set;
@@ -21,6 +23,8 @@ import io.realm.RealmSchema;
 
 public class BabbleApplication extends Application{
 
+    public AppComponent appComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,6 +37,7 @@ public class BabbleApplication extends Application{
                 .build();
         Realm.setDefaultConfiguration(config);
         JobManager.create(this).addJobCreator(new PlayTodayJobCreator());
+        appComponent = DaggerAppComponent.factory().create(this);
     }
 
     RealmMigration migration = (realm, oldVersion, newVersion) -> {;
