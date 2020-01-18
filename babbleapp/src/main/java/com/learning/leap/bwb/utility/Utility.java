@@ -31,7 +31,6 @@ import com.learning.leap.bwb.settings.userInfo.UserInfoActivity;
 public class Utility {
     private static final String sharedPreferencesFile = "Global";
 
-
     public  static CognitoCredentialsProvider getCredientail(Context context){
         return new CognitoCachingCredentialsProvider(
                 context.getApplicationContext(),  /* get the context for the application */

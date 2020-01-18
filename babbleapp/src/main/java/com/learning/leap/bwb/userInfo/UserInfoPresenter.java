@@ -64,21 +64,13 @@ public class UserInfoPresenter{
 
 
     private void retriveNotificationsFromAmazon() {
-        if (BuildConfig.FLAVOR.equals("talk2")){
-            Disposable notificationDisposable = babblePlayer.retriveNorthWestenNotifications(mapper)
-                    .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::updateNWViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());
-            disposables.add(notificationDisposable);
-        } else {
             Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(), mapper)
                     .doOnSubscribe(disposable -> userInfoViewInterface.displaySaveDialog())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::updateViewAfterRetrivingNotificationList, throwable -> updateViewAfterError());
             disposables.add(notificationDisposable);
-        }
+
     }
 
     private void updateViewAfterError(){
@@ -151,12 +143,9 @@ public class UserInfoPresenter{
 
     public void checkUserInput() {
         babblePlayer.setuserAgeInMonth();
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            babblePlayer.setZipCode(00000);
-        }
         if (babblePlayer.checkIfPlayerIsValid()){
             updatePlayer();
-        }else if (!babblePlayer.checkZipCode() && BuildConfig.FLAVOR.equals("regular")){
+        }else if (!babblePlayer.checkZipCode()){
             userInfoViewInterface.displayErrorDialog(R.string.userZipCodeErrorTitle,R.string.userZipCodeError);
         }else if (babblePlayer.checkNameIsEmpty()){
             userInfoViewInterface.displayErrorDialog(R.string.userNameNameErrorTitle,R.string.userNameEmptyError);

@@ -1,5 +1,6 @@
 package com.learning.leap.bwb.baseActivity
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -11,12 +12,18 @@ import com.learning.leap.bwb.settings.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
 
 class SplashActivity : AppCompatActivity() {
+    private val sharedPreferencesFile = "Global"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_activity)
-        goToCorrectScreen((application as BabbleApplication).appComponent.sharedPreferences)
+        goToCorrectScreen(provideSharedPref(this))
     }
+
+    fun provideSharedPref(context: Context):SharedPreferences{
+        return context.getSharedPreferences(sharedPreferencesFile, Context.MODE_PRIVATE);
+    }
+
 
     private fun goToCorrectScreen(sharedPreferences:SharedPreferences){
         val didDownload = sharedPreferences.getBoolean(Constant.DID_DOWNLOAD,false)

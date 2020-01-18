@@ -3,56 +3,45 @@ package com.learning.leap.bwb.settings.userInfo
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
-import com.learning.leap.bwb.BuildConfig
 import com.learning.leap.bwb.Player
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.models.BabblePlayer
-import com.learning.leap.bwb.research.ResearchPlayers
 import com.learning.leap.bwb.settings.WhyActivity
 import com.learning.leap.bwb.userInfo.UserInfoPresenter
 import com.learning.leap.bwb.userInfo.UserInfoViewInterface
 import com.learning.leap.bwb.utility.Constant
+import com.learning.leap.bwb.utility.DynamoDBSingleton
 import com.learning.leap.bwb.utility.NetworkChecker
 import com.learning.leap.bwb.utility.Utility
 import io.realm.Realm
-import kotlinx.android.synthetic.main.fragment_user_profile.*
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_user_info.*
+import java.util.*
 
 class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
     var newUser: Boolean? = null
     var mDialog: ProgressDialog? = null
     var gender: String? = null
 
-
-    @Inject
     lateinit var userInfoPresenter: UserInfoPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_user_profile)
-        setupOnClickListners()
-
+        setContentView(R.layout.activity_user_info)
+        onClickListners()
         newUser = intent.getBooleanExtra(Constant.NEW_USER, false)
-
+        userInfoPresenter = UserInfoPresenter(newUser,this, LocalLoadSaveHelper(this),
+                NetworkChecker(this),Realm.getDefaultInstance(),
+                DynamoDBSingleton.getDynamoDB(this))
         if (!newUser!!) {
             userInfoPresenter.loadPlayerFromSharedPref()
         }
     }
 
-
-    private fun setupOnClickListners() {
+    private fun onClickListners() {
         pleaseTapHereTextView.setOnClickListener { view: View? -> whyActivityIntent() }
         userProfileFragmentSaveButton.setOnClickListener { view: View? -> saveButtonClicked() }
     }
@@ -68,8 +57,8 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
     }
 
     private fun saveButtonClicked() {
-        userInfoPresenter!!.createBabblePlayer(createBabblePlayer())
-        userInfoPresenter!!.checkUserInput()
+        userInfoPresenter.createBabblePlayer(createBabblePlayer())
+        userInfoPresenter.checkUserInput()
     }
 
     private fun setGender() {
@@ -87,7 +76,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
             babblePlayer.babyName = userProfileFragmentFirstNameEditText.text.toString().trim { it <= ' ' }
             babblePlayer.zipCode = setZipCode()
             babblePlayer.babyBirthday =userProfileFragmentBirtdayEditText.text.toString().trim { it <= ' ' }
-            babblePlayer.babbleID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+            babblePlayer.babbleID = UUID.randomUUID().toString();
             setGender()
             babblePlayer.babyGender = gender
             return babblePlayer

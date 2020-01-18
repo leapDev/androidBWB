@@ -17,113 +17,96 @@ import io.realm.Realm;
 
 public class LocalLoadSaveHelper {
 
-    public SharedPreferences sharedPreferences;
-    @Inject
-    public LocalLoadSaveHelper(SharedPreferences sharedPreferences){
-        this.sharedPreferences = sharedPreferences;
-
+    public Context context;
+    public LocalLoadSaveHelper(Context context){
+        this.context = context;
     }
 
-
-
-//    public int getNotificationMaxTime(){
-//        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,context);
-//    }
-//    public void saveNotificationMaxTime(int time){
-//        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,time,context);
-//    }
-//
-//    public int getNotificationMinTime(){
-//        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,context);
-//    }
-//    public void saveNotificationMinTime(int time){
-//        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,time,context);
-//    }
-//
-//    public void clearBabbleID(){
-//        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,"",context);
-//    }
+    public void clearBabbleID(){
+        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,"",context);
+    }
 
     public String getBabbleID(){
-       return sharedPreferences.getString(Constant.BABBLE_ID,"");
+        return Utility.readStringSharedPreferences(Constant.BABBLE_ID,context);
     }
 
     public void saveBabbleID(String babbleID){
-        sharedPreferences.edit().putString(Constant.BABBLE_ID,babbleID).apply();
+        Utility.writeStringSharedPreferences(Constant.BABBLE_ID,babbleID,context);
     }
 
     public String getBabyBirthDay(){
-        return sharedPreferences.getString(Constant.BABY_BIRTHDAY,"");
+        return Utility.readStringSharedPreferences(Constant.BABY_BIRTHDAY,context);
     }
 
     public void saveBabyBirthDay(String babyBirthDay){
-        sharedPreferences.edit().putString(Constant.BABY_BIRTHDAY,babyBirthDay).apply();
+        Utility.writeStringSharedPreferences(Constant.BABY_BIRTHDAY,babyBirthDay,context);
     }
 
     public boolean checkedSaveBabyAged(){
-        return sharedPreferences.getBoolean(Constant.SAVED_BABY_AGE,false);
+        return Utility.readBoolSharedPreferences(Constant.SAVED_BABY_AGE,context);
     }
 
     public void updatedSavedBabyAged(boolean savedBabyAged){
-        sharedPreferences.edit().putBoolean(Constant.SAVED_BABY_AGE,savedBabyAged).apply();
+        Utility.writeBoolenSharedPreferences(Constant.SAVED_BABY_AGE,savedBabyAged,context);
     }
 
 
     public int getZipCode(){
-        return sharedPreferences.getInt(Constant.ZIP_CODE,0);
+        return Utility.readIntSharedPreferences(Constant.ZIP_CODE,context);
     }
 
     public  void saveUserBirthDayInMonth(int month){
-       sharedPreferences.edit().putInt(Constant.USER_BDAY_IN_MONTH,month).apply();
+        Utility.writeIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,month,context);
     }
 
     public int getUserBirthdayInMonth(){
-        return sharedPreferences.getInt(Constant.USER_BDAY_IN_MONTH,0);
+        return Utility.readIntSharedPreferences(Constant.USER_BDAY_IN_MONTH,context);
     }
 
     public void saveZipCode(int zipCode){
-        sharedPreferences.edit().putInt(Constant.ZIP_CODE,zipCode).apply();
+        Utility.writeIntSharedPreferences(Constant.ZIP_CODE,zipCode,context);
     }
 
     public String getBabyName(){
-        return sharedPreferences.getString(Constant.BABY_NAME,"");
+        return Utility.readStringSharedPreferences(Constant.BABY_NAME,context);
     }
 
     public void saveBabyName(String babyName){
-        sharedPreferences.edit().putString(Constant.BABY_NAME,babyName).apply();
+        Utility.writeStringSharedPreferences(Constant.BABY_NAME,babyName,context);
     }
 
     public void saveBabyGender(String gender){
-        sharedPreferences.edit().putString(Constant.GENDER,gender).apply();
+        Utility.writeStringSharedPreferences(Constant.GENDER,gender,context);
     }
 
     public String getBabyGender(){
-        return sharedPreferences.getString(Constant.GENDER,"");
+        return Utility.readStringSharedPreferences(Constant.GENDER,context);
     }
 
     public static Date getLastDayTurnedOff(Context context) throws Exception{
         String date = Utility.readStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,context);
-        return new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).parse(date);
+        return new SimpleDateFormat("MM/dd/yyyy").parse(date);
     }
 
     public static void SaveLastDayTurnedOff(Boolean clear,Context context){
         String date;
         if (clear){
-           date = null;
+            date = null;
         }else {
-           date = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+            date = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
         }
 
-        //sharedPreferences.edit().putInt(Constant.LAST_DAY_TURNED_OFF,date);
+        Utility.writeStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,date,context);
     }
 
     public void  saveNotificationSize(int size){
-        sharedPreferences.edit().putInt(Constant.NOTIFICATION_SIZE,size).apply();
+        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_SIZE,size,context);
     }
 
-//    public int getNotificationTotalSize(){
-//        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_SIZE,context);
-//    }
+    public int getNotificationTotalSize(){
+        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_SIZE,context);
+    }
+
 
 
 }
