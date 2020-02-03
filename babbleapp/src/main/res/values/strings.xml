@@ -44,9 +44,10 @@
     <string name="updateDialogTitle">There is updated Content for you to Download.</string>
     <string name="update">Update</string>
     <string name="remindMeLater">Update Later</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
     <string name="stop">STOP</string>
     <string name="comeBackTommrow">Come back tomorrow for more ways to talk, listen and connect with your baby!</string>
     <string name="babble_update">New Tips Are Available To Download</string>
+    <string name="male">Male</string>
+    <string name="not_now">Not Now</string>
+    <string name="female">Female</string>
 </resources>

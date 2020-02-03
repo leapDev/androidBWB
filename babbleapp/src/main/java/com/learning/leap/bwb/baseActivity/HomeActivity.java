@@ -51,39 +51,18 @@ public class HomeActivity extends AppCompatActivity  {
             Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
 
         }
-        if (BuildConfig.FLAVOR.equals("regular")) {
-            poweredByTextView.setOnClickListener(view -> openWebsite());
-        }else {
-            leapLogo.setVisibility(View.GONE);
-            poweredByTextView.setVisibility(View.GONE);
-        }
+        poweredByTextView.setOnClickListener(view -> openWebsite());
         Utility.hideButtonCheck(libararyImageView,playToday);
 //
         if (Utility.isNetworkAvailable(this)){
             ActionHistoryIntentService.startActionHistoryIntent(this);
         }
 
-
-//
-//        ImageView homeImageView = (ImageView) findViewById(R.id.homeFragmentHomeIcon);
-//        homeImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                java.util.Calendar calendar = java.util.Calendar.getInstance();
-//                calendar.add(java.util.Calendar.MINUTE,1);
-//                TipReminder tipReminder = new TipReminder(getBucketNumber(),1,new Date(),calendar.getTime(),HomeActivity.this);
-//                tipReminder.setReminder(calendar.getTime());
-//
-//            }
-//        });
-
     }
 
     private int getBucketNumber(){
-
         bucketNumber++;
         return bucketNumber;
-
     }
 
     private boolean updateCheck() {
@@ -122,14 +101,6 @@ public class HomeActivity extends AppCompatActivity  {
         super.onDestroy();
     }
 
-    private void displayUpdateDialog(){
-//        new AlertDialog.Builder(this)
-//                .setMessage(R.string.updateDialogTitle)
-//                .setPositiveButton(R.string.update,(dialogInterface, i) -> {dialogInterface.dismiss();downloadIntent();})
-//                .setNegativeButton(R.string.remindMeLater,(dialogInterface, i) -> dialogInterface.dismiss())
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-    }
 
     private void setUpBackground(){
         ImageView background = (ImageView)findViewById(R.id.homeBackground);

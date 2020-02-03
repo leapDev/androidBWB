@@ -2,14 +2,16 @@ package com.learning.leap.bwb.settings.userInfo
 
 import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.learning.leap.bwb.Player
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
-import com.learning.leap.bwb.models.BabblePlayer
+import com.learning.leap.bwb.model.BabbleUser
 import com.learning.leap.bwb.settings.WhyActivity
 import com.learning.leap.bwb.userInfo.UserInfoPresenter
 import com.learning.leap.bwb.userInfo.UserInfoViewInterface
@@ -22,9 +24,9 @@ import kotlinx.android.synthetic.main.activity_user_info.*
 import java.util.*
 
 class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
-    var newUser: Boolean? = null
+    var newUser: Boolean = false
     var mDialog: ProgressDialog? = null
-    var gender: String? = null
+    var gender: String = "Now Now"
 
     lateinit var userInfoPresenter: UserInfoPresenter
 
@@ -36,19 +38,51 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
         userInfoPresenter = UserInfoPresenter(newUser,this, LocalLoadSaveHelper(this),
                 NetworkChecker(this),Realm.getDefaultInstance(),
                 DynamoDBSingleton.getDynamoDB(this))
-        if (!newUser!!) {
+        if (!newUser) {
             userInfoPresenter.loadPlayerFromSharedPref()
         }
     }
 
     private fun onClickListners() {
         pleaseTapHereTextView.setOnClickListener { view: View? -> whyActivityIntent() }
-        userProfileFragmentSaveButton.setOnClickListener { view: View? -> saveButtonClicked() }
+        userProfileSaveButton.setOnClickListener { view: View? -> saveButtonClicked() }
+        userMaleButton.setOnClickListener {
+            maleButtonSelected()
+            gender = "Male"
+        }
+
+        userFemaleButton.setOnClickListener {
+            femaleButonSelected()
+            gender = "Female"
+        }
+
+        userNotNowButton.setOnClickListener {
+            notNowSelected()
+            gender = "Not Now"
+        }
+    }
+
+    private fun notNowSelected() {
+        userMaleButton.setBackgroundColor(Color.LTGRAY)
+        userFemaleButton.setBackgroundColor(Color.LTGRAY)
+        userNotNowButton.setBackgroundColor(ContextCompat.getColor(this, R.color.darkestBlue))
+    }
+
+    private fun femaleButonSelected() {
+        userMaleButton.setBackgroundColor(Color.LTGRAY)
+        userFemaleButton.setBackgroundColor(ContextCompat.getColor(this, R.color.darkestBlue))
+        userNotNowButton.setBackgroundColor(Color.LTGRAY)
+    }
+
+    private fun maleButtonSelected() {
+        userMaleButton.setBackgroundColor(ContextCompat.getColor(this, R.color.darkestBlue))
+        userFemaleButton.setBackgroundColor(Color.LTGRAY)
+        userNotNowButton.setBackgroundColor(Color.LTGRAY)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        userInfoPresenter.onDestory()
+        userInfoPresenter.onDestroy()
     }
 
     private fun whyActivityIntent() {
@@ -61,38 +95,24 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
         userInfoPresenter.checkUserInput()
     }
 
-    private fun setGender() {
-        gender = if (maleRadioButton!!.isChecked) {
-            "Male"
-        } else if (femaleRadioButton!!.isChecked) {
-            "Female"
-        } else {
-            "Not Now"
-        }
-    }
+    private fun createBabblePlayer(): BabbleUser {
+            return BabbleUser(UUID.randomUUID().toString(), userProfileFragmentBirtdayEditText.text.toString().trim { it <= ' ' },
+                    userProfileFragmentFirstNameEditText.text.toString().trim { it <= ' ' },gender)
 
-    private fun createBabblePlayer(): Player {
-            val babblePlayer = BabblePlayer()
-            babblePlayer.babyName = userProfileFragmentFirstNameEditText.text.toString().trim { it <= ' ' }
-            babblePlayer.zipCode = setZipCode()
-            babblePlayer.babyBirthday =userProfileFragmentBirtdayEditText.text.toString().trim { it <= ' ' }
-            babblePlayer.babbleID = UUID.randomUUID().toString();
-            setGender()
-            babblePlayer.babyGender = gender
-            return babblePlayer
-
-    }
-
-    private fun setZipCode(): Int {
-        return try {
-            userProfileFragmentZipCodeEditText.text.toString().trim { it <= ' ' }.toInt()
-        } catch (e: NumberFormatException) {
-            0
-        }
     }
 
     override fun displayErrorDialog(dialogTitle: Int, dialogMessage: Int) {
         runOnUiThread { Utility.displayAlertMessage(dialogTitle, dialogMessage, this) }
+    }
+
+    override fun displayUserInfo(babbleUser: BabbleUser) {
+        userProfileFragmentBirtdayEditText.setText(babbleUser.babyBirthday)
+        userProfileFragmentFirstNameEditText.setText(babbleUser.babyName)
+        when (babbleUser.babyGender) {
+            "Male" -> maleButtonSelected()
+            "Female" -> femaleButonSelected()
+            else -> notNowSelected()
+        }
     }
 
     override fun dismissActivity() {
@@ -105,19 +125,9 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
         startActivity(downloadIntent)
     }
 
-    override fun displayUserInfo(babblePlayer: Player) {
-       userProfileFragmentBirtdayEditText.setText(babblePlayer.babyBirthday)
-        userProfileFragmentFirstNameEditText.setText(babblePlayer.babyName)
-        userProfileFragmentZipCodeEditText.setText(babblePlayer.zipCode.toString())
-        when (babblePlayer.babyGender) {
-            "Male" -> maleRadioButton!!.isChecked = true
-            "Female" -> femaleRadioButton!!.isChecked = true
-            else -> notNowRadioButton!!.isChecked = true
-        }
-    }
 
     override fun getUserGender(): String {
-        return gender!!
+        return gender
     }
 
     override fun displaySaveDialog() {

@@ -10,8 +10,8 @@ class DynamoDBSingleton() {
         private var dynamoDB:DynamoDBMapper? = null
         fun getDynamoDB(context: Context):DynamoDBMapper{
             if (dynamoDB == null){
-            val amazonDynamoDBClient = AmazonDynamoDBClient(Utility.getCredientail(context.applicationContext))
-            return DynamoDBMapper.builder().dynamoDBClient(amazonDynamoDBClient).build()
+                val amazonDynamoDBClient = AmazonDynamoDBClient(Utility.getCredientail(context.applicationContext))
+                return DynamoDBMapper.builder().dynamoDBClient(amazonDynamoDBClient).build()
             }else{
                 return dynamoDB!!
             }
