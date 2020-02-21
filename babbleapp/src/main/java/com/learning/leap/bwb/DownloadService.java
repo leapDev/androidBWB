@@ -90,7 +90,7 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
                 AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
                 TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
                 awsDownload = new AWSDownload(this, transferUtility, this);
-                realmNotificationSubscription = new Notification().getNotificationFromRealm(Realm.getDefaultInstance())
+                realmNotificationSubscription = BabbleTip.getNotificationFromRealm(Realm.getDefaultInstance())
                         .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
                                 throwable -> errorHasOccured());
                 int filesDownloadAtPaused = 0;

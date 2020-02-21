@@ -5,9 +5,10 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,6 @@ public class PlayTodayFragment extends Fragment implements MediaPlayer.OnPrepare
         mPreviousImageView = (ImageView) view.findViewById(R.id.playTodayFragmentPreviousImageView);
         mAudioButton = (ImageView) view.findViewById(R.id.playTodayFragmentPlayAudioImageView);
         mVideoButton = (ImageView)view.findViewById(R.id.playTodayFragmentPlayVideoImageView);
-        mFavoriteButton = (Button)view.findViewById(R.id.notificationFragmentFavoriteButton);
         mSettingsImageView = (ImageView)view.findViewById(R.id.playTodayFragmentSettingsImageView);
         mLibraryImageView = (ImageView)view.findViewById(R.id.playTodayFragmentLibraryImageView);
         mHomeImageView = (ImageView)view.findViewById(R.id.playTodayFragmentHomeImageView);
@@ -73,7 +73,7 @@ public class PlayTodayFragment extends Fragment implements MediaPlayer.OnPrepare
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setUpViews(view);
         setUpOnClickLisnter();
@@ -85,6 +85,11 @@ public class PlayTodayFragment extends Fragment implements MediaPlayer.OnPrepare
             releaseMediaPlayer();
             isPlaying = false;
         });
+
+    }
+
+    @Override
+    public void updateFavorite(@NonNull Boolean isFavorite) {
 
     }
 
@@ -207,10 +212,10 @@ public class PlayTodayFragment extends Fragment implements MediaPlayer.OnPrepare
 
     @Override
     public void onLibraryPress() {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        LibarayFragment libarayFragment = new LibarayFragment();
-        ft.replace(R.id.detailFragment, libarayFragment);
-        ft.commit();
+//        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//        LibarayActivity libarayFragment = new LibarayActivity();
+//        ft.replace(R.id.detailFragment, libarayFragment);
+//        ft.commit();
     }
 
     @Override

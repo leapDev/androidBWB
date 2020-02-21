@@ -11,6 +11,7 @@ public class Constant {
     public static final String BABY_BIRTHDAY = "babyBirthDay";
     public static final String LAST_DAY_TURNED_OFF = "lastDayTurnedOff";
     public static final String DID_DOWNLOAD = "Did_Download";
+    public static final String DID_UPDATE_TO_2 = "DID_UPDATE_TO+2";
     public static final String START_TIME = "START_TIME";
     public static final String END_TIME = "END_TIME";
     public static final String ALL_TIME_END_TIME = "ALL_TIME_END_TIME";

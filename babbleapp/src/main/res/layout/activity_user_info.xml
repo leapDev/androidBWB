@@ -18,7 +18,7 @@
         android:inputType="text"
         android:imeOptions="actionNext"
         android:hint="@string/userBirthdayHint"
-        android:id="@+id/userProfileFragmentBirtdayEditText"
+        android:id="@+id/userProfileBirtdayEditText"
         android:gravity="center"
         android:textSize="17sp"
         android:layout_gravity="center_horizontal"
@@ -46,42 +46,44 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="3"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp">
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp">
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:textColor="@android:color/white"
                 android:text="@string/male"
                 android:textAllCaps="true"
                 app:strokeWidth="2dp"
+                app:backgroundTint="@color/light_grey"
                 android:id="@+id/userMaleButton"
                 android:layout_marginEnd="10dp"
                 app:strokeColor="@color/darkestBlue"/>
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:textColor="@android:color/white"
                 android:text="@string/female"
                 android:layout_marginEnd="10dp"
                 android:textAllCaps="true"
                 app:strokeWidth="2dp"
+                app:backgroundTint="@color/light_grey"
                 android:id="@+id/userFemaleButton"
                 app:strokeColor="@color/darkestBlue"/>
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="10dp"
                 android:textColor="@android:color/white"
                 android:text="@string/not_now"
+                app:backgroundTint="@color/darkestBlue"
                 android:textAllCaps="true"
-                android:background="@color/darkestBlue"
                 app:strokeWidth="2dp"
                 android:id="@+id/userNotNowButton"
                 app:strokeColor="@color/darkestBlue"/>
@@ -108,7 +110,7 @@
         android:textColor="@android:color/black"
         android:textStyle="bold"/>
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

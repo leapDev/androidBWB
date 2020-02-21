@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.library.LibarayFragment;
 import com.learning.leap.bwb.library.PlayTodayFragment;
 
 public class DetailActivity extends AppCompatActivity  {
@@ -32,7 +31,7 @@ public class DetailActivity extends AppCompatActivity  {
         if (fragmentToDisplay == PLAY_TODAY){
             return new PlayTodayFragment();
         }else if (fragmentToDisplay == LIBRARY){
-            return new LibarayFragment();
+            return null;
         }else {
             return null;
         }

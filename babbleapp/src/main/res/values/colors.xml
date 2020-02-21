@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="grey">#929292</color>
     <color name="darkestBlue">#003597</color>
+    <color name="light_grey">#d8d8d8</color>
+    <color name="lipstick">#D61F26</color>
 </resources>

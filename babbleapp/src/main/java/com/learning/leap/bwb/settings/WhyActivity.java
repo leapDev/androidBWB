@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.learning.leap.bwb.R;
 
@@ -13,7 +14,7 @@ public class WhyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activiy_why);
-        Button backToSettignsButton = findViewById(R.id.backSettingsButton);
+        ImageButton backToSettignsButton = findViewById(R.id.backSettingsButton);
         backToSettignsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -46,7 +46,7 @@ public class DownloadFragment extends Fragment implements DownloadViewInterface 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.download_fragment, parent, false);
+        return inflater.inflate(R.layout.activity_download, parent, false);
     }
 
     @Override

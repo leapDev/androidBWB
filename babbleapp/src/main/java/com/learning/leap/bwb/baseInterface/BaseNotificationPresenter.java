@@ -1,15 +1,15 @@
 package com.learning.leap.bwb.baseInterface;
 
-import com.learning.leap.bwb.models.Notification;
+import android.widget.RelativeLayout;
+
+import com.learning.leap.bwb.model.BabbleTip;
 import com.learning.leap.bwb.notification.NotificationPresenterInterface;
 import com.learning.leap.bwb.notification.NotificationViewViewInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -19,7 +19,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     public int index = 0;
     public int totalCount = 0;
     public   BaseNotificationViewInterface baseNotificationViewInterface;
-    public ArrayList<Notification> notifications = new ArrayList<>();
+    public ArrayList<BabbleTip> notifications = new ArrayList<>();
     public  final CompositeDisposable disposables = new CompositeDisposable();
     public String babyName;
     public boolean isPlaying;
@@ -35,12 +35,12 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         if (isPlaying){
             onStopButtonPress();
         }
-        baseNotificationViewInterface.displayPrompt(notificationAtIndex().getMessage());
+        baseNotificationViewInterface.displayPrompt(tipAtIndex().getMessage());
         videoButtonCheck();
         soundButtonCheck();
     }
 
-    public void setNotifications(RealmResults<Notification> notificationRealmResults){
+    public void setNotifications(RealmResults<BabbleTip> notificationRealmResults){
         notifications.addAll(notificationRealmResults);
         Collections.shuffle(notifications);
         totalCount = notifications.size();
@@ -48,7 +48,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
 
 
     public void soundButtonCheck(){
-        if (notificationAtIndex().noSoundFile()){
+        if (tipAtIndex().noSoundFile()){
             baseNotificationViewInterface.hideSoundButton();
         }else {
             baseNotificationViewInterface.displaySoundButton();
@@ -56,7 +56,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
     public void videoButtonCheck(){
-        if (notificationAtIndex().noVideFile()){
+        if (tipAtIndex().noVideFile()){
             baseNotificationViewInterface.hideVideoButton();
         }else {
             baseNotificationViewInterface.displayVideoButton();
@@ -64,21 +64,34 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
     public String getTag(){
-        return notificationAtIndex().getTag();
+        return tipAtIndex().getTag();
     }
 
 
-    protected Notification notificationAtIndex(){
+    protected BabbleTip tipAtIndex(){
         return notifications.get(index);
     }
 
+    public Boolean updateFavoriteForTip(){
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        boolean isFavorite = tipAtIndex().getFavorite();
+        tipAtIndex().setFavorite(!isFavorite);
+        realm.commitTransaction();
+        return tipAtIndex().getFavorite();
+    }
 
+
+
+    public void displayFavorite(){
+        baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
+    }
     protected void displayPrompt(){
-        baseNotificationViewInterface.displayPrompt(notificationAtIndex().updateMessage(babyName));
+        baseNotificationViewInterface.displayPrompt(tipAtIndex().updateMessage(babyName));
     }
 
     public void onPlayAudioPress() {
-        String notificationSoundFile = notificationAtIndex().getCreated() + "-" + notificationAtIndex().getSoundFileName();
+        String notificationSoundFile = tipAtIndex().getCreated() + "-" + tipAtIndex().getSoundFileName();
         baseNotificationViewInterface.playSound(notificationSoundFile);
         isPlaying = true;
         showStopButton();
@@ -100,7 +113,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
     public void onPlayVideoPress() {
-        String notificationVideoFile = notificationAtIndex().getCreated() + "-" + notificationAtIndex().getVideoFileName();
+        String notificationVideoFile = tipAtIndex().getCreated() + "-" + tipAtIndex().getVideoFileName();
         baseNotificationViewInterface.playVideo(notificationVideoFile);
     }
 
@@ -122,6 +135,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         }else {
             displayPrompt();
         }
+        baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
     }
 
 
@@ -133,6 +147,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         displayPrompt();
         soundButtonCheck();
         videoButtonCheck();
+        baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
     }
 
     @Override
@@ -143,6 +158,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         displayPrompt();
         soundButtonCheck();
         videoButtonCheck();
+        baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
     }
 
 

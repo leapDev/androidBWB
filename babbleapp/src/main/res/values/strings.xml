@@ -19,7 +19,7 @@
     <string name="okay">OK</string>
     <string name="noPromptsForUser">There were no prompts for the baby\'s age.  Please try again.</string>
     <string name="downloadError">Error downloading.  Please try again."</string>
-    <string name="downloadFiles">Downloading Files</string>
+    <string name="almostDone">Almost Done...</string>
     <string name="allTipsSentBetween">ALL TIPS SENT BETWEEN</string>
     <string name="MaxNumberOfTips">MAX # OF TIPS SENT PER DAY</string>
     <string name="sendTipsToday">Send Tips Today</string>
@@ -50,4 +50,11 @@
     <string name="male">Male</string>
     <string name="not_now">Not Now</string>
     <string name="female">Female</string>
+    <string name="baby_gender_info">By selecting your baby\'s gender, the app will be able to better personalize tips for you and your child!</string>
+    <string name="baby_s_gender">Baby\'s Gender?</string>
+    <string name="download_files_info">Please wait while we download tips to your mobile device. Also please do NOT leave this screen as this will disrupt the download process. Thanks!</string>
+    <string name="congrats_first_message">You and your child are ready to go. You will get your first tip shortly!</string>
+    <string name="congrats_second_message">Remember, you can change the times tips are sent under “Settings.” Get ready to have some fun with your child</string>
+    <string name="library_category_title">Click below to search our library for specific Tips.</string>
+    <string name="library_category_subtitle">You\'re doing great! Keep it up!</string>
 </resources>

@@ -16,6 +16,7 @@ import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.download.DownloadActivity;
+import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
@@ -122,9 +123,8 @@ public class HomeActivity extends AppCompatActivity  {
         startActivity(settingOptionIntent);
     }
     private void detailIntent() {
-        Intent detailIntent = new Intent(HomeActivity.this,DetailActivity.class);
-        detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.LIBRARY);
-        Utility.addCustomEvent(Constant.VIEWED_LIBRARY,Utility.getUserID(this),null);
+        Intent detailIntent = new Intent(HomeActivity.this, LibraryCategoryActivity.class);
+        //Utility.addCustomEvent(Constant.VIEWED_LIBRARY,Utility.getUserID(this),null);
         startActivity(detailIntent);
     }
 

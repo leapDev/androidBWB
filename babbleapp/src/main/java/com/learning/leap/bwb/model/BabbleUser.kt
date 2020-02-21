@@ -16,8 +16,8 @@ import java.util.*
 @DynamoDBTable(tableName = "babbleUsers")
 open class BabbleUser() :RealmModel{
     @PrimaryKey
-    @DynamoDBHashKey(attributeName = "BabbleID")
-    private var babbleID: String = ""
+    @DynamoDBHashKey(attributeName = "Id")
+    var babbleID: String = ""
     @DynamoDBRangeKey(attributeName = "BabyBirthday")
     var babyBirthday: String = ""
     @DynamoDBAttribute(attributeName = "BabyName")
@@ -30,6 +30,7 @@ open class BabbleUser() :RealmModel{
         this.babyBirthday = babyBirthday
         this.babyName = babyName
         this.babyGender = babyGender
+        setuserAgeInMonth()
     }
 
     companion object {
@@ -40,16 +41,23 @@ open class BabbleUser() :RealmModel{
         fun saveUpdatedInfo(context: Context?) {
             val saveHelper = LocalLoadSaveHelper(context)
             val sharedPrefBirthDay = saveHelper.babyBirthDay
-            val updatedBabblePlayer = BabblePlayer()
+            val updatedBabblePlayer = BabbleUser()
             updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
             updatedBabblePlayer.setuserAgeInMonth()
-            saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth())
+            saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.userAgeInMonth)
         }
 
     }
 
     var userAgeInMonth = 0
     var birthdayDate: Date? = null
+
+    fun setuserAgeInMonth() {
+        if (checkDate()) {
+            val userAgeInMonthDouble = daysBetween(birthdayDate!!).toDouble() / 30
+            userAgeInMonth = Math.floor(userAgeInMonthDouble).toInt()
+        }
+    }
 
     private fun checkName(): Boolean {
         return !checkNameIsEmpty()!! && !checkNameIsTooLong()!!
@@ -125,7 +133,7 @@ open class BabbleUser() :RealmModel{
             attributeValue[":val"] = ageAttributeValue
             attributeValue[":val2"] = falseAttributeValue
             scanExpression.expressionAttributeValues = attributeValue
-            scanExpression.filterExpression = "StartMonthNumber<=:val AND EndMonthNumber>=:val AND Deleted=:val2"
+            scanExpression.filterExpression = "StartMonth<=:val AND EndMonth>=:val AND Deleted=:val2"
         return mapper.scan(BabbleTip::class.java,scanExpression)
 
     }

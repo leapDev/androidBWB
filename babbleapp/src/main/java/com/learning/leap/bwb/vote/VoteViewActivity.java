@@ -2,6 +2,8 @@ package com.learning.leap.bwb.vote;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -119,6 +121,11 @@ public class VoteViewActivity extends AppCompatActivity implements VoteViewViewI
         }
         mediaPlayer.release();
         mediaPlayer = new MediaPlayer();
+    }
+
+    @Override
+    public void updateFavorite(@NonNull Boolean isFavorite) {
+
     }
 
     @Override

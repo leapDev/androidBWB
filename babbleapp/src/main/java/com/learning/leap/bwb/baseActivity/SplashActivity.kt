@@ -10,14 +10,20 @@ import com.learning.leap.bwb.R
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.settings.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import java.util.concurrent.TimeUnit
 
 class SplashActivity : AppCompatActivity() {
     private val sharedPreferencesFile = "Global"
-
+    private var disposable:Disposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_activity)
-        goToCorrectScreen(provideSharedPref(this))
+        disposable = Observable.timer(2,TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            goToCorrectScreen(provideSharedPref(this))
+        }
     }
 
     fun provideSharedPref(context: Context):SharedPreferences{

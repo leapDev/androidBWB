@@ -3,10 +3,9 @@ package com.learning.leap.bwb.vote;
 import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
 import com.learning.leap.bwb.helper.AnswerNotification;
+import com.learning.leap.bwb.model.BabbleTip;
 import com.learning.leap.bwb.models.Notification;
 import com.learning.leap.bwb.research.ResearchNotifications;
-import com.learning.leap.bwb.utility.Constant;
-import com.learning.leap.bwb.utility.Utility;
 
 import java.util.Date;
 
@@ -20,7 +19,7 @@ public class VotePresenter extends BaseNotificationPresenter {
     private int bucketNumber;
     private VoteViewViewInterface voteViewInterface;
 
-    public VotePresenter(int numberOfTips,int bucketNumber,VoteViewViewInterface voteViewInterface){
+    VotePresenter(int numberOfTips, int bucketNumber, VoteViewViewInterface voteViewInterface){
         this.numberOfTips = numberOfTips;
         this.bucketNumber = bucketNumber;
         this.voteViewInterface = voteViewInterface;
@@ -28,16 +27,8 @@ public class VotePresenter extends BaseNotificationPresenter {
 
     @Override
     public void getRealmResults() {
-        babyName = baseNotificationViewInterface.babyName();
-        if (BuildConfig.FLAVOR.equals("talk2")){
-            ResearchNotifications researchNotifications = new ResearchNotifications();
-            Disposable disposable = researchNotifications.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
+            Disposable disposable = BabbleTip.Companion.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
             disposables.add(disposable);
-        }else {
-            Notification notification = new Notification();
-            Disposable disposable = notification.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
-            disposables.add(disposable);
-        }
     }
 
     @Override
@@ -78,9 +69,9 @@ public class VotePresenter extends BaseNotificationPresenter {
     private void updateRandomNotification(Boolean thumbUp){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        notificationAtIndex().setPlayToday(true);
-        notificationAtIndex().setFavorite(thumbUp);
-        realm.copyToRealmOrUpdate(notificationAtIndex());
+        tipAtIndex().setPlayToday(true);
+        tipAtIndex().setFavorite(thumbUp);
+        realm.copyToRealmOrUpdate(tipAtIndex());
         realm.commitTransaction();
         realm.beginTransaction();
         AnswerNotification answerNotification = new AnswerNotification();

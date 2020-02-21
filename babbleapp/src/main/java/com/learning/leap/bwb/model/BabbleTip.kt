@@ -4,40 +4,92 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribut
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
+import io.reactivex.Observable
+import io.realm.Realm
 import io.realm.RealmModel
-import io.realm.RealmObject
+import io.realm.RealmResults
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
+import java.util.concurrent.Callable
+import java.util.regex.Pattern
 
 @RealmClass
 @DynamoDBTable(tableName = "babbleTips")
 open class BabbleTip():RealmModel {
         @DynamoDBRangeKey(attributeName = "Created")
-        private var created: String = ""
+        var created: String = ""
         @DynamoDBHashKey(attributeName = "Tag")
-        private var tag: String = ""
+         var tag: String = ""
         @DynamoDBAttribute(attributeName = "AgeRange")
-        private var ageRange: String = ""
+         var ageRange: String = ""
         @DynamoDBAttribute(attributeName = "Deleted")
-        private var deleted: String = ""
+         var deleted: String = ""
         @DynamoDBAttribute(attributeName = "EndMonth")
-        private var endMonth: String = ""
+         var endMonth: Int = 0
         @DynamoDBAttribute(attributeName = "Message")
-        private var message: String = ""
+         var message: String = ""
         @DynamoDBAttribute(attributeName = "SoundFileName")
-        private var soundFileName: String = ""
+        var soundFileName: String = ""
         @DynamoDBAttribute(attributeName = "StartMonth")
-        private var startMonth: String = ""
+         var startMonth: Int = 0
         @DynamoDBAttribute(attributeName = "VideoFileName")
-        private var videoFileName: String = ""
+         var videoFileName: String = ""
         @DynamoDBAttribute(attributeName = "Language")
         private var language:String = ""
         @DynamoDBAttribute(attributeName = "Category")
-        private var category:String = ""
+         var category:String = ""
         @DynamoDBAttribute(attributeName = "Subcategory")
-        private var subcategory:String = ""
-        private var mPlayToday:Boolean = false
-        private var mFavorite :Boolean = false
+         var subcategory:String = ""
+        public var playToday:Boolean = false
+        var favorite :Boolean = false
         @PrimaryKey
         var id:Int = 0
+
+    companion object{
+        @JvmStatic
+        fun getNotificationFromRealm(realm: Realm): Observable<RealmResults<BabbleTip>> {
+            return Observable.fromCallable(Callable { realm.where(BabbleTip::class.java).findAll() })
+        }
+
+        @JvmStatic
+        fun getTipsWithCategory(category:String,realm:Realm):Observable<RealmResults<BabbleTip>>{
+            return Observable.fromCallable(Callable { realm.where(BabbleTip::class.java).equalTo("category",category).findAll() })
+        }
+
+        @JvmStatic
+        fun getTipsWithSubcategory(subCategory:String,realm:Realm):Observable<RealmResults<BabbleTip>>{
+            return Observable.fromCallable(Callable { realm.where(BabbleTip::class.java).equalTo("subcategory",subCategory).findAll() })
+        }
+
+        @JvmStatic
+        fun getFavoriteTips(realm:Realm):Observable<RealmResults<BabbleTip>>{
+            return Observable.fromCallable(Callable { realm.where(BabbleTip::class.java).equalTo("favorite",true).findAll() })
+        }
+
+        @JvmStatic
+        fun getPlayTodayFromRealm(realm: Realm): Observable<RealmResults<BabbleTip>> {
+            return Observable.fromCallable(Callable {
+                realm.where(BabbleTip::class.java)
+                        .equalTo("playToday", true)
+                        .findAll()
+            })
+        }
+
+    }
+
+    open fun noSoundFile(): Boolean {
+        val fileName: String = soundFileName
+        return fileName == "no file"
+    }
+
+    open fun noVideFile(): Boolean {
+        val fileName: String = videoFileName
+        return fileName == "no file"
+    }
+
+    open fun updateMessage(babyName: String): String {
+        return message.replace("(?i)" + Pattern.quote("your baby").toRegex(), babyName)
+                .replace("(?i)" + Pattern.quote("your child").toRegex(), babyName)
+    }
+
 }

@@ -2,12 +2,11 @@ package com.learning.leap.bwb.settings.userInfo
 
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Color
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.learning.leap.bwb.Player
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
@@ -19,14 +18,17 @@ import com.learning.leap.bwb.utility.Constant
 import com.learning.leap.bwb.utility.DynamoDBSingleton
 import com.learning.leap.bwb.utility.NetworkChecker
 import com.learning.leap.bwb.utility.Utility
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_user_info.*
 import java.util.*
 
-class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
+
+class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface, DatePickerDialog.OnDateSetListener {
     var newUser: Boolean = false
     var mDialog: ProgressDialog? = null
     var gender: String = "Now Now"
+    var date = ""
 
     lateinit var userInfoPresenter: UserInfoPresenter
 
@@ -34,12 +36,29 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_info)
         onClickListners()
+        setUpDateTextView()
         newUser = intent.getBooleanExtra(Constant.NEW_USER, false)
         userInfoPresenter = UserInfoPresenter(newUser,this, LocalLoadSaveHelper(this),
                 NetworkChecker(this),Realm.getDefaultInstance(),
                 DynamoDBSingleton.getDynamoDB(this))
         if (!newUser) {
             userInfoPresenter.loadPlayerFromSharedPref()
+        }
+    }
+
+    fun setUpDateTextView(){
+        userProfileBirtdayEditText.isFocusable = false
+        userProfileBirtdayEditText.isClickable = true
+        val now = Calendar.getInstance()
+        val dpd: DatePickerDialog = DatePickerDialog.newInstance(
+                this,
+                now[Calendar.YEAR],  // Initial year selection
+                now[Calendar.MONTH],  // Initial month selection
+                now[Calendar.DAY_OF_MONTH] // Inital day selection
+        )
+        dpd.accentColor = ContextCompat.getColor(this,R.color.darkestBlue)
+        userProfileBirtdayEditText.setOnClickListener {
+            dpd.show(this.supportFragmentManager,null)
         }
     }
 
@@ -63,21 +82,29 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
     }
 
     private fun notNowSelected() {
-        userMaleButton.setBackgroundColor(Color.LTGRAY)
-        userFemaleButton.setBackgroundColor(Color.LTGRAY)
-        userNotNowButton.setBackgroundColor(ContextCompat.getColor(this, R.color.darkestBlue))
+        userMaleButton.backgroundTintList = greyBackgroundTint()
+        userFemaleButton.backgroundTintList = greyBackgroundTint()
+        userNotNowButton.backgroundTintList = darkBlueeBackgroundTint()
     }
 
     private fun femaleButonSelected() {
-        userMaleButton.setBackgroundColor(Color.LTGRAY)
-        userFemaleButton.setBackgroundColor(ContextCompat.getColor(this, R.color.darkestBlue))
-        userNotNowButton.setBackgroundColor(Color.LTGRAY)
+        userMaleButton.backgroundTintList = greyBackgroundTint()
+        userFemaleButton.backgroundTintList = darkBlueeBackgroundTint()
+        userNotNowButton.backgroundTintList = greyBackgroundTint()
     }
 
     private fun maleButtonSelected() {
-        userMaleButton.setBackgroundColor(ContextCompat.getColor(this, R.color.darkestBlue))
-        userFemaleButton.setBackgroundColor(Color.LTGRAY)
-        userNotNowButton.setBackgroundColor(Color.LTGRAY)
+        userMaleButton.backgroundTintList = darkBlueeBackgroundTint()
+        userFemaleButton.backgroundTintList = greyBackgroundTint()
+        userNotNowButton.backgroundTintList = greyBackgroundTint()
+    }
+
+    private fun greyBackgroundTint():ColorStateList?{
+       return ContextCompat.getColorStateList(this, R.color.light_grey)
+    }
+
+    private fun darkBlueeBackgroundTint():ColorStateList?{
+        return ContextCompat.getColorStateList(this, R.color.darkestBlue)
     }
 
     override fun onDestroy() {
@@ -96,7 +123,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
     }
 
     private fun createBabblePlayer(): BabbleUser {
-            return BabbleUser(UUID.randomUUID().toString(), userProfileFragmentBirtdayEditText.text.toString().trim { it <= ' ' },
+            return BabbleUser(UUID.randomUUID().toString(), date,
                     userProfileFragmentFirstNameEditText.text.toString().trim { it <= ' ' },gender)
 
     }
@@ -106,7 +133,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
     }
 
     override fun displayUserInfo(babbleUser: BabbleUser) {
-        userProfileFragmentBirtdayEditText.setText(babbleUser.babyBirthday)
+        userProfileBirtdayEditText.setText(babbleUser.babyBirthday)
         userProfileFragmentFirstNameEditText.setText(babbleUser.babyName)
         when (babbleUser.babyGender) {
             "Male" -> maleButtonSelected()
@@ -145,5 +172,11 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface {
         if (mDialog != null) {
             runOnUiThread { mDialog!!.dismiss() }
         }
+    }
+
+    override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
+        val correctMonth = monthOfYear+1
+       date = "$correctMonth/$dayOfMonth/$year"
+        userProfileBirtdayEditText.setText(date)
     }
 }

@@ -36,6 +36,7 @@ class UserInfoPresenter(private val newUser: Boolean, private val userInfoViewIn
                     .subscribe({
                         updatePlayerOnCompleted()
                     }, {
+                        it.printStackTrace()
                         userInfoViewInterface.displayErrorDialog(R.string.BabbleError, R.string.userSave)
                     })
             disposables.add(disposable)
@@ -64,6 +65,7 @@ class UserInfoPresenter(private val newUser: Boolean, private val userInfoViewIn
                     .subscribe({ tips ->
                         updateViewAfterRetrievingNotificationList(tips)
                     }, {
+                        it.printStackTrace()
                             updateViewAfterError()
                     })
         }

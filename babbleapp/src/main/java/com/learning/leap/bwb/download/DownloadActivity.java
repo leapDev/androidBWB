@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,14 +14,14 @@ import android.widget.TextView;
 
 import com.learning.leap.bwb.DownloadService;
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
-public class DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
+public class
+DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
     DownloadService downloadService;
-    ProgressBar mProgressBar;
-    TextView mDownloadPercentTextView;
+    ProgressBar progressBar;
+    TextView downloadPercentTextView;
     boolean bound = false;
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -50,7 +50,7 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.download_fragment);
+        setContentView(R.layout.activity_download);
         setUpProgressBar();
         //startDownloadService();
     }
@@ -70,30 +70,18 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
                 Utility.homeIntent(this);
             }else {
                 if (!bound){
-                startDownloadService();
+                    startDownloadService();
                 }
         }
         super.onResume();
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-    }
-
     private void setUpProgressBar() {
-        mProgressBar = (ProgressBar)findViewById(R.id.downloadProgressBar);
-        mProgressBar.setMax(100);
-        mProgressBar.setIndeterminate(false);
-        mDownloadPercentTextView = (TextView)findViewById(R.id.downloadTextPercentage);
+        progressBar = findViewById(R.id.downloadProgressBar);
+        progressBar.setMax(100);
+        progressBar.setIndeterminate(false);
+        downloadPercentTextView = findViewById(R.id.downloadTextPercentage);
     }
 
     @Override
@@ -111,17 +99,19 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
     @Override
     public void updateProgressBar(int progress) {
         if (bound) {
-            mProgressBar.setProgress(progress);
-            mDownloadPercentTextView.setText(Integer.toString(progress) + "%");
+            progressBar.setProgress(progress);
+            String downloadPercent = progress + "%";
+            downloadPercentTextView.setText(downloadPercent);
         }
     }
 
     @Override
     public void downloadCompleted() {
         if (bound) {
-            Intent homeIntent = new Intent(this, HomeActivity.class);
-            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(homeIntent);
+            Intent congratsIntent = new Intent(this, CongratsActivity.class);
+            congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(congratsIntent);
+
         }
     }
 
