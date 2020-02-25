@@ -2,8 +2,12 @@ package com.learning.leap.bwb.library
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.leap.bwb.R
@@ -14,7 +18,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_library_category.*
 
-class LibraryCategoryActivity:Activity() {
+class LibraryCategoryActivity:AppCompatActivity() {
     companion object {
         val SUB_CATEGORY = "SUB_CATEGORY"
         val HAS_SUB_CATEGORY = "HAS_SUB_CATEGORY"
@@ -24,7 +28,10 @@ class LibraryCategoryActivity:Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library_category)
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this,R.color.lipstick)))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if(intent.getBooleanExtra(HAS_SUB_CATEGORY,false)){
+            supportActionBar?.title = "Library Subcategories"
             librarySubCategoryTextView.text = intent.getStringExtra(SUB_CATEGORY)
             librarySubCategoryTextView.visibility = View.VISIBLE
             libraryCategoryLinearLayout.visibility = View.GONE
@@ -32,8 +39,18 @@ class LibraryCategoryActivity:Activity() {
                 getSubCategory(it)
             }
         }else{
+            supportActionBar?.title = "Library Categories"
             getAllCategories()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId: Int = item.itemId
+        if (itemId == android.R.id.home) {
+            finish()
+        }
+        return true
+
     }
 
     private fun getAllCategories() {
@@ -106,7 +123,7 @@ class LibraryCategoryActivity:Activity() {
         }
         val adapter = LibraryCategoryAdapter(recyclerViewList)
         libraryCategoryRecyclerView.adapter = adapter
-        libraryCategoryRecyclerView.addItemDecoration(DividerItemDecoration(this,LinearLayoutManager.HORIZONTAL))
+        libraryCategoryRecyclerView.addItemDecoration(DividerItemDecoration(this,LinearLayoutManager.VERTICAL))
         libraryCategoryRecyclerView.layoutManager = LinearLayoutManager(this)
         adapter.itemOnClick = {category,position ->
             if (category.contains("All")){

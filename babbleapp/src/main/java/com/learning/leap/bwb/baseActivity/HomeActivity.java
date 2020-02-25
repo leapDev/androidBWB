@@ -17,6 +17,7 @@ import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.library.LibraryCategoryActivity;
+import com.learning.leap.bwb.library.PlayTodayActivity;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
@@ -34,24 +35,20 @@ public class HomeActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         setUpBackground();
-        ImageView libararyImageView = (ImageView) findViewById(R.id.homeActivityLibraryImageView);
-        ImageView settignsImageView = (ImageView)findViewById(R.id.homeActivitySettings);
-        ImageView playToday = (ImageView)findViewById(R.id.homeActivityPlayTodayImageView);
-        ImageView leapLogo = (ImageView)findViewById(R.id.homeLeapLogo);
-        TextView poweredByTextView = (TextView)findViewById(R.id.powerByTextView);
+        ImageView libararyImageView = findViewById(R.id.homeActivityLibraryImageView);
+        ImageView settignsImageView = findViewById(R.id.homeActivitySettings);
+        ImageView playToday = findViewById(R.id.homeActivityPlayTodayImageView);
+        ImageView leapLogo = findViewById(R.id.homeLeapLogo);
+        TextView poweredByTextView = findViewById(R.id.powerByTextView);
         libararyImageView.setOnClickListener(view -> detailIntent());
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
         Utility.addCustomEvent(Constant.ACCESSED_APP,Utility.getUserID(this),null);
-
-        if (!Utility.readBoolSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,this)){
-            JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
-            PlayTodayJob.schedule();
-            Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
-
-        }
         poweredByTextView.setOnClickListener(view -> openWebsite());
         Utility.hideButtonCheck(libararyImageView,playToday);
 //
@@ -61,10 +58,6 @@ public class HomeActivity extends AppCompatActivity  {
 
     }
 
-    private int getBucketNumber(){
-        bucketNumber++;
-        return bucketNumber;
-    }
 
     private boolean updateCheck() {
         if (BabblePlayer.homeScreenAgeCheck(this)){
@@ -111,8 +104,7 @@ public class HomeActivity extends AppCompatActivity  {
 
 
     private void playTodayIntent(){
-        Intent detailIntent = new Intent(HomeActivity.this,DetailActivity.class);
-        detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.PLAY_TODAY);
+        Intent detailIntent = new Intent(HomeActivity.this, PlayTodayActivity.class);
         Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY,Utility.getUserID(this),null );
         startActivity(detailIntent);
     }

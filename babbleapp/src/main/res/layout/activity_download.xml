@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/downloadProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
+        android:progressTint="@color/dark_green"
         android:layout_marginTop="60dp"
         android:max="100"/>
 

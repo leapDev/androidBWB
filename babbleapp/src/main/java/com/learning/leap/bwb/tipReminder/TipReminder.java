@@ -1,88 +1,53 @@
 package com.learning.leap.bwb.tipReminder;
 
-import android.app.*;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.os.SystemClock;
+import android.util.Log;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.learning.leap.bwb.BuildConfig;
-import com.learning.leap.bwb.helper.AnswerNotification;
+import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
-import java.math.BigInteger;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
+import java.util.Locale;
 
 
 public class TipReminder {
 
     private int bucketNumber;
     private int numberOfTips;
-    private Date startTimeDate;
-    private Date endTimeDate;
     private Context context;
 
-    public TipReminder(int bucketNumber, int numberOfTips,Date startTimeDate, Date endTimeDate, Context context){
+    public TipReminder(int bucketNumber, int numberOfTips, Context context){
         this.bucketNumber = bucketNumber;
         this.numberOfTips = numberOfTips;
-        this.startTimeDate = startTimeDate;
-        this.endTimeDate = endTimeDate;
         this.context = context;
     }
 
-    public void setNotificationForBucket(){
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<AnswerNotification> mAnswerNotificatoinsResults = realm.where(AnswerNotification.class).equalTo("mAnswerBucket",bucketNumber).findAll();
-        if (mAnswerNotificatoinsResults.size() == 0){
-            setReminder(startTimeDate);
-        }else {
-            setReminder(findAverageDateForBucket(mAnswerNotificatoinsResults));
+    private void setReminder(Date notificationDate){
+        if (notificationDate == null){
+            return;
         }
-    }
-
-    private Date findAverageDateForBucket(RealmResults<AnswerNotification> answerNotifications){
-        BigInteger total = BigInteger.ZERO;
-        for (AnswerNotification answerNotification: answerNotifications) {
-            total = total.add(BigInteger.valueOf(answerNotification.mAnswerTime.getTime()));
-        }
-        BigInteger averageMillis = total.divide(BigInteger.valueOf(answerNotifications.size()));
-        Date averageDate = new Date(averageMillis.longValue());
-        if (averageDate.after(startTimeDate) && averageDate.before(endTimeDate)){
-            return averageDate;
-        }else {
-            return startTimeDate;
-        }
-    }
-
-    public void setReminder(Date notificationDate){
-        Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
-        alarmIntent.putExtra("id",bucketNumber);
-        alarmIntent.putExtra("NumberOfTips",numberOfTips);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), bucketNumber, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        java.util.Calendar now = java.util.Calendar.getInstance();
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        Calendar now = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(notificationDate);
         now.setTime(new Date());
-        calendar.set(java.util.Calendar.SECOND,0);
-        calendar.set(java.util.Calendar.MILLISECOND,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
         if (calendar.getTime().before(now.getTime())){
-            calendar.add(java.util.Calendar.DATE,1);
+            calendar.add(Calendar.DATE,1);
         }
-
-        setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
-        //Add follow up message
-//        if (bucketNumber == 3){
-//            calendar.add(Calendar.HOUR,1);
-//            setTipToAlarmManger(calendar.getTimeInMillis(),pendingIntent);
-//        }
+        Log.d("test",convertDate(calendar.getTime()));
+        setTipToAlarmManger(calendar.getTimeInMillis(),alarmIntent());
         Utility.addCustomEvent(Constant.TIP_SCHEUDLED_TIME,Utility.getUserID(context),null);
         Answers.getInstance().logCustom(new CustomEvent(Constant.TIP_SCHEUDLED_TIME)
                              .putCustomAttribute("Time",convertDate(calendar.getTime()))
@@ -90,21 +55,70 @@ public class TipReminder {
 
     }
 
+    private PendingIntent alarmIntent(){
+        Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
+        alarmIntent.putExtra("id",bucketNumber);
+        alarmIntent.putExtra("NumberOfTips",numberOfTips);
+        return PendingIntent.getBroadcast(context.getApplicationContext(), bucketNumber, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public void cancelTipReminder(){
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager != null) {
+            alarmManager.cancel(alarmIntent());
+        }
+    }
+
     private void setTipToAlarmManger(long timeInMills, PendingIntent pendingIntent){
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        if (Build.VERSION.SDK_INT >= 23){
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,timeInMills,pendingIntent);
-        }else if (Build.VERSION.SDK_INT >=19){
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeInMills, pendingIntent);
-        }else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMills, pendingIntent);
+        if (alarmManager != null) {
+           alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  timeInMills,AlarmManager.INTERVAL_DAY,pendingIntent);
         }
     }
 
     private String convertDate(Date date){
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyy HH:mm:ss", Locale.getDefault());
         return dateFormat.format(date);
     }
 
+    private Date convertStringToDate(String time){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        Date date;
+        try {
+            date = simpleDateFormat.parse(time);
+            Calendar tipReminderCalender = Calendar.getInstance();
+            Calendar tipTime = Calendar.getInstance();
+            if (date != null) {
+                tipTime.setTime(date);
+                tipReminderCalender.set(Calendar.HOUR,tipTime.get(Calendar.HOUR));
+                tipReminderCalender.set(Calendar.MINUTE,tipTime.get(Calendar.MINUTE));
+                tipReminderCalender.set(Calendar.SECOND,0);
+                tipReminderCalender.set(Calendar.MILLISECOND,0);
+                if (tipReminderCalender.getTime().before(Calendar.getInstance().getTime())){
+                    tipReminderCalender.add(java.util.Calendar.DATE,1);
+                }
+                return tipReminderCalender.getTime();
+            }else{
+                return  null;
+            }
+
+        }catch (ParseException ex){
+            return null;
+        }
+    }
+
+    public void setAlarmForTip(int index){
+        if (bucketNumber == 1){
+            String[] allStartTimes = context.getResources().getStringArray(R.array.all_times_settings_array);
+            String firstTip = allStartTimes[index];
+            Date tipTime = convertStringToDate(firstTip);
+            setReminder(tipTime);
+        }else {
+            String[] allEndTimes = context.getResources().getStringArray(R.array.all_times_settings_array);
+            String secondTip = allEndTimes[index];
+            Date endTime = convertStringToDate(secondTip);
+            setReminder(endTime);
+        }
+    }
 
 }

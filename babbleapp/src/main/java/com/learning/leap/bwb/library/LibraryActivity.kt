@@ -1,16 +1,19 @@
 package com.learning.leap.bwb.library
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.baseActivity.HomeActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
@@ -38,10 +41,21 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface, Medi
         val LIBRARY_SUB_CATEGORY = "LIBRARY_SUB_CATEGORY"
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId: Int = item.itemId
+        if (itemId == android.R.id.home) {
+            finish()
+        }
+        return true
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_library)
-
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this,R.color.lipstick)))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Library"
         notificationPresenter = NotificaitonPresenter()
         notificationPresenter.attachView(this)
         if (intent.getBooleanExtra(IS_ALL,false)){

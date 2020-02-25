@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+
 import androidx.annotation.Nullable;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedList;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -21,22 +21,13 @@ import com.learning.leap.bwb.helper.ScheduleBucket;
 import com.learning.leap.bwb.model.BabbleTip;
 import com.learning.leap.bwb.model.BabbleUser;
 import com.learning.leap.bwb.models.AWSDownload;
-import com.learning.leap.bwb.models.BabblePlayer;
-import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.research.ResearchNotifications;
-import com.learning.leap.bwb.research.ResearchPlayers;
+import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
-import java.util.concurrent.Callable;
-
-import io.reactivex.Completable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 
 public class DownloadService extends Service implements DownloadPresneterInterface {
@@ -152,13 +143,17 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void onComplete(){
         Utility.writeIntSharedPreferences(Constant.START_TIME,8,this);
-        Utility.writeIntSharedPreferences(Constant.END_TIME,16,this);
+        Utility.writeIntSharedPreferences(Constant.END_TIME,20,this);
         Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD,true,this);
         Utility.writeBoolenSharedPreferences(Constant.UPDATE,false,this);
         Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,this);
-        ScheduleBucket scheduleBucket = new ScheduleBucket(this);
-        scheduleBucket.scheduleForFirstTime();
-        PlayTodayJob.schedule();
+        Utility.writeIntSharedPreferences(Constant.TIPS_PER_DAY,3,this);
+        Utility.writeBoolenSharedPreferences(Constant.TIP_ONE_ON,true,this);
+        Utility.writeBoolenSharedPreferences(Constant.TIP_TWO_ON,true,this);
+        TipReminder firstTipReminder = new TipReminder(1,3,this);
+        firstTipReminder.setAlarmForTip(8);
+        TipReminder secondTipReminder = new TipReminder(2,3,this);
+        secondTipReminder.setAlarmForTip(20);
         Utility.writeBoolenSharedPreferences(Constant.UpdatedScheduleBuckets,true,this);
         Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
         if (update){

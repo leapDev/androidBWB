@@ -21,6 +21,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.splash_activity)
+        supportActionBar?.hide()
         disposable = Observable.timer(2,TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe {
             goToCorrectScreen(provideSharedPref(this))
         }

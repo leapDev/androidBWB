@@ -30,17 +30,19 @@ public class TipSettingsPresenters {
         displayStartTime();
         displayEndTime();
         displayMaxNumberOfTips();
+        displaySwitches();
+    }
+
+    private void displaySwitches() {
+        tipSettingsViewInterface.displayFirstSwitch(Utility.readBoolSharedPreferences(Constant.TIP_ONE_ON,context));
+        tipSettingsViewInterface.displaySecondSwitch(Utility.readBoolSharedPreferences(Constant.TIP_TWO_ON,context));
     }
 
     public void save() {
-        if (!userTipSettings.endTimeIsBeforeStart()){
-            userTipSettings.saveIndexes();
-            userTipSettings.saveTurnOnTips();
             deleteAnserNotifications();
+            userTipSettings.saveTurnOnTips(tipSettingsViewInterface.tipOneSwitchIsOn(),tipSettingsViewInterface.tipTwoSwitchIsOn());
+            userTipSettings.saveIndexes();
             tipSettingsViewInterface.saveCompleted(turnOffTTips);
-        }else {
-            tipSettingsViewInterface.displayErrorMessage();
-        }
     }
 
     private void deleteAnserNotifications(){
@@ -144,10 +146,8 @@ public class TipSettingsPresenters {
 
     }
 
-    public void turnOfSwitchChangedListner(boolean turnOff){
+    public void turnOfSwitchChangedListener(){
         displaySaveButton();
-        userTipSettings.setSendTipsToday(turnOff);
-        turnOffTTips = turnOff;
     }
 
     private void displayEndTime(){

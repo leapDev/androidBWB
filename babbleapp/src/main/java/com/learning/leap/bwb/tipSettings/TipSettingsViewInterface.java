@@ -25,5 +25,9 @@ public interface TipSettingsViewInterface extends ViewInterface {
     void setTipSwitch(Boolean sendTipsToday);
     void displaySaveButton();
     void displayErrorMessage();
+    boolean tipOneSwitchIsOn();
+    boolean tipTwoSwitchIsOn();
     void saveCompleted(boolean turnOffTips);
+    void displayFirstSwitch(boolean readBoolSharedPreferences);
+    void displaySecondSwitch(boolean readBoolSharedPreferences);
 }

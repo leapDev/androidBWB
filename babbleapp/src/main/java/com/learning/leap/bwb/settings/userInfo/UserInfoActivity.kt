@@ -3,7 +3,9 @@ package com.learning.leap.bwb.settings.userInfo
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -37,6 +39,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface, DatePickerD
         setContentView(R.layout.activity_user_info)
         onClickListners()
         setUpDateTextView()
+        setActionBarBackgroundColor()
         newUser = intent.getBooleanExtra(Constant.NEW_USER, false)
         userInfoPresenter = UserInfoPresenter(newUser,this, LocalLoadSaveHelper(this),
                 NetworkChecker(this),Realm.getDefaultInstance(),
@@ -46,7 +49,24 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface, DatePickerD
         }
     }
 
-    fun setUpDateTextView(){
+    private fun setActionBarBackgroundColor(){
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this,R.color.dark_green)))
+        supportActionBar?.title = "User Information"
+        if (!newUser) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId: Int = item.itemId
+        if (itemId == android.R.id.home) {
+            finish()
+        }
+        return true
+
+    }
+
+    private fun setUpDateTextView(){
         userProfileBirtdayEditText.isFocusable = false
         userProfileBirtdayEditText.isClickable = true
         val now = Calendar.getInstance()

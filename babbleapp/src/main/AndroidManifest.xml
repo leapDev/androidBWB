@@ -98,9 +98,14 @@
             android:excludeFromRecents="true"
             >
         </activity>
-        <activity android:name=".download.CongratsActivity" />
-        <activity android:name=".library.LibraryCategoryActivity" />
-        <activity android:name=".library.LibraryActivity" />
+        <activity android:name=".download.CongratsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".library.LibraryCategoryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".library.LibraryActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".library.PlayTodayActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

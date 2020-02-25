@@ -11,6 +11,11 @@
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
+    <style name="TipSwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/darkestBlue</item>
+
+    </style>
+
     <style name="NoBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
 
 

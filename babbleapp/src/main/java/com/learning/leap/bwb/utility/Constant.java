@@ -16,6 +16,9 @@ public class Constant {
     public static final String END_TIME = "END_TIME";
     public static final String ALL_TIME_END_TIME = "ALL_TIME_END_TIME";
     public static final String SEND_TIPS_TODAY = "SEND_TIPS_TODAY";
+    public static final String TIPS_PER_DAY = "TIPS_PER_DAY";
+    public static final String TIP_ONE_ON = "TIP_ONE_ON";
+    public static final String TIP_TWO_ON = "TIP_TWO_ON";
     public static final String VIEWED_SETTINGS = "ViewedSettings";
     public static final String CHANGE_PROFILE_SETTINGS = "ChangeProfileSettings";
     public static final String CHANGED_NOTIFICATION_SETTINGS = "ChangedNotificationSettings";

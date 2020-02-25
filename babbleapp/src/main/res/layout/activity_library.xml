@@ -4,19 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/libraryBackground"
-            android:scaleType="fitXY"/>
-
-
-    </FrameLayout>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,10 +28,10 @@
         android:layout_marginTop="15dp"
         android:src="@drawable/library_playaudio"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/libraryActivityStopButton"
-        android:layout_width="wrap_content"
-        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:background="@drawable/rectangle_1_3x"
         android:text="@string/stop"
         android:textColor="@android:color/white"

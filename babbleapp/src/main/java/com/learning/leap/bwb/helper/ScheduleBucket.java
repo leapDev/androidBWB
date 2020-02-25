@@ -81,33 +81,9 @@ public class ScheduleBucket {
     }
 
     private void setUpBucket(int startIndex, int endIndex){
-        endIndex++;
-        String[] allTimes = context.getResources().getStringArray(R.array.all_times_settings_array);
-        String[] userTimes = Arrays.copyOfRange(allTimes,startIndex,endIndex);
-        ArrayList<String> userTimeWithOutDuplicateds = new ArrayList<>(Arrays.asList(userTimes));
         removePlayToday();
-        if (BuildConfig.FLAVOR.equals("regular")) {
-            getNumberOfTipsPerNotification();
-            getThreeBuckets(userTimes);
-        }else {
-            northwestBucket(userTimeWithOutDuplicateds);
-        }
+        getNumberOfTipsPerNotification();
 
-    }
-
-    private void northwestBucket(ArrayList<String> usersTimes){
-        int lastItem = usersTimes.size();
-        int median =lastItem/2;
-        List<String>firstHalf = usersTimes.subList(0,median);
-        List<String>secondHalf = usersTimes.subList(median,(lastItem));
-        String[] times = {usersTimes.get(0),getMedian(firstHalf),getMedian(usersTimes),getMedian(secondHalf),usersTimes.get(lastItem-1)};
-        int index = 1;
-        for (String time:times) {
-            Date reminderTime = updateConvertDateToToday(convertStringToDate(time));
-            TipReminder tipReminder = new TipReminder(index, 1, new Date(), reminderTime, context);
-            tipReminder.setReminder(reminderTime);
-            index++;
-        }
     }
 
     private String getMedian(List<String> times){
@@ -186,8 +162,8 @@ public class ScheduleBucket {
         Date firstDateForTheBucket = updateConvertDateToToday(convertStringToDate(firstTime));
         Date endDateForTheBucket = updateConvertDateToToday(convertStringToDate(endTime));
         if (endDateForTheBucket != null && firstDateForTheBucket !=null) {
-            TipReminder tipReminder = new TipReminder(bucketNumber, numberOfTips, firstDateForTheBucket, endDateForTheBucket, context);
-            tipReminder.setNotificationForBucket();
+//            TipReminder tipReminder = new TipReminder(bucketNumber, numberOfTips, firstDateForTheBucket, endDateForTheBucket, context);
+//            tipReminder.setNotificationForBucket();
         }
     }
 

@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/setting_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tipSettingsBackground"
-        android:paddingBottom="5dp"
-        android:src="@drawable/settings_bg"
-        android:scaleType="fitXY"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/settings_icon"
+            android:src="@drawable/home_settings"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:id="@+id/tipsSettingsIcon"/>
 
         <LinearLayout
@@ -46,7 +41,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp">
@@ -57,26 +52,40 @@
                     android:id="@+id/tipSettingsStartTimeTextView"
                     android:text="5:00 AM"
                     android:gravity="center"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="10dp"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
                     android:textColor="@android:color/black"
                     android:textAlignment="center"
                     android:textStyle="normal|bold"/>
-                <Button
-                    android:layout_width="70dp"
-                    android:layout_height="40dp"
-                    android:text="-"
 
-                    android:id="@+id/tipSettingsStartTimeMinusButton"
-                    android:background="@android:color/white"
-                    android:textSize="30sp"/>
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="70dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
+                    android:text="-"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_green"
+                    android:id="@+id/tipSettingsStartTimeMinusButton"
+                    android:textSize="20sp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
                     android:text="+"
+                    android:textColor="@color/dark_green"
+                    android:textSize="20sp"
                     android:id="@+id/tipSettingsStartTimePlusButton"
-                    android:background="@android:color/white"
-                    android:textSize="30sp"/>
+                    android:background="@android:color/white" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/firstTipSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="center"
+                    android:theme="@style/TipSwitch"
+                    />
 
             </LinearLayout>
 
@@ -90,7 +99,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp">
@@ -100,6 +109,8 @@
                     android:layout_height="match_parent"
                     android:id="@+id/tipSettingsEndTimeTextView"
                     android:text="8:00 AM"
+                    android:textSize="16sp"
+                    android:layout_marginEnd="10dp"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
@@ -108,18 +119,29 @@
                     android:textStyle="normal|bold"/>
                 <Button
                     android:layout_width="70dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:text="-"
                     android:id="@+id/tipSettingsEndTimeMinusButton"
                     android:background="@android:color/white"
-                    android:textSize="30sp"/>
+                    android:textColor="@color/dark_green"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
                 <Button
                     android:layout_width="70dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:text="+"
                     android:id="@+id/tipSettingsEndTimePlusButton"
-                    android:background="@android:color/white"
-                    android:textSize="30dp"/>
+                    android:textColor="@color/dark_green"
+                    android:textSize="20sp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/secondTipSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:theme="@style/TipSwitch"
+                    android:layout_gravity="center"
+                    />
 
             </LinearLayout>
 
@@ -134,7 +156,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp">
@@ -144,7 +166,9 @@
                     android:layout_height="match_parent"
                     android:id="@+id/tipSettingsMaxNumberTipTextView"
                     android:text="3"
+                    android:layout_marginEnd="10dp"
                     android:gravity="center"
+                    android:textSize="16sp"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
                     android:textColor="@android:color/black"
@@ -154,32 +178,27 @@
 
                 <Button
                     android:layout_width="70dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:text="-"
                     android:id="@+id/tipsettingsMaxNumberTipMinusButton"
-                    android:background="@android:color/white"
-                    android:textSize="30dp"/>
+                    android:textColor="@color/dark_green"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
 
                 <Button
                     android:layout_width="70dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:text="+"
                     android:id="@+id/tipSettingsMaxTipNumberPlusButton"
                     android:background="@android:color/white"
-                    android:textSize="30dp"/>
+                    android:textColor="@color/dark_green"
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
 
 
-            <Switch
-                android:id="@+id/tipSettingsFragmentSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sendTipsToday"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"/>
-            <Button
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tipSettingSaveButton"
@@ -191,39 +210,5 @@
         </LinearLayout>
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:src="@drawable/bwb_icon"
-            android:id="@+id/tipSettingsFragmentHomeImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:src="@drawable/library_icon"
-            android:id="@+id/tipSettingsFragmentLibararyImageView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:src="@drawable/home_playtoday"
-            android:id="@+id/tipSettingsFragmentPlayTodayImageView"
-            android:layout_alignTop="@+id/tipSettingsFragmentHomeImageView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+</LinearLayout>

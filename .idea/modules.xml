@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/androidBWB.iml" filepath="$PROJECT_DIR$/androidBWB.iml" />
-      <module fileurl="file://$PROJECT_DIR$/babbleapp/babbleapp.iml" filepath="$PROJECT_DIR$/babbleapp/babbleapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androidBWB.iml" filepath="$PROJECT_DIR$/androidBWB.iml" group="androidBWB" />
+      <module fileurl="file://$PROJECT_DIR$/babbleapp/babbleapp.iml" filepath="$PROJECT_DIR$/babbleapp/babbleapp.iml" group="androidBWB/babbleapp" />
     </modules>
   </component>
 </project>

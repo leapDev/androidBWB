@@ -34,6 +34,7 @@ public class VotePresenter extends BaseNotificationPresenter {
     @Override
     public void onCreate(){
         setBaseNotificationViewInterface(voteViewInterface);
+        babyName = baseNotificationViewInterface.babyName();
         getRealmResults();
         if (notifications.size() == 0){
             voteViewInterface.homeIntent();

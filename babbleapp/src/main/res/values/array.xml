@@ -104,4 +104,16 @@
         <item>9:30 PM</item>
         <item>10:00 PM</item>
     </string-array>
+
+    <string-array name="setting_titles">
+        <item>Profile Settings</item>
+        <item>Tip Settings</item>
+        <item>Age Range Settings</item>
+    </string-array>
+
+    <string-array name="setting_detail">
+        <item>Fill in your child\'s Date of Birth, Name, Gender.</item>
+        <item>Tap Tip Settings to set the time and max number of tips per day.  Pick no sound or choose a sound when a tip comes in.</item>
+        <item>Select another age range if you want to recieve tips more appropriate to an older or younger child.</item>
+    </string-array>
 </resources>
