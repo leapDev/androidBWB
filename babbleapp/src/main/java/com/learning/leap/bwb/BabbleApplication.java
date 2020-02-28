@@ -3,9 +3,6 @@ package com.learning.leap.bwb;
 import android.app.Application;
 import android.content.Context;
 import androidx.multidex.MultiDex;
-import com.evernote.android.job.JobManager;
-import com.learning.leap.bwb.di.AppComponent;
-import com.learning.leap.bwb.di.DaggerAppComponent;
 import java.util.Set;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -17,8 +14,6 @@ import io.sentry.android.AndroidSentryClientFactory;
 
 public class BabbleApplication extends Application{
 
-    public AppComponent appComponent;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -29,8 +24,6 @@ public class BabbleApplication extends Application{
                 .migration(migration)
                 .build();
         Realm.setDefaultConfiguration(config);
-        JobManager.create(this).addJobCreator(new PlayTodayJobCreator());
-        appComponent = DaggerAppComponent.factory().create(this);
     }
 
     RealmMigration migration = (realm, oldVersion, newVersion) -> {;

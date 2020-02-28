@@ -185,6 +185,7 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
             Utility.writeIntSharedPreferences(Constant.TIPS_PER_DAY, 3, this);
             Utility.writeBoolenSharedPreferences(Constant.TIP_ONE_ON, true, this);
             Utility.writeBoolenSharedPreferences(Constant.TIP_TWO_ON, true, this);
+            Utility.writeBoolenSharedPreferences(Constant.UPDATE_TO_TWO,true,this);
             Calendar dueDate = Calendar.getInstance();
             dueDate.add(Calendar.MINUTE, 1);
             OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(DailyWorker.class).

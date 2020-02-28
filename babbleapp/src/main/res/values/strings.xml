@@ -57,7 +57,7 @@
     <string name="congrats_second_message">Remember, you can change the times tips are sent under “Settings.” Get ready to have some fun with your child</string>
     <string name="library_category_title">Click below to search our library for specific Tips.</string>
     <string name="library_category_subtitle">You\'re doing great! Keep it up!</string>
-    <string name="update_info">This is a big update with a lot of new tips and features and we need you to reenter your baby information. Thank you and enjoy.</string>
+    <string name="update_info">This is a big update with a lot of new tips and features and we need you to reenter your baby information. This is a one time thing. Thank you and enjoy.</string>
     <string name="age_rage_title">You can select the appropriate age level for your child</string>
     <string name="updating">Updating...</string>
 </resources>

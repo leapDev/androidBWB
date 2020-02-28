@@ -87,7 +87,7 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface, Medi
             isPlaying = false
         }
         libraryActivityPlayVideoImageView.setOnClickListener { notificationPresenter.onPlayVideoPress() }
-        libraryActivityStopButton.setOnClickListener { view1: View? -> notificationPresenter.onStopButtonPress() }
+        libraryActivityStopButton.setOnClickListener { notificationPresenter.onStopButtonPress() }
         libraryActivityFavoriteButton.setOnClickListener {
             favoirte = notificationPresenter.updateFavoriteForTip()
             updateFavorite(favoirte)

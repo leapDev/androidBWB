@@ -25,6 +25,7 @@ import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.library.PlayTodayActivity;
 import com.learning.leap.bwb.model.BabbleUser;
 import com.learning.leap.bwb.models.BabblePlayer;
+import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Utility;
@@ -47,6 +48,12 @@ public class HomeActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_home);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
+        }
+
+        int tipPerReminder = Utility.readIntSharedPreferences(Constant.TIPS_PER_DAY,this);
+        if (Utility.readBoolSharedPreferences(Constant.TIP_ONE_ON,this)){
+            TipReminder tipReminder = new TipReminder(1,tipPerReminder,this);
+            tipReminder.setAlarmForTip(Utility.readIntSharedPreferences(Constant.START_TIME,this));
         }
 
         setUpBackground();

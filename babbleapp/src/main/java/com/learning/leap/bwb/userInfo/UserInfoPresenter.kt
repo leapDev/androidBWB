@@ -5,9 +5,6 @@ import com.learning.leap.bwb.R
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.model.BabbleUser
-import com.learning.leap.bwb.models.BabblePlayer
-import com.learning.leap.bwb.models.Notification
-import com.learning.leap.bwb.research.ResearchNotifications
 import com.learning.leap.bwb.utility.NetworkCheckerInterface
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -92,7 +89,7 @@ class UserInfoPresenter(private val newUser: Boolean, private val userInfoViewIn
         realm.beginTransaction()
         realm.where(BabbleTip::class.java).findAll().deleteAllFromRealm()
         realm.copyToRealm(notifications)
-        babblePlayer?.savePlayerToRealm(realm)
+        babblePlayer?.savePlayerToRealm()
         realm.commitTransaction()
         userInfoViewInterface.downloadIntent()
     }

@@ -114,11 +114,12 @@
     <string-array name="setting_detail">
         <item>Fill in your child\'s Date of Birth, Name, Gender.</item>
         <item>Tap Tip Settings to set the time and max number of tips per day.  Pick no sound or choose a sound when a tip comes in.</item>
-        <item>Select another age range if you want to recieve tips more appropriate to an older or younger child.</item>
+        <item>Select another age range if you want to receive tips more appropriate to an older or younger child.</item>
     </string-array>
 
     <string-array name="age_ranges">
         <item>0 month - 3 months</item>
+        <item>3 month - 6 months</item>
         <item>6 months - 9 months</item>
         <item>9 months - 1 year</item>
         <item>1 year - 1 year and 6 months</item>

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.learning.leap.bwb.BabbleApplication
 import com.learning.leap.bwb.R
+import com.learning.leap.bwb.UpdatedToTwoActivity
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.settings.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
@@ -37,8 +37,9 @@ class SplashActivity : AppCompatActivity() {
         val needUpdate = sharedPreferences.getBoolean(Constant.UPDATE, false)
         val didUpdateToTwo = sharedPreferences.getBoolean(Constant.UPDATE_TO_TWO,false)
 
-        if(!didUpdateToTwo){
-
+        if(didDownload && !didUpdateToTwo){
+            updateIntent()
+            return
         }
         if (didDownload && !needUpdate) {
             homeIntent()
@@ -47,6 +48,12 @@ class SplashActivity : AppCompatActivity() {
         } else {
            userInfoIntent()
         }
+    }
+
+    private fun updateIntent(){
+        val updateIntent = Intent(this, UpdatedToTwoActivity::class.java)
+        updateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(updateIntent)
     }
 
     private fun userInfoIntent() {

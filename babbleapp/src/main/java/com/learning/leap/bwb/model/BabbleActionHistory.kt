@@ -6,8 +6,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
 import com.learning.leap.bwb.models.Notification
 
-@DynamoDBTable(tableName = "BabbleActionHistory")
-data class BabbleActionHistory(
+@DynamoDBTable(tableName = "babbleActionHistory")
+class BabbleActionHistory(
         @DynamoDBHashKey(attributeName = "ActionHistoryID")
         private val actionHistoryID: String,
         @DynamoDBAttribute(attributeName = "Created")
@@ -21,6 +21,5 @@ data class BabbleActionHistory(
         @DynamoDBAttribute(attributeName = "NotificationID")
                 private val notificationID: String,
         private var mNotification: BabbleTip
-
 ) {
 }

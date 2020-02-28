@@ -78,7 +78,7 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
 
     @Override
     public void onResume() {
-            if (Utility.readBoolSharedPreferences(Constant.DID_DOWNLOAD,this)) {
+            if (Utility.readBoolSharedPreferences(Constant.DID_DOWNLOAD,this) &&   Utility.readBoolSharedPreferences(Constant.UPDATE_TO_TWO,this)) {
                 Utility.homeIntent(this);
             }else {
                 if (!bound){

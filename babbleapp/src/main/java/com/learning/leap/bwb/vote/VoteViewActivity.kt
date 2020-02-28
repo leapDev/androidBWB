@@ -88,7 +88,7 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface, MediaPlayer
     }
 
     override fun displayPrompt(prompt: String) {
-        Utility.addCustomEvent(Constant.VIEWED_NOTIFICATIONS, Utility.getUserID(this), votePresenter!!.tag)
+        Utility.addCustomEvent(Constant.VIEWED_NOTIFICATIONS, Utility.getUserID(this), votePresenter.tag)
        voteFragmentPromptTextView.text = prompt
     }
 

@@ -107,6 +107,7 @@
         <activity android:name=".library.PlayTodayActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".settings.AgeRangeActivity" />
+        <activity android:name=".UpdatedToTwoActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

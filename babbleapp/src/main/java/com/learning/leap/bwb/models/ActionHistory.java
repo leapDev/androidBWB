@@ -24,7 +24,7 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 
-@DynamoDBTable(tableName = "ActionHistory")
+@DynamoDBTable(tableName = "babbleActionHistory")
 public class ActionHistory extends RealmObject {
     private String mActionHistoryID;
     private String mCreated;
@@ -32,13 +32,12 @@ public class ActionHistory extends RealmObject {
     private String mActionTime;
     private String mActionMessage;
     private String mNotificationID;
-    public Notification mNotification;
 
     public ActionHistory(){
 
     }
 
-    @DynamoDBHashKey(attributeName = "ActionHistoryID")
+    @DynamoDBHashKey(attributeName = "Id")
     public String getActionHistoryID() {
         return mActionHistoryID;
     }
@@ -56,7 +55,7 @@ public class ActionHistory extends RealmObject {
         mCreated = created;
     }
 
-    @DynamoDBRangeKey(attributeName = "BabbleID")
+    @DynamoDBAttribute(attributeName = "BabbleID")
     public String getBabbleID() {
         return mBabbleID;
     }

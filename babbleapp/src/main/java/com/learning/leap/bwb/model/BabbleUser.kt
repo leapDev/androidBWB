@@ -207,7 +207,7 @@ open class BabbleUser() :RealmModel{
         saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth())
     }
 
-    fun savePlayerToRealm(realm:Realm) {
+    fun savePlayerToRealm() {
         Realm.getDefaultInstance().copyToRealmOrUpdate(this)
     }
 

@@ -40,12 +40,7 @@ public class Utility {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(errorTitle);
         builder.setMessage(errorMessage);
-        builder.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        builder.setNeutralButton(R.string.okay, (dialogInterface, i) -> dialogInterface.dismiss());
         builder.show();
     }
 
@@ -128,15 +123,8 @@ public class Utility {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static boolean connectedWif(Context context){
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return  (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI);
-    }
-
     public static void addCustomEvent(String event,String ID,String tag){
-
+        ActionHistory.createActionHistoryItem(ID, event, tag);
     }
 
 

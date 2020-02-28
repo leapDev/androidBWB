@@ -49,12 +49,12 @@ public class VotePresenter extends BaseNotificationPresenter {
     }
 
     void thumbUpButtonTapped(){
-       updateRandomNotification(true);
+       updateRandomNotification();
         checkForHomeIntent();
     }
 
     void thumbDownButtonTapped(){
-        updateRandomNotification(false);
+        updateRandomNotification();
         checkForHomeIntent();
     }
 
@@ -67,11 +67,10 @@ public class VotePresenter extends BaseNotificationPresenter {
 
         }
     }
-    private void updateRandomNotification(Boolean thumbUp){
+    private void updateRandomNotification(){
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         tipAtIndex().setPlayToday(true);
-        tipAtIndex().setFavorite(thumbUp);
         realm.copyToRealmOrUpdate(tipAtIndex());
         realm.commitTransaction();
         realm.beginTransaction();

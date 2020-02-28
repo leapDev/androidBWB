@@ -1,7 +1,6 @@
 package com.learning.leap.bwb.helper;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
@@ -10,9 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import javax.inject.Inject;
-
-import io.realm.Realm;
 
 
 public class LocalLoadSaveHelper {
