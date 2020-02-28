@@ -36,6 +36,9 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface, MediaPlayer
         }
     }
 
+    override fun hideFavoriteButton() {
+        voteFragmentFavoriteButton.visibility = View.GONE
+    }
 
     private fun setOnClickListener() {
         voteFragmentPlayAudioImageView.setOnClickListener { votePresenter.onPlayAudioPress() }

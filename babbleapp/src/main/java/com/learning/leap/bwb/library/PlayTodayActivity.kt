@@ -4,6 +4,7 @@ import android.content.Intent
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.learning.leap.bwb.PlayTodayPresenter
@@ -29,6 +30,7 @@ class PlayTodayActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener, N
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_play_today)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setUpOnClickListener()
         presenter = PlayTodayPresenter()
         presenter.attachView(this)
@@ -40,6 +42,20 @@ class PlayTodayActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener, N
         }
     }
 
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId: Int = item.itemId
+        if (itemId == android.R.id.home) {
+            finish()
+        }
+        return true
+
+    }
+
+
+    override fun hideFavoriteButton() {
+        playTodayFragmentFavoriteButton.visibility = View.GONE
+    }
 
     override fun updateFavorite(isFavorite: Boolean) {
         favoirte = isFavorite

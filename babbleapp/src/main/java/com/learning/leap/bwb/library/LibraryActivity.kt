@@ -49,6 +49,9 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface, Medi
         return true
     }
 
+    override fun hideFavoriteButton() {
+        libraryActivityFavoriteButton.visibility = View.GONE
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

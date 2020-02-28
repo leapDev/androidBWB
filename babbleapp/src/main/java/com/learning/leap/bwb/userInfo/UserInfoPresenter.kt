@@ -90,7 +90,7 @@ class UserInfoPresenter(private val newUser: Boolean, private val userInfoViewIn
         }
         saveHelper.saveNotificationSize(notifications.size)
         realm.beginTransaction()
-        realm.where(Notification::class.java).findAll().deleteAllFromRealm()
+        realm.where(BabbleTip::class.java).findAll().deleteAllFromRealm()
         realm.copyToRealm(notifications)
         babblePlayer?.savePlayerToRealm(realm)
         realm.commitTransaction()

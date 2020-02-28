@@ -4,11 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
+import android.os.Build;
 import android.util.Log;
-
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
@@ -19,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 
 public class TipReminder {
@@ -49,10 +47,6 @@ public class TipReminder {
         Log.d("test",convertDate(calendar.getTime()));
         setTipToAlarmManger(calendar.getTimeInMillis(),alarmIntent());
         Utility.addCustomEvent(Constant.TIP_SCHEUDLED_TIME,Utility.getUserID(context),null);
-        Answers.getInstance().logCustom(new CustomEvent(Constant.TIP_SCHEUDLED_TIME)
-                             .putCustomAttribute("Time",convertDate(calendar.getTime()))
-                             .putCustomAttribute("ID",Utility.getUserID(context)));
-
     }
 
     private PendingIntent alarmIntent(){
@@ -72,7 +66,11 @@ public class TipReminder {
     private void setTipToAlarmManger(long timeInMills, PendingIntent pendingIntent){
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
-           alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  timeInMills,AlarmManager.INTERVAL_DAY,pendingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,  timeInMills,pendingIntent);
+            }else{
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,  timeInMills,pendingIntent);
+            }
         }
     }
 
@@ -90,13 +88,10 @@ public class TipReminder {
             Calendar tipTime = Calendar.getInstance();
             if (date != null) {
                 tipTime.setTime(date);
-                tipReminderCalender.set(Calendar.HOUR,tipTime.get(Calendar.HOUR));
+                tipReminderCalender.set(Calendar.HOUR_OF_DAY,tipTime.get(Calendar.HOUR_OF_DAY));
                 tipReminderCalender.set(Calendar.MINUTE,tipTime.get(Calendar.MINUTE));
                 tipReminderCalender.set(Calendar.SECOND,0);
                 tipReminderCalender.set(Calendar.MILLISECOND,0);
-                if (tipReminderCalender.getTime().before(Calendar.getInstance().getTime())){
-                    tipReminderCalender.add(java.util.Calendar.DATE,1);
-                }
                 return tipReminderCalender.getTime();
             }else{
                 return  null;

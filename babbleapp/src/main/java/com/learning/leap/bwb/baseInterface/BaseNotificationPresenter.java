@@ -134,8 +134,8 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
             hideAllButtons();
         }else {
             displayPrompt();
+            baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
         }
-        baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
     }
 
 
@@ -201,6 +201,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         notificationViewInterface.hidePreviousButton();
         notificationViewInterface.hideSoundButton();
         notificationViewInterface.hideVideoButton();
+        notificationViewInterface.hideFavoriteButton();
     }
 
     @Override

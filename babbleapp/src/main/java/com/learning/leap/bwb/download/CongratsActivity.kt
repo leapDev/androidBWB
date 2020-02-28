@@ -14,7 +14,7 @@ class CongratsActivity:Activity() {
         setContentView(R.layout.activity_congrats)
         congratContinueButton.setOnClickListener {
             val congratsIntent = Intent(this, HomeActivity::class.java)
-            congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(congratsIntent)
         }
     }

@@ -85,7 +85,7 @@ public class LocalLoadSaveHelper {
 
     public static Date getLastDayTurnedOff(Context context) throws Exception{
         String date = Utility.readStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,context);
-        return new SimpleDateFormat("MM/dd/yyyy").parse(date);
+        return new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).parse(date);
     }
 
     public static void SaveLastDayTurnedOff(Boolean clear,Context context){
@@ -93,11 +93,20 @@ public class LocalLoadSaveHelper {
         if (clear){
             date = null;
         }else {
-            date = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+            date = new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).format(new Date());
         }
 
         Utility.writeStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,date,context);
     }
+
+    public void  saveAgeRangeBucket(int bucketNumber){
+        Utility.writeIntSharedPreferences(Constant.AGE_RANGE_BUCKET,bucketNumber,context);
+    }
+
+    public int getAgeRangeBucketNumber(){
+        return Utility.readIntSharedPreferences(Constant.AGE_RANGE_BUCKET,context);
+    }
+
 
     public void  saveNotificationSize(int size){
         Utility.writeIntSharedPreferences(Constant.NOTIFICATION_SIZE,size,context);

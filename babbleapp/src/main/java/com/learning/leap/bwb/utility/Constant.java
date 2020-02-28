@@ -1,6 +1,9 @@
 package com.learning.leap.bwb.utility;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constant {
     public static final String CognitoIdentityPoolId = "us-east-1:43044b2f-5335-448c-a61f-f334d476c6ee";
     public static final String NOTIFICATION_MAX_TIME = "notificationMaxTime";
@@ -16,6 +19,8 @@ public class Constant {
     public static final String END_TIME = "END_TIME";
     public static final String ALL_TIME_END_TIME = "ALL_TIME_END_TIME";
     public static final String SEND_TIPS_TODAY = "SEND_TIPS_TODAY";
+    public static final String AGE_RANGE_BUCKET = "AGE_RANGE_BUCKET";
+    public static final String COME_FROM_AGE_RANGE = "COME_FROM_AGE_RANGE";
     public static final String TIPS_PER_DAY = "TIPS_PER_DAY";
     public static final String TIP_ONE_ON = "TIP_ONE_ON";
     public static final String TIP_TWO_ON = "TIP_TWO_ON";
@@ -50,6 +55,8 @@ public class Constant {
     public static final String I_WILL_LATER = "IWillLater";
     public static final String YES = "Yes";
     public static final String NO = "No";
+    public static final String UPDATE_TO_TWO = "UPDATE_TO_TWO";
     public static final String UpdatedScheduleBuckets = "UPDATED_SCHEDULE_BUCKETS";
+    public static final Integer[] updateAges ={1,4,7,10,13,19,25,32,37,49};
     public static final String UpdatedTOPLAYTODAYJOB = "UPDATED_PLAY_TODAY_JOB";
 }

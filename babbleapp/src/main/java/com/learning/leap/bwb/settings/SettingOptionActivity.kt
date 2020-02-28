@@ -36,7 +36,7 @@ class SettingOptionActivity : AppCompatActivity() {
                 0 -> userSettingsIntent()
                 1 -> tipsIntent()
                 else -> {
-
+                ageRangeSettingsIntent()
                 }
             }
         }
@@ -58,6 +58,11 @@ class SettingOptionActivity : AppCompatActivity() {
         val userSettingIntent = Intent(this@SettingOptionActivity, UserInfoActivity::class.java)
         userSettingIntent.putExtra("newUser", false)
         startActivity(userSettingIntent)
+    }
+
+    private fun ageRangeSettingsIntent() {
+        val ageRangeIntent = Intent(this@SettingOptionActivity, AgeRangeActivity::class.java)
+        startActivity(ageRangeIntent)
     }
 
     private fun tipsIntent() {

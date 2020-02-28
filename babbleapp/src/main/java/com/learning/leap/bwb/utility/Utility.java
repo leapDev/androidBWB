@@ -17,8 +17,6 @@ import android.view.View;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.regions.Regions;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
@@ -138,14 +136,7 @@ public class Utility {
     }
 
     public static void addCustomEvent(String event,String ID,String tag){
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            ResearchActionHistory.createActionHistoryItem(ID,event,tag);
-            Answers.getInstance().logCustom(new CustomEvent(event).putCustomAttribute("ID",ID));
-        }else {
-            ActionHistory.createActionHistoryItem(ID, event, tag);
-            Answers.getInstance().logCustom(new CustomEvent(event)
-                    .putCustomAttribute("ID", ID));
-        }
+
     }
 
 
@@ -199,9 +190,6 @@ public class Utility {
     }
 
     public static void hideButtonCheck(View playToday, View library){
-        if (BuildConfig.FLAVOR.equals("talk2")) {
-            library.setVisibility(View.GONE);
-            playToday.setVisibility(View.GONE);
-        }
+
     }
 }

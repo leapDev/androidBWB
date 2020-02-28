@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.learning.leap.bwb.DownloadService;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
-public class
-DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
+public class DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
     DownloadService downloadService;
     ProgressBar progressBar;
     TextView downloadPercentTextView;
@@ -48,6 +48,11 @@ DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
     }
 
     @Override
+    public boolean comingFromAgeRange() {
+       return getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE,false);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
@@ -55,6 +60,10 @@ DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
             getSupportActionBar().hide();
         }
         setUpProgressBar();
+        if (getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE,false)){
+            TextView titleTextView = findViewById(R.id.downloadActivityTitleTextView);
+            titleTextView.setText(R.string.updating);
+        }
         //startDownloadService();
     }
 
@@ -111,10 +120,15 @@ DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
     @Override
     public void downloadCompleted() {
         if (bound) {
-            Intent congratsIntent = new Intent(this, CongratsActivity.class);
-            congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(congratsIntent);
-
+            if (getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE,false)){
+                Intent homeIntent = new Intent(this, HomeActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(homeIntent);
+            }else {
+                Intent congratsIntent = new Intent(this, CongratsActivity.class);
+                congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(congratsIntent);
+            }
         }
     }
 

@@ -6,7 +6,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,15 +18,21 @@ import android.widget.TextView;
 import com.evernote.android.job.JobManager;
 import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.BuildConfig;
+import com.learning.leap.bwb.DailyWorker;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.library.PlayTodayActivity;
+import com.learning.leap.bwb.model.BabbleUser;
 import com.learning.leap.bwb.models.BabblePlayer;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 
@@ -38,6 +48,7 @@ public class HomeActivity extends AppCompatActivity  {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
         setUpBackground();
         ImageView libararyImageView = findViewById(R.id.homeActivityLibraryImageView);
         ImageView settignsImageView = findViewById(R.id.homeActivitySettings);
@@ -50,31 +61,26 @@ public class HomeActivity extends AppCompatActivity  {
         leapLogo.setOnClickListener(view -> openWebsite());
         Utility.addCustomEvent(Constant.ACCESSED_APP,Utility.getUserID(this),null);
         poweredByTextView.setOnClickListener(view -> openWebsite());
-        Utility.hideButtonCheck(libararyImageView,playToday);
-//
         if (Utility.isNetworkAvailable(this)){
             ActionHistoryIntentService.startActionHistoryIntent(this);
         }
+        updateCheck();
 
     }
 
 
-    private boolean updateCheck() {
-        if (BabblePlayer.homeScreenAgeCheck(this)){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(Constant.UPDATE);
-            builder.setMessage(getString(R.string.babble_update));
-            builder.setNegativeButton("Later", (dialog, which) -> dialog.dismiss());
-            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    downloadIntent();
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
-        }
-        return false;
+    private void updateCheck() {
+//        if (BabbleUser.Companion.homeScreenAgeCheck(this) != Age){
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle(Constant.UPDATE);
+//            builder.setMessage(getString(R.string.babble_update));
+//            builder.setNegativeButton("Later", (dialog, which) -> dialog.dismiss());
+//            builder.setPositiveButton("Update", (dialog, which) -> {
+//                downloadIntent();
+//                dialog.dismiss();
+//            });
+//            builder.show();
+//        }
     }
 
     private void downloadIntent(){

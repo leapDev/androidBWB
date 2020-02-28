@@ -5,12 +5,14 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.models.BabblePlayer
+import com.learning.leap.bwb.utility.Constant.updateAges
 import io.realm.Realm
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.floor
 
 @RealmClass
 @DynamoDBTable(tableName = "babbleUsers")
@@ -30,7 +32,7 @@ open class BabbleUser() :RealmModel{
         this.babyBirthday = babyBirthday
         this.babyName = babyName
         this.babyGender = babyGender
-        setuserAgeInMonth()
+        setUserAgeInMonth()
     }
 
     companion object {
@@ -43,8 +45,50 @@ open class BabbleUser() :RealmModel{
             val sharedPrefBirthDay = saveHelper.babyBirthDay
             val updatedBabblePlayer = BabbleUser()
             updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
-            updatedBabblePlayer.setuserAgeInMonth()
+            updatedBabblePlayer.setUserAgeInMonth()
             saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.userAgeInMonth)
+        }
+
+        fun homeScreenAgeCheck(context: Context?): Int {
+            val saveHelper = LocalLoadSaveHelper(context)
+            val sharedPrefBirthDay = saveHelper.babyBirthDay
+            val updatedBabblePlayer = BabbleUser()
+            updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
+            updatedBabblePlayer.setUserAgeInMonth()
+            if (!saveHelper.checkedSaveBabyAged()) {
+                saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.userAgeInMonth)
+                saveHelper.updatedSavedBabyAged(true)
+            }
+            val sharedPrefBirthDayInMonth = saveHelper.userBirthdayInMonth
+            return getAgeRangeBucket(sharedPrefBirthDayInMonth, updatedBabblePlayer)
+        }
+
+         private fun getAgeRangeBucket(sharedPrefBirthDayInMonth: Int, updatedBabblePlayer: BabbleUser): Int {
+            if (checkIfAgeIsInRange(0, 3, sharedPrefBirthDayInMonth)) {
+                return 0
+            } else if (checkIfAgeIsInRange(4, 6, sharedPrefBirthDayInMonth)) {
+                return 1
+            } else if (checkIfAgeIsInRange(7, 9, sharedPrefBirthDayInMonth)) {
+                return 2
+            } else if (checkIfAgeIsInRange(10, 12, sharedPrefBirthDayInMonth)) {
+                return 3
+            } else if (checkIfAgeIsInRange(13, 18, sharedPrefBirthDayInMonth)) {
+                return 4
+            } else if (checkIfAgeIsInRange(19, 24, sharedPrefBirthDayInMonth)) {
+                return 5
+            } else if (checkIfAgeIsInRange(25, 30, sharedPrefBirthDayInMonth)) {
+                return 6
+            } else if (checkIfAgeIsInRange(31, 36, sharedPrefBirthDayInMonth)) {
+                return 7
+            } else if (checkIfAgeIsInRange(37, 48, sharedPrefBirthDayInMonth)) {
+                return 8
+            } else {
+                return 100
+            }
+        }
+
+        private fun checkIfAgeIsInRange(startMonth: Int, endMonth: Int, age: Int): Boolean {
+            return age in startMonth..endMonth
         }
 
     }
@@ -52,10 +96,24 @@ open class BabbleUser() :RealmModel{
     var userAgeInMonth = 0
     var birthdayDate: Date? = null
 
-    fun setuserAgeInMonth() {
+    fun getUserAge(context: Context):Int{
+        val ageBucket = getAgeRangeBucket(userAgeInMonth,this)
+        val saveHelper = LocalLoadSaveHelper(context)
+        val saveAgeRangeBucket = saveHelper.ageRangeBucketNumber
+        if (ageBucket != saveAgeRangeBucket){
+            return updateAges[saveAgeRangeBucket]
+        }else{
+            return updateAges[ageBucket]
+        }
+    }
+    fun setUserAgeInMonth() {
         if (checkDate()) {
             val userAgeInMonthDouble = daysBetween(birthdayDate!!).toDouble() / 30
-            userAgeInMonth = Math.floor(userAgeInMonthDouble).toInt()
+            if (userAgeInMonthDouble > 0 && userAgeInMonthDouble < 1){
+                userAgeInMonth = 1
+                return
+            }
+            userAgeInMonth = floor(userAgeInMonthDouble).toInt()
         }
     }
 
@@ -84,16 +142,14 @@ open class BabbleUser() :RealmModel{
                 birthdayDate = it
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             return false
         }
         return true
     }
 
-     fun checkIfAgeIsInRange(startMonth: Int, endMonth: Int, age: Int): Boolean? {
-        return age in startMonth..endMonth
-    }
 
-    private fun updatedAgeCheck(value: Int): Boolean? {
+    private fun updatedAgeCheck(value: Int): Boolean {
         return userAgeInMonth >= value
     }
 
@@ -114,11 +170,15 @@ open class BabbleUser() :RealmModel{
         saveHelper.saveBabyName(babyName)
         saveHelper.saveBabbleID(babbleID)
         saveHelper.saveBabyGender(babyGender)
+         val ageRangeBucket = getAgeRangeBucket(userAgeInMonth,this)
+         saveHelper.saveAgeRangeBucket(ageRangeBucket)
     }
 
 //    fun savePlayerObservable(mapper: DynamoDBMapper, checker: NetworkCheckerInterface, saveHelper: LocalLoadSaveHelper) {
 //        return
 //    }
+
+
 
 
     fun retrieveNotifications(babyAge: Int, mapper: DynamoDBMapper): PaginatedScanList<BabbleTip> {

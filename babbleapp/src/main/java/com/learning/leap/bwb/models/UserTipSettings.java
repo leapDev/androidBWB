@@ -150,7 +150,7 @@ public class UserTipSettings {
         int oldStartTime = Utility.readIntSharedPreferences(Constant.START_TIME,context);
         int oldMaxNumberOfTips = Utility.readIntSharedPreferences(Constant.TIPS_PER_DAY,context);
        if (isFirstTipOn != firstTipOn || oldStartTime != startTimeIndex || userMaxTipInt != oldMaxNumberOfTips ){
-           TipReminder oldFirstTip = new TipReminder(1,Utility.readIntSharedPreferences(Constant.TIPS_PER_DAY,context),context);
+           TipReminder oldFirstTip = new TipReminder(1,oldMaxNumberOfTips,context);
            oldFirstTip.cancelTipReminder();
            TipReminder firstTip = new TipReminder(1,userMaxTipInt,context);
            if (firstTipOn){
@@ -161,7 +161,7 @@ public class UserTipSettings {
        }
 
         if (isSecondTipOn != secondTipOn || oldEndTime != endTimeIndex || userMaxTipInt != oldMaxNumberOfTips ){
-            TipReminder oldSecondTip = new TipReminder(2,Utility.readIntSharedPreferences(Constant.TIPS_PER_DAY,context),context);
+            TipReminder oldSecondTip = new TipReminder(2,oldMaxNumberOfTips,context);
             oldSecondTip.cancelTipReminder();
             TipReminder secondTip = new TipReminder(2,userMaxTipInt,context);
             if (secondTipOn){

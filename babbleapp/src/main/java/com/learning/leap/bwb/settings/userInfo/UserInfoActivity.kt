@@ -3,6 +3,7 @@ package com.learning.leap.bwb.settings.userInfo
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
@@ -31,6 +32,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface, DatePickerD
     var mDialog: ProgressDialog? = null
     var gender: String = "Now Now"
     var date = ""
+    var dialogIsShowing = false
 
     lateinit var userInfoPresenter: UserInfoPresenter
 
@@ -77,8 +79,17 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface, DatePickerD
                 now[Calendar.DAY_OF_MONTH] // Inital day selection
         )
         dpd.accentColor = ContextCompat.getColor(this,R.color.darkestBlue)
+        dpd.setOkColor(Color.WHITE)
+        dpd.setCancelColor(Color.WHITE)
+        dpd.setOnCancelListener {
+            dialogIsShowing = false
+        }
         userProfileBirtdayEditText.setOnClickListener {
-            dpd.show(this.supportFragmentManager,null)
+            if (!dialogIsShowing){
+                dialogIsShowing = true
+                dpd.show(this.supportFragmentManager, null)
+            }
+
         }
     }
 

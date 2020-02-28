@@ -3,22 +3,16 @@ package com.learning.leap.bwb;
 import android.app.Application;
 import android.content.Context;
 import androidx.multidex.MultiDex;
-import androidx.multidex.MultiDexApplication;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.evernote.android.job.JobManager;
 import com.learning.leap.bwb.di.AppComponent;
 import com.learning.leap.bwb.di.DaggerAppComponent;
-
-
 import java.util.Set;
-
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmSchema;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 
 
 public class BabbleApplication extends Application{
@@ -28,8 +22,7 @@ public class BabbleApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
-        Fabric.with(this, new Answers());
+        Sentry.init("https://304314b3ecda47fe9439012d7bfbcd61@sentry.io/2888418", new AndroidSentryClientFactory(this));
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .schemaVersion(1)

@@ -16,4 +16,5 @@ public interface BaseNotificationViewInterface {
     void stopPlayer();
     void updateFavorite(@NonNull Boolean isFavorite);
     String babyName();
+    void hideFavoriteButton();
 }
