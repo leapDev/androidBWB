@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
@@ -16,15 +21,17 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.learning.leap.bwb.download.DownloadPresneterInterface;
 import com.learning.leap.bwb.download.DownloadViewInterface;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
-import com.learning.leap.bwb.helper.ScheduleBucket;
+import com.learning.leap.bwb.model.BabbleTip;
+import com.learning.leap.bwb.model.BabbleUser;
 import com.learning.leap.bwb.models.AWSDownload;
-import com.learning.leap.bwb.models.BabblePlayer;
-import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.research.ResearchNotifications;
-import com.learning.leap.bwb.research.ResearchPlayers;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
+import java.io.File;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -79,22 +86,10 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
 
     private void startDownload(){
         if (!started){
-            if (BuildConfig.FLAVOR.equals("talk2")){
                 AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
                 TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
                 awsDownload = new AWSDownload(this, transferUtility, this);
-                realmNotificationSubscription = new ResearchNotifications().getNotificationFromRealm(Realm.getDefaultInstance())
-                        .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
-                                throwable -> errorHasOccured());
-                int filesDownloadAtPaused = 0;
-                awsDownload.downloadFiles(filesDownloadAtPaused);
-                started = true;
-                disposables.add(realmNotificationSubscription);
-            }else {
-                AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
-                TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
-                awsDownload = new AWSDownload(this, transferUtility, this);
-                realmNotificationSubscription = new Notification().getNotificationFromRealm(Realm.getDefaultInstance())
+                realmNotificationSubscription = BabbleTip.getNotificationFromRealm(Realm.getDefaultInstance())
                         .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
                                 throwable -> errorHasOccured());
                 int filesDownloadAtPaused = 0;
@@ -102,65 +97,58 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
                 started = true;
                 disposables.add(realmNotificationSubscription);
             }
-        }
     }
 
 
     private void updateNotifications(){
-
-        if (BuildConfig.FLAVOR.equals("talk2")){
-            ResearchPlayers players = new ResearchPlayers();
             LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
             Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
+            BabbleUser babblePlayer = BabbleUser.Companion.loadBabblePlayerFromSharedPref(localLoadSaveHelper);
             AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
             DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
-            Disposable notificationDisposable = players.retriveNorthWestenNotifications(mapper)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(notifications -> {
-                        saveNWNotifications(notifications);
-                        startDownload();
-                    }, throwable -> {
-                        errorHasOccured();
-                    });
-            disposables.add(notificationDisposable);
+       Disposable disposable =  Single.fromCallable(() -> babblePlayer.retrieveNotifications(localLoadSaveHelper.getAgeRangeBucketNumber(),mapper))
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe(notifications -> {
+           deleteOldTips();
+           saveNotifications(notifications);
+            startDownload();
+        }, throwable -> {
+           throwable.printStackTrace();
+            errorHasOccured();
+        });
 
-        }else {
-            BabblePlayer babblePlayer = new BabblePlayer();
-            LocalLoadSaveHelper localLoadSaveHelper = new LocalLoadSaveHelper(this);
-            Utility.writeBoolenSharedPreferences(Constant.UPDATE,true,this);
-            babblePlayer = babblePlayer.loadBabblePlayerFronSharedPref(localLoadSaveHelper);
-            AmazonDynamoDBClient amazonDynamoDBClient = new AmazonDynamoDBClient(Utility.getCredientail(this));
-            DynamoDBMapper mapper = new DynamoDBMapper(amazonDynamoDBClient);
-            Disposable notificationDisposable = babblePlayer.retriveNotifications(babblePlayer.getuserAgeInMonth(), mapper)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(notifications -> {
-                        saveNotifications(notifications);
-                        startDownload();
-                    }, throwable -> {
-                        errorHasOccured();
-                    });
-            disposables.add(notificationDisposable);
+       disposables.add(disposable);
+    }
+
+    private void deleteOldTips(){
+        Realm.getDefaultInstance().beginTransaction();
+        Realm.getDefaultInstance().deleteAll();
+        Realm.getDefaultInstance().commitTransaction();
+        if (this.getFilesDir().listFiles() != null){
+            File[] files = this.getFilesDir().listFiles();
+            if (files != null) {
+                for (File child:files ){
+                    if (child.getName().contains("20")){
+                        child.delete();
+                    }
+                }
+            }
         }
+
     }
 
-    private void saveNotifications(PaginatedScanList<Notification> notifications) {
+    private void saveNotifications(PaginatedScanList<BabbleTip> notifications) {
+        for (int i = 0; i< notifications.size(); i++) {
+            BabbleTip tip = notifications.get(i);
+            tip.setId(i);
+        }
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        realm.deleteAll();
+        realm.where(BabbleTip.class).findAll().deleteAllFromRealm();
         realm.copyToRealm(notifications);
         realm.commitTransaction();
     }
-
-    private void saveNWNotifications(PaginatedScanList<ResearchNotifications> notifications) {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.deleteAll();
-        realm.copyToRealm(notifications);
-        realm.commitTransaction();
-    }
-
 
     @Override
     public void onDestroy() {
@@ -188,22 +176,43 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
     }
 
     private void onComplete(){
-        Utility.writeIntSharedPreferences(Constant.START_TIME,8,this);
-        Utility.writeIntSharedPreferences(Constant.END_TIME,16,this);
-        Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD,true,this);
-        Utility.writeBoolenSharedPreferences(Constant.UPDATE,false,this);
-        Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY,true,this);
-        ScheduleBucket scheduleBucket = new ScheduleBucket(this);
-        scheduleBucket.scheduleForFirstTime();
-        PlayTodayJob.schedule();
-        Utility.writeBoolenSharedPreferences(Constant.UpdatedScheduleBuckets,true,this);
-        Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
-        if (update){
-            if (!BuildConfig.FLAVOR.equals("regular")){
-                ResearchPlayers.saveUpdatedInfo(this);
-            }else {
-                BabblePlayer.saveUpdatedInfo(this);
+        Utility.writeBoolenSharedPreferences(Constant.UPDATE, false, this);
+        if (!downloadViewInterface.comingFromAgeRange()) {
+            Utility.writeIntSharedPreferences(Constant.START_TIME, 8, this);
+            Utility.writeIntSharedPreferences(Constant.END_TIME, 20, this);
+            Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD, true, this);
+            Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY, true, this);
+            Utility.writeIntSharedPreferences(Constant.TIPS_PER_DAY, 3, this);
+            Utility.writeBoolenSharedPreferences(Constant.TIP_ONE_ON, true, this);
+            Utility.writeBoolenSharedPreferences(Constant.TIP_TWO_ON, true, this);
+            Utility.writeBoolenSharedPreferences(Constant.UPDATE_TO_TWO,true,this);
+            Calendar dueDate = Calendar.getInstance();
+            dueDate.add(Calendar.MINUTE, 1);
+            OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(DailyWorker.class).
+                    setInitialDelay(dueDate.getTimeInMillis(), TimeUnit.MILLISECONDS).build();
+            WorkManager.getInstance(this).enqueue(request);
+            setUpdDailyWorker();
+            if (update) {
+                BabbleUser.Companion.saveUpdatedInfo(this);
             }
         }
+
     }
+
+    private void setUpdDailyWorker(){
+        Calendar currentDate = Calendar.getInstance();
+        Calendar dueDate = Calendar.getInstance();
+        dueDate.set(Calendar.HOUR_OF_DAY, 1);
+        dueDate.set(Calendar.MINUTE, 0);
+        dueDate.set(Calendar.SECOND, 0);
+        if (dueDate.before(currentDate)) {
+            dueDate.add(Calendar.HOUR_OF_DAY, 24);
+        }
+        long timeDiff = dueDate.getTimeInMillis() - currentDate.getTimeInMillis();
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(DailyWorker.class, 1, TimeUnit.DAYS).setInitialDelay(timeDiff,TimeUnit.MILLISECONDS)
+                .build();
+        WorkManager.getInstance(this.getApplicationContext()).enqueue(periodicWork);
+    }
+
+
 }

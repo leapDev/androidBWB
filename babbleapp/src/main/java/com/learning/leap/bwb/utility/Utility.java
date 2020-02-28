@@ -17,8 +17,6 @@ import android.view.View;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.regions.Regions;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
 import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
@@ -26,11 +24,10 @@ import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.models.ActionHistory;
 import com.learning.leap.bwb.research.ResearchActionHistory;
-import com.learning.leap.bwb.settings.UserInfoActivity;
+import com.learning.leap.bwb.settings.userInfo.UserInfoActivity;
 
 public class Utility {
     private static final String sharedPreferencesFile = "Global";
-
 
     public  static CognitoCredentialsProvider getCredientail(Context context){
         return new CognitoCachingCredentialsProvider(
@@ -43,12 +40,7 @@ public class Utility {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(errorTitle);
         builder.setMessage(errorMessage);
-        builder.setNeutralButton(R.string.okay, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        builder.setNeutralButton(R.string.okay, (dialogInterface, i) -> dialogInterface.dismiss());
         builder.show();
     }
 
@@ -131,22 +123,8 @@ public class Utility {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static boolean connectedWif(Context context){
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return  (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI);
-    }
-
     public static void addCustomEvent(String event,String ID,String tag){
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            ResearchActionHistory.createActionHistoryItem(ID,event,tag);
-            Answers.getInstance().logCustom(new CustomEvent(event).putCustomAttribute("ID",ID));
-        }else {
-            ActionHistory.createActionHistoryItem(ID, event, tag);
-            Answers.getInstance().logCustom(new CustomEvent(event)
-                    .putCustomAttribute("ID", ID));
-        }
+        ActionHistory.createActionHistoryItem(ID, event, tag);
     }
 
 
@@ -200,9 +178,6 @@ public class Utility {
     }
 
     public static void hideButtonCheck(View playToday, View library){
-        if (BuildConfig.FLAVOR.equals("talk2")) {
-            library.setVisibility(View.GONE);
-            playToday.setVisibility(View.GONE);
-        }
+
     }
 }

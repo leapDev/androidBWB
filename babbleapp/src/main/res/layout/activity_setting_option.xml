@@ -1,79 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/setting_bg">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/home_settings"
         android:id="@+id/settingsBackground"/>
 
-    <RelativeLayout
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/home_settings"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="70dp"
-            android:layout_marginTop="10dp"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/settings_profilesettings"
-            android:layout_marginTop="160dp"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/settingsFragmentProfileSettingsButton"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/settings_tipsettings"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/settingsFragmentProfileSettingsButton"
-            android:layout_marginTop="30dp"
-            android:id="@+id/settingsFragmentTipSettingButton"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:src="@drawable/playtoday_icon"
-            android:id="@+id/settingsFragmentPlayTodayImageView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:id="@+id/settingsRecyclerView"
+        android:layout_marginTop="20dp"
+        />
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:src="@drawable/bwb_icon"
-            android:id="@+id/settingsFragmentHomeImageView"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:src="@drawable/library_icon"
-            android:id="@+id/settingsFragmentLibararyImageView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"/>
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+</LinearLayout>

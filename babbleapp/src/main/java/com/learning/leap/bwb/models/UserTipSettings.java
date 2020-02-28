@@ -8,6 +8,7 @@ import com.evernote.android.job.JobRequest;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.helper.ScheduleBucket;
+import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -23,7 +24,7 @@ public class UserTipSettings {
     private String[] startTimes;
     private String[] endTimes;
     private ArrayList<String> allTime;
-    private static final String[] maxTips = {"3","4","5","6","7","8","9","10"};
+    private static final String[] maxTips = {"2","3","4","5","6","7"};
     private Boolean sendTipsToday;
 
     public UserTipSettings(Context context){
@@ -52,11 +53,11 @@ public class UserTipSettings {
     }
 
     private void setStartTimes(){
-        startTimes = context.getResources().getStringArray(R.array.start_times_settings_array);
+        startTimes = context.getResources().getStringArray(R.array.all_times_settings_array);
     }
 
     private void setEndTimes(){
-        endTimes = context.getResources().getStringArray(R.array.end_times_tips_settings_array);
+        endTimes = context.getResources().getStringArray(R.array.all_times_settings_array);
     }
 
     private void setAllTimes(){
@@ -95,28 +96,23 @@ public class UserTipSettings {
         return hideMinusButton(userNumberOfTipsIndex);
     }
 
-    private int minusButtonTapped(int index){
-        if (index != 0){
-            index--;
-        }
-        return index;
+    private boolean minusButtonTapped(int index){
+        return index != 0;
     }
 
     public void startTimeMinusButtonHasBeenTapped(){
-        startTimeIndex = minusButtonTapped(startTimeIndex);
+        if (minusButtonTapped(startTimeIndex)){
+            startTimeIndex--;
+        }
     }
 
     public void startTimePlusButtonHasBeenTapped(){
         startTimeIndex++;
-        if (startTimeIndex > endTimeIndex){
-            endTimeIndex = startTimeIndex;
-        }
     }
 
     public void endTimeMinusButtonHasBeenTapped(){
-        endTimeIndex = minusButtonTapped(endTimeIndex);
-        if (startTimeIndex > endTimeIndex){
-            endTimeIndex = startTimeIndex;
+        if (minusButtonTapped(endTimeIndex)){
+            endTimeIndex--;
         }
     }
 
@@ -125,7 +121,9 @@ public class UserTipSettings {
     }
 
     public void userMaxNumberOfTipsMinusButtonHasBeenTapped(){
-        userNumberOfTipsIndex = minusButtonTapped(userNumberOfTipsIndex);
+        if (minusButtonTapped(userNumberOfTipsIndex)){
+            userNumberOfTipsIndex--;
+        }
     }
 
     public void userMaxNumberOfTipsPlusButtonHasBeenTapped(){
@@ -144,18 +142,37 @@ public class UserTipSettings {
        sendTipsToday =  Utility.readBoolSharedPreferences(Constant.SEND_TIPS_TODAY,context);
     }
 
-    public void saveTurnOnTips(){
-        if (!sendTipsToday){
-            JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
-        }else {
-           PlayTodayJob.schedule();
+    public void saveTurnOnTips(boolean firstTipOn, boolean secondTipOn){
+       boolean isFirstTipOn = Utility.readBoolSharedPreferences(Constant.TIP_ONE_ON,context);
+       boolean isSecondTipOn = Utility.readBoolSharedPreferences(Constant.TIP_TWO_ON,context);
+        int userMaxTipInt = Integer.parseInt(userMaxNumberOfTipsAtIndex());
+        int oldEndTime = Utility.readIntSharedPreferences(Constant.END_TIME,context);
+        int oldStartTime = Utility.readIntSharedPreferences(Constant.START_TIME,context);
+        int oldMaxNumberOfTips = Utility.readIntSharedPreferences(Constant.TIPS_PER_DAY,context);
+       if (isFirstTipOn != firstTipOn || oldStartTime != startTimeIndex || userMaxTipInt != oldMaxNumberOfTips ){
+           TipReminder oldFirstTip = new TipReminder(1,oldMaxNumberOfTips,context);
+           oldFirstTip.cancelTipReminder();
+           TipReminder firstTip = new TipReminder(1,userMaxTipInt,context);
+           if (firstTipOn){
+               firstTip.setAlarmForTip(startTimeIndex);
+           }else{
+               firstTip.cancelTipReminder();
+           }
+       }
+
+        if (isSecondTipOn != secondTipOn || oldEndTime != endTimeIndex || userMaxTipInt != oldMaxNumberOfTips ){
+            TipReminder oldSecondTip = new TipReminder(2,oldMaxNumberOfTips,context);
+            oldSecondTip.cancelTipReminder();
+            TipReminder secondTip = new TipReminder(2,userMaxTipInt,context);
+            if (secondTipOn){
+                secondTip.setAlarmForTip(endTimeIndex);
+            }else{
+                secondTip.cancelTipReminder();
+            }
         }
-        Utility.writeBoolenSharedPreferences(Constant.SEND_TIPS_TODAY, sendTipsToday,context);
-    }
 
-    public Boolean endTimeIsBeforeStart(){
-        return startTimeIndex > 6 && startTimeIndex > endTimeIndex && endTimeIndex < startTimeIndex -6;
-
+        Utility.writeBoolenSharedPreferences(Constant.TIP_ONE_ON, firstTipOn,context);
+        Utility.writeBoolenSharedPreferences(Constant.TIP_TWO_ON, secondTipOn,context);
     }
 
     private int findEndTimeIndex(){
@@ -163,11 +180,10 @@ public class UserTipSettings {
     }
     public void  saveIndexes(){
         Utility.writeIntSharedPreferences(Constant.START_TIME,startTimeIndex,context);
-        Utility.writeIntSharedPreferences(Constant.ALL_TIME_END_TIME,findEndTimeIndex(),context);
         Utility.writeIntSharedPreferences(Constant.END_TIME,endTimeIndex,context);
         int userMaxTipInt = Integer.parseInt(userMaxNumberOfTipsAtIndex());
         Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS_INDEX,userNumberOfTipsIndex,context);
-        Utility.writeIntSharedPreferences(Constant.NUM_OF_TIPS,userMaxTipInt,context);
+        Utility.writeIntSharedPreferences(Constant.TIPS_PER_DAY,userMaxTipInt,context);
     }
     public String userMaxNumberOfTipsAtIndex(){
         return maxTips[userNumberOfTipsIndex];

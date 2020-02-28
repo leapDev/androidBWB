@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/splash_home_bg"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <fragment
-        android:name="com.learning.leap.bwb.download.DownloadFragment"
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/almostDone"
+        android:id="@+id/downloadActivityTitleTextView"
+        android:textAllCaps="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:textSize="30sp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:lineSpacingExtra="1.3sp"
+        android:id="@+id/downloadActivityDetailTextView"
+        android:text="@string/download_files_info"/>
+
+    <ProgressBar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/downloadFragment"
-        tools:layout="@layout/download_fragment"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/downloadProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressTint="@color/dark_green"
+        android:layout_marginTop="60dp"
+        android:max="100"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/downloadTextPercentage"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:text="0%"
+        android:textSize="25sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"/>
 
 </LinearLayout>

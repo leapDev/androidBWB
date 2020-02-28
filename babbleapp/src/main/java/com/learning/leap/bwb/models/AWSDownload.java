@@ -7,6 +7,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.learning.leap.bwb.download.DownloadPresneterInterface;
+import com.learning.leap.bwb.model.BabbleTip;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,8 +28,8 @@ public class AWSDownload {
         this.downloadPresneterInterface = downloadPresneterInterface;
     }
 
-    public void addNotificationsFilesToList(List<Notification> notifications){
-     for (Notification notification:notifications){
+    public void addNotificationsFilesToList(List<BabbleTip> notifications){
+     for (BabbleTip notification:notifications){
         if (!notification.getSoundFileName().equals("no file")){
             addFileToArray(notification.getCreated(),notification.getSoundFileName());
             }

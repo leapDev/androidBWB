@@ -7,8 +7,8 @@ import com.learning.leap.bwb.utility.Utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
-import io.realm.Realm;
 
 
 public class LocalLoadSaveHelper {
@@ -18,28 +18,12 @@ public class LocalLoadSaveHelper {
         this.context = context;
     }
 
-
-
-    public int getNotificationMaxTime(){
-        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,context);
-    }
-    public void saveNotificationMaxTime(int time){
-        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MAX_TIME,time,context);
-    }
-
-    public int getNotificationMinTime(){
-        return Utility.readIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,context);
-    }
-    public void saveNotificationMinTime(int time){
-        Utility.writeIntSharedPreferences(Constant.NOTIFICATION_MIN_TIME,time,context);
-    }
-
     public void clearBabbleID(){
         Utility.writeStringSharedPreferences(Constant.BABBLE_ID,"",context);
     }
 
     public String getBabbleID(){
-       return Utility.readStringSharedPreferences(Constant.BABBLE_ID,context);
+        return Utility.readStringSharedPreferences(Constant.BABBLE_ID,context);
     }
 
     public void saveBabbleID(String babbleID){
@@ -97,19 +81,28 @@ public class LocalLoadSaveHelper {
 
     public static Date getLastDayTurnedOff(Context context) throws Exception{
         String date = Utility.readStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,context);
-        return new SimpleDateFormat("MM/dd/yyyy").parse(date);
+        return new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).parse(date);
     }
 
     public static void SaveLastDayTurnedOff(Boolean clear,Context context){
         String date;
         if (clear){
-           date = null;
+            date = null;
         }else {
-           date = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+            date = new SimpleDateFormat("MM/dd/yyyy",Locale.getDefault()).format(new Date());
         }
 
         Utility.writeStringSharedPreferences(Constant.LAST_DAY_TURNED_OFF,date,context);
     }
+
+    public void  saveAgeRangeBucket(int bucketNumber){
+        Utility.writeIntSharedPreferences(Constant.AGE_RANGE_BUCKET,bucketNumber,context);
+    }
+
+    public int getAgeRangeBucketNumber(){
+        return Utility.readIntSharedPreferences(Constant.AGE_RANGE_BUCKET,context);
+    }
+
 
     public void  saveNotificationSize(int size){
         Utility.writeIntSharedPreferences(Constant.NOTIFICATION_SIZE,size,context);
@@ -118,6 +111,7 @@ public class LocalLoadSaveHelper {
     public int getNotificationTotalSize(){
         return Utility.readIntSharedPreferences(Constant.NOTIFICATION_SIZE,context);
     }
+
 
 
 }

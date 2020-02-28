@@ -4,12 +4,6 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/whyneedinfo_bg"/>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -74,7 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/babyZipCode"
+            android:text="@string/baby_s_gender"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:textSize="18sp"
@@ -84,7 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/babyZipCodeInfo"
+            android:text="@string/baby_gender_info"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
             android:textColor="@android:color/black"
@@ -93,14 +87,13 @@
             android:layout_margin="10dp"
             android:textSize="16sp"/>
 
-        <Button
+        <ImageButton
+            android:id="@+id/backSettingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
-            android:id="@+id/backSettingsButton"
-            android:background="@drawable/whyneedinfo_backtosettings"
-            />
+            android:background="@drawable/whyneedinfo_backtosettings" />
 
     </LinearLayout>
 

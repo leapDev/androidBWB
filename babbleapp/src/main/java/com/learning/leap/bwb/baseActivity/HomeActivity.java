@@ -6,7 +6,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,13 +18,22 @@ import android.widget.TextView;
 import com.evernote.android.job.JobManager;
 import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.BuildConfig;
+import com.learning.leap.bwb.DailyWorker;
 import com.learning.leap.bwb.PlayTodayJob;
 import com.learning.leap.bwb.download.DownloadActivity;
+import com.learning.leap.bwb.library.LibraryCategoryActivity;
+import com.learning.leap.bwb.library.PlayTodayActivity;
+import com.learning.leap.bwb.model.BabbleUser;
 import com.learning.leap.bwb.models.BabblePlayer;
+import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Utility;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
+
+import java.io.File;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.Disposable;
 
@@ -33,75 +46,48 @@ public class HomeActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        int tipPerReminder = Utility.readIntSharedPreferences(Constant.TIPS_PER_DAY,this);
+        if (Utility.readBoolSharedPreferences(Constant.TIP_ONE_ON,this)){
+            TipReminder tipReminder = new TipReminder(1,tipPerReminder,this);
+            tipReminder.setAlarmForTip(Utility.readIntSharedPreferences(Constant.START_TIME,this));
+        }
+
         setUpBackground();
-        ImageView libararyImageView = (ImageView) findViewById(R.id.homeActivityLibraryImageView);
-        ImageView settignsImageView = (ImageView)findViewById(R.id.homeActivitySettings);
-        ImageView playToday = (ImageView)findViewById(R.id.homeActivityPlayTodayImageView);
-        ImageView leapLogo = (ImageView)findViewById(R.id.homeLeapLogo);
-        TextView poweredByTextView = (TextView)findViewById(R.id.powerByTextView);
+        ImageView libararyImageView = findViewById(R.id.homeActivityLibraryImageView);
+        ImageView settignsImageView = findViewById(R.id.homeActivitySettings);
+        ImageView playToday = findViewById(R.id.homeActivityPlayTodayImageView);
+        ImageView leapLogo = findViewById(R.id.homeLeapLogo);
+        TextView poweredByTextView = findViewById(R.id.powerByTextView);
         libararyImageView.setOnClickListener(view -> detailIntent());
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
         Utility.addCustomEvent(Constant.ACCESSED_APP,Utility.getUserID(this),null);
-
-        if (!Utility.readBoolSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,this)){
-            JobManager.instance().cancelAllForTag(PlayTodayJob.PLAY_TODAY);
-            PlayTodayJob.schedule();
-            Utility.writeBoolenSharedPreferences(Constant.UpdatedTOPLAYTODAYJOB,true,this);
-
-        }
-        if (BuildConfig.FLAVOR.equals("regular")) {
-            poweredByTextView.setOnClickListener(view -> openWebsite());
-        }else {
-            leapLogo.setVisibility(View.GONE);
-            poweredByTextView.setVisibility(View.GONE);
-        }
-        Utility.hideButtonCheck(libararyImageView,playToday);
-//
+        poweredByTextView.setOnClickListener(view -> openWebsite());
         if (Utility.isNetworkAvailable(this)){
             ActionHistoryIntentService.startActionHistoryIntent(this);
         }
-
-
-//
-//        ImageView homeImageView = (ImageView) findViewById(R.id.homeFragmentHomeIcon);
-//        homeImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                java.util.Calendar calendar = java.util.Calendar.getInstance();
-//                calendar.add(java.util.Calendar.MINUTE,1);
-//                TipReminder tipReminder = new TipReminder(getBucketNumber(),1,new Date(),calendar.getTime(),HomeActivity.this);
-//                tipReminder.setReminder(calendar.getTime());
-//
-//            }
-//        });
+        updateCheck();
 
     }
 
-    private int getBucketNumber(){
 
-        bucketNumber++;
-        return bucketNumber;
-
-    }
-
-    private boolean updateCheck() {
-        if (BabblePlayer.homeScreenAgeCheck(this)){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(Constant.UPDATE);
-            builder.setMessage(getString(R.string.babble_update));
-            builder.setNegativeButton("Later", (dialog, which) -> dialog.dismiss());
-            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    downloadIntent();
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
-        }
-        return false;
+    private void updateCheck() {
+//        if (BabbleUser.Companion.homeScreenAgeCheck(this) != Age){
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle(Constant.UPDATE);
+//            builder.setMessage(getString(R.string.babble_update));
+//            builder.setNegativeButton("Later", (dialog, which) -> dialog.dismiss());
+//            builder.setPositiveButton("Update", (dialog, which) -> {
+//                downloadIntent();
+//                dialog.dismiss();
+//            });
+//            builder.show();
+//        }
     }
 
     private void downloadIntent(){
@@ -122,14 +108,6 @@ public class HomeActivity extends AppCompatActivity  {
         super.onDestroy();
     }
 
-    private void displayUpdateDialog(){
-//        new AlertDialog.Builder(this)
-//                .setMessage(R.string.updateDialogTitle)
-//                .setPositiveButton(R.string.update,(dialogInterface, i) -> {dialogInterface.dismiss();downloadIntent();})
-//                .setNegativeButton(R.string.remindMeLater,(dialogInterface, i) -> dialogInterface.dismiss())
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .show();
-    }
 
     private void setUpBackground(){
         ImageView background = (ImageView)findViewById(R.id.homeBackground);
@@ -139,8 +117,7 @@ public class HomeActivity extends AppCompatActivity  {
 
 
     private void playTodayIntent(){
-        Intent detailIntent = new Intent(HomeActivity.this,DetailActivity.class);
-        detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.PLAY_TODAY);
+        Intent detailIntent = new Intent(HomeActivity.this, PlayTodayActivity.class);
         Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY,Utility.getUserID(this),null );
         startActivity(detailIntent);
     }
@@ -151,9 +128,8 @@ public class HomeActivity extends AppCompatActivity  {
         startActivity(settingOptionIntent);
     }
     private void detailIntent() {
-        Intent detailIntent = new Intent(HomeActivity.this,DetailActivity.class);
-        detailIntent.putExtra(DetailActivity.DETAIL_INTENT,DetailActivity.LIBRARY);
-        Utility.addCustomEvent(Constant.VIEWED_LIBRARY,Utility.getUserID(this),null);
+        Intent detailIntent = new Intent(HomeActivity.this, LibraryCategoryActivity.class);
+        //Utility.addCustomEvent(Constant.VIEWED_LIBRARY,Utility.getUserID(this),null);
         startActivity(detailIntent);
     }
 
